@@ -30,6 +30,13 @@ export default class Tweetcord extends Client {
                 return message.channel.send("This command is restricted to bot developers.")
             }
 
+            try {
+                return command.run(message, args)
+            } catch (e) {
+                this.logger.error(e);
+                return message.channel.send(e)
+            }
+
         }
     }
 
