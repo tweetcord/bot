@@ -6,6 +6,8 @@ import { statSync, readdir } from "fs";
 import { Options, EventOptions } from "./Types";
 import * as logger from "./Logger";
 import embeds from "./resources/Embeds"
+import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
 
 export default class Tweetcord extends Client {
     config: Options;
@@ -78,6 +80,7 @@ export default class Tweetcord extends Client {
     }
 
     public init() {
+        Sentry.init({ dsn: this.config.sentry, tracesSampleRate: 1.0 })
         this.on("message", this.handleMessage)
         this.loadCommands(resolve("commands"))
         this.loadEvents(resolve("events"))

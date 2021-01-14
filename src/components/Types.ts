@@ -4,6 +4,7 @@ export interface Options {
     token: string;
     owner: string | Array<string>;
     prefix: string;
+    sentry: string;
 }
 
 export interface CommandOptions {
