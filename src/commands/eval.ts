@@ -13,9 +13,9 @@ export default class Eval extends Command {
         try {
             const isAsync = args.join(" ").includes('return') || code.includes('await');
 
-            let result = await eval(isAsync ? `(async()=>{ return ${code}})();` : code)
+            let result = await eval(isAsync ? `(async()=>{ ${code}})();` : code)
             if (typeof result !== "string") result = inspect(result, { depth: 0 });
-
+            console.log(typeof result);
 
             return message.channel.send(result, {
                 code: "js",
