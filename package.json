@@ -7,8 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "clean": "rimraf dist/ && mkdir dist",
-    "build": "yarn clean && yarn --silent && tsc",
+    "build": "yarn --silent && tsc",
     "start": "yarn build && cd dist/ && node Bot.js"
   },
   "dependencies": {
