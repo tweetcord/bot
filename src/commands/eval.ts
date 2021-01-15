@@ -10,17 +10,21 @@ export default class Eval extends Command {
     }
     public async run(message: Message, args: string[]): Promise<Message> {
         const code = args.join(" ")
-        const asynchr = args.join(" ").includes('return') || code.includes('await');
-        let result = await eval(asynchr ? `(async()=>{ return ${code}})();` : code)
-        if (typeof result !== "string") result = inspect(result, { depth: 0 });
+        try {
+            const isAsync = args.join(" ").includes('return') || code.includes('await');
 
-    
-        message.channel.send(result, {
-            code: "js",
-            split: true
-        })
+            let result = await eval(isAsync ? `(async()=>{ return ${code}})();` : code)
+            if (typeof result !== "string") result = inspect(result, { depth: 0 });
 
-          
-        return message.reply(`${this.bot.ws.ping} ms.`)
+            // @ts-expect-error
+            return message.channel.send(result, {
+                code: "js",
+                split: true
+            })
+        } catch (error) {
+            message.channel.send(error.message, {
+                split: true
+            })
+        }
     }
 }
