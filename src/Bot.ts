@@ -1,12 +1,10 @@
-import * as dotenv from "dotenv"
 import Tweetcord from "./components/Client";
-dotenv.config()
-
+import * as config from "./Config"
 const client = new Tweetcord({
     prefix: "!t",
-    token: process.env.TOKEN,
-    sentry: process.env.SENTRY_DNS,
-    owner: process.env.OWNER,
+    token: config.token,
+    sentry: config.sentry,
+    owner: "534099893979971584",
 }, {
     presence: {
         activity: {
