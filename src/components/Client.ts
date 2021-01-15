@@ -23,9 +23,9 @@ export default class Tweetcord extends Client {
     private handleMessage(message: Message) {
         const channel = message.channel as TextChannel;
         if (!message.content.startsWith(this.config.prefix) || message.author.bot || message.webhookID || !channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
-        const args = message.content.slice(this.config.prefix.length).trim().split(/ +w/g)
+        const args = message.content.slice(this.config.prefix.length).trim().split(/ +/g)
         const command: Command = this.findCommand(args.shift())
-        console.log(message.content.slice(this.config.prefix.length).trim().split(/ +w/g), message.content)
+        console.log(message.content.slice(this.config.prefix.length).trim().split(/ +/g), message.content)
 
         if (command) {
             if (command.nsfwOnly && !channel.nsfw && this.config.owner !== message.author.id) {
