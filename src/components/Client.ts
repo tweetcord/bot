@@ -3,7 +3,7 @@ import Command from "./Command";
 import Event from "./Event";
 import { resolve } from "path";
 import { statSync, readdir } from "fs";
-import { Options, EventOptions } from "./Types";
+import { Options } from "./Types";
 import * as logger from "./Logger";
 import embeds from "./resources/Embeds"
 import * as Sentry from '@sentry/node';
@@ -86,7 +86,7 @@ export default class Tweetcord extends Client {
     }
 
     public init() {
-        Sentry.init({ dsn: this.config.sentry, tracesSampleRate: 1.0 })
+        Sentry.init({ dsn: this.config.sentry, tracesSampleRate: 0.2 })
         this.on("message", this.handleMessage)
         this.loadCommands(resolve("commands"))
         this.loadEvents(resolve("events"))

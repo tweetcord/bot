@@ -6,6 +6,11 @@
   "author": "https://github.com/NMW03",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "clean": "rimraf dist/ && mkdir dist",
+    "build": "yarn clean && yarn --silent && tsc",
+    "start": "yarn build && cd dist/ && node Bot.js"
+  },
   "dependencies": {
     "@sentry/node": "^5.30.0",
     "@sentry/tracing": "^5.30.0",
@@ -15,6 +20,7 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
-    "@types/node": "^14.14.20"
+    "@types/node": "^14.14.20",
+    "rimraf": "^3.0.2"
   }
 }
