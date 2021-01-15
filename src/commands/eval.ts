@@ -11,11 +11,11 @@ export default class Eval extends Command {
     public async run(message: Message, args: string[]): Promise<Message | Message[]> {
         const code = args.join(" ")
         try {
-            const isAsync = args.join(" ").includes('return') || code.includes('await');
+            const isAsync = code.includes('return') || code.includes('await');
 
             let result = await eval(isAsync ? `(async()=>{ ${code}})();` : code)
             if (typeof result !== "string") result = inspect(result, { depth: 0 });
-            console.log(typeof result);
+            console.log(typeof result, code);
 
             return message.channel.send(result, {
                 code: "js",
