@@ -1,0 +1,1 @@
+export let X: string = '<:xtick:738936304565354497>'

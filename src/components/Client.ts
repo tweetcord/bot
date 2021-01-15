@@ -8,7 +8,7 @@ import * as logger from "./Logger";
 import embeds from "./resources/Embeds"
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
-
+import * as emojis from "./resources/Emojis"
 export default class Tweetcord extends Client {
     config: Options;
     logger: any
@@ -24,14 +24,13 @@ export default class Tweetcord extends Client {
         if (!message.content.startsWith(this.config.prefix) || message.author.bot || message.webhookID || !channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
         const args = message.content.slice(this.config.prefix.length).trim().split(/ +w/g)
         const command: Command = this.findCommand(args.shift())
-        console.log(message.content.slice(this.config.prefix.length).trim().split(/ +w/g))
         if (command) {
             if (command.nsfwOnly && !channel.nsfw && this.config.owner !== message.author.id) {
                 const embed = embeds.nsfw()
                 return message.channel.send({ embed })
             }
             if (command.ownerOnly && message.author.id !== this.config.owner) {
-                return message.channel.send("This command is restricted to bot developers.")
+                return message.channel.send(`${emojis.X} This command is restricted to bot developers.`)
             }
 
             try {
