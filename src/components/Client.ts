@@ -52,6 +52,7 @@ export default class Tweetcord extends Client {
             readdir(dir, (err: Error, commands) => {
                 if (err) throw err;
                 for (const commandName of commands) {
+                    console.log(commandName)
                     const stat = statSync(dir + "/" + commandName)
                     if (stat.isDirectory()) return this.loadCommands(dir + "/" + commandName);
                     const command: Command = new (require(dir + "/" + commandName))(this);
