@@ -9,7 +9,6 @@ import embeds from "./resources/Embeds"
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import * as emojis from "./resources/Emojis"
-import '@skyra/editable-commands';
 
 export default class Tweetcord extends Client {
     config: Options;
