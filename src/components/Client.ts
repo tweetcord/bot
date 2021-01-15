@@ -35,6 +35,7 @@ export default class Tweetcord extends Client {
             try {
                 return command.run(message, args)
             } catch (e) {
+                Sentry.captureException(e)
                 this.logger.error(e);
                 return message.channel.send(e)
             }
@@ -59,6 +60,7 @@ export default class Tweetcord extends Client {
                 return true;
             })
         } catch (error) {
+            Sentry.captureException(error)
             this.logger.error(error)
             return false;
         }
@@ -73,9 +75,13 @@ export default class Tweetcord extends Client {
                     if (event.type === "once") this.once(event.name, event.run)
                     this.on(event.name, event.run)
                 }
+                return true;
             })
+
         } catch (error) {
+            Sentry.captureException(error)
             this.logger.error(error)
+            return false;
         }
     }
 
