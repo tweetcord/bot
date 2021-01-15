@@ -12,6 +12,7 @@ export default class Eval extends Command {
     public async run(message: Message, args: string[]): Promise<Message | Message[]> {
         const code = args.join(" ")
         console.log(code)
+        
         try {
             const isAsync = code.includes('return') || code.includes('await');
 
