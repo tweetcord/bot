@@ -27,7 +27,7 @@ export default class Tweetcord extends Client {
         const command: Command = this.findCommand(args.shift())
 
         console.log(prefix, args, args.shift())
-        console.log(message.content.slice(this.config.prefix.length).trim().split(/+w/g))
+        console.log(message.content.slice(this.config.prefix.length).trim().split(/ +w/g))
         if (command) {
             if (command.nsfwOnly && !channel.nsfw && this.config.owner !== message.author.id) {
                 const embed = embeds.nsfw()
