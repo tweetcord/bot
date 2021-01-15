@@ -5,7 +5,6 @@ export default class Ping extends Command {
     constructor(client: Client) {
         super(client, {
             triggers: ["ping", "latency"],
-            ownerOnly: true
         });
     }
     public run(message: Message, args: string[]): Promise<Message> {
