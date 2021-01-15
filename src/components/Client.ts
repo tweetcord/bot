@@ -57,6 +57,7 @@ export default class Tweetcord extends Client {
                     if (stat.isDirectory()) return this.loadCommands(dir + "/" + commandName);
                     const path = dir + '/' + commandName;
                     const file = require(resolve(path))
+                    console.log(file)
                     const command: Command = new file(this)
                     this.commands.set(command.triggers[0], command)
                 }
