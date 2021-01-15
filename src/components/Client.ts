@@ -23,19 +23,20 @@ export default class Tweetcord extends Client {
     private handleMessage(message: Message) {
         const channel = message.channel as TextChannel;
         if (!message.content.startsWith(this.config.prefix) || message.author.bot || message.webhookID || !channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
-        const args = message.content.slice(this.config.prefix.length).trim().split(/ +w/g)
-        const command: Command = this.findCommand(args.shift())
-        if (command) {
-            if (command.nsfwOnly && !channel.nsfw && this.config.owner !== message.author.id) {
+        const [command, ...args] = message.content.slice(this.config.prefix.length).trim().split(/ +w/g)
+        const cmd: Command = this.findCommand(command)
+        console.log(command, args)
+        if (cmd) {
+            if (cmd.nsfwOnly && !channel.nsfw && this.config.owner !== message.author.id) {
                 const embed = embeds.nsfw()
                 return message.channel.send({ embed })
             }
-            if (command.ownerOnly && message.author.id !== this.config.owner) {
+            if (cmd.ownerOnly && message.author.id !== this.config.owner) {
                 return message.channel.send(`${emojis.X} This command is restricted to bot developers.`)
             }
 
             try {
-                return command.run(message, args)
+                return cmd.run(message, args)
             } catch (e) {
                 Sentry.captureException(e)
                 this.logger.error(e);
@@ -54,7 +55,6 @@ export default class Tweetcord extends Client {
             readdir(dir, (err: Error, commands) => {
                 if (err) throw err;
                 for (const commandName of commands) {
-                    console.log(commandName)
                     const stat = statSync(dir + "/" + commandName)
                     if (stat.isDirectory()) return this.loadCommands(dir + "/" + commandName);
                     const path = dir + '/' + commandName;
