@@ -77,6 +77,7 @@ export default class Tweetcord extends Client {
                 for (const eventName of events) {
                     const path = dir + '/' + eventName;
                     const file = require(resolve(path))
+                    console.log(file)
                     const event: Event = new file(this)
                     if (event.type === "once") this.once(event.name, event.run)
                     this.on(event.name, event.run)
