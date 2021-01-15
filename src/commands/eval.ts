@@ -16,7 +16,7 @@ export default class Eval extends Command {
             let result = await eval(isAsync ? `(async()=>{ return ${code}})();` : code)
             if (typeof result !== "string") result = inspect(result, { depth: 0 });
 
-            // @ts-expect-error
+            // @ts-ignore
             return message.channel.send(result, {
                 code: "js",
                 split: true
