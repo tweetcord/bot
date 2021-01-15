@@ -14,7 +14,7 @@ export default class Eval extends Command {
         try {
             const isAsync = code.includes('return') || code.includes('await');
 
-            let result = await eval(isAsync ? `(async()=>{ ${code}})();` : code)
+            let result = eval(isAsync ? `(async()=>{ ${code}})();` : code)
             if (typeof result !== "string") result = inspect(result, { depth: 0 });
             console.log(typeof result, code);
 
