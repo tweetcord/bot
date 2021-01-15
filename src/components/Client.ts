@@ -56,7 +56,7 @@ export default class Tweetcord extends Client {
                     const stat = statSync(dir + "/" + commandName)
                     if (stat.isDirectory()) return this.loadCommands(dir + "/" + commandName);
                     const path = dir + '/' + commandName;
-                    const file = require(resolve(dir))
+                    const file = require(resolve(path))
                     const command: Command = new file(this)
                     this.commands.set(command.triggers[0], command)
                 }
@@ -75,7 +75,7 @@ export default class Tweetcord extends Client {
                 if (err) throw err;
                 for (const eventName of events) {
                     const path = dir + '/' + eventName;
-                    const file = require(resolve(dir))
+                    const file = require(resolve(path))
                     const event: Event = new file(this)
                     if (event.type === "once") this.once(event.name, event.run)
                     this.on(event.name, event.run)
