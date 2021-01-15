@@ -8,7 +8,7 @@ export default class Eval extends Command {
             ownerOnly: true
         });
     }
-    public async run(message: Message, args: string[]): Promise<Message> {
+    public async run(message: Message, args: string[]): Promise<Message | Message[]> {
         const code = args.join(" ")
         try {
             const isAsync = args.join(" ").includes('return') || code.includes('await');
@@ -16,7 +16,7 @@ export default class Eval extends Command {
             let result = await eval(isAsync ? `(async()=>{ return ${code}})();` : code)
             if (typeof result !== "string") result = inspect(result, { depth: 0 });
 
-            // @ts-ignore
+
             return message.channel.send(result, {
                 code: "js",
                 split: true

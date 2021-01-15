@@ -21,7 +21,7 @@ class Command {
         this.botPermissions = options.botPermissions;
     };
 
-    async run(message: Message, args: string[]) {
+    async run(message: Message, args: string[]): Promise<Message | Message[]> {
         return message.channel.send('This command isn\'t available yet lol');
     }
 };
