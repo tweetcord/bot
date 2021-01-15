@@ -17,7 +17,7 @@ export default class Eval extends Command {
             if (typeof result !== "string") result = inspect(result, { depth: 0 });
             console.log(typeof result, code);
 
-            return message.channel.send(result, {
+            return message.channel.send(result.replace(new RegExp(message.client.token, 'gi'), "[TOKEN]"), {
                 code: "js",
                 split: true
             })
@@ -25,6 +25,8 @@ export default class Eval extends Command {
             message.channel.send(error.message, {
                 split: true
             })
+            console.log("error");
+
         }
     }
 }
