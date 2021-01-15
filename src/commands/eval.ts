@@ -1,6 +1,7 @@
 import { Client, Message } from "discord.js";
 import Command from "../components/Command";
 import { inspect } from "util";
+
 export default class Eval extends Command {
     constructor(client: Client) {
         super(client, {
@@ -14,7 +15,7 @@ export default class Eval extends Command {
         try {
             const isAsync = code.includes('return') || code.includes('await');
 
-            let result = eval(isAsync ? `(async()=>{ ${code}})();` : code)
+            let result: any = eval(isAsync ? `(async()=>{${code}})();` : code)
             if (typeof result !== "string") result = inspect(result, { depth: 0 });
             console.log(typeof result, code);
 
@@ -23,10 +24,10 @@ export default class Eval extends Command {
                 split: true
             })
         } catch (error) {
+            console.log("error");
             return message.channel.send(error.message, {
                 split: true
             })
-            console.log("error");
 
         }
     }
