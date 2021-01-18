@@ -9,3 +9,4 @@ app.listen(8080, () => console.log("Started api in 8080"))
 app.get("/vote", (req: Request, res: Response) => {
     return console.log(req.body)
 })
+
