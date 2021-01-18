@@ -21,7 +21,10 @@ export default class Tweetcord extends Client {
         this.config = options;
         this.logger = logger
         this.commands = new Collection()
-        this.ddog = new StatsD()
+        this.ddog = new StatsD({
+            port: 8080,
+            errorHandler: Sentry.captureException
+        })
 
     }
     private handleMessage(message: Message) {
