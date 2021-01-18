@@ -9,19 +9,23 @@ import embeds from "./resources/Embeds"
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import * as emojis from "./resources/Emojis"
+import { StatsD } from "hot-shots";
 
 export default class Tweetcord extends Client {
     config: Options;
     logger: any
-    commands: Collection<string, Command>;    
+    commands: Collection<string, Command>;  
+    ddog: StatsD
     constructor(options: Options, clientOptions: ClientOptions) {
         super(clientOptions);
         this.config = options;
         this.logger = logger
         this.commands = new Collection()
+        this.ddog = new StatsD()
 
     }
     private handleMessage(message: Message) {
+        this.ddog.increment("seen")
         const channel = message.channel as TextChannel;
         if (!message.content.startsWith(this.config.prefix) || message.author.bot || message.webhookID || !channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
         const [command, ...args] = message.content.slice(this.config.prefix.length).trim().split(/ +/g)
@@ -36,6 +40,7 @@ export default class Tweetcord extends Client {
             }
 
             try {
+                this.ddog.increment("commandExecuted")
                 return cmd.run(message, args)
             } catch (e) {
                 Sentry.captureException(e)
