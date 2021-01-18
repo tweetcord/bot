@@ -2,9 +2,8 @@ import { Client, Message } from "discord.js";
 import Command from "../components/Command";
 import { inspect, promisify } from "util";
 import { exec } from "child_process";
-
+import util from "../components/Util";
 const execute = promisify(exec)
-
 export default class Eval extends Command {
     constructor(client: Client) {
         super(client, {
@@ -15,16 +14,17 @@ export default class Eval extends Command {
     public async run(message: Message, args: string[]): Promise<Message | Message[]> {
         const code = args.join(" ")
         try {
+            const start = process.hrtime()
             const { stderr, stdout } = await execute(code)
-
+            const end = process.hrtime(start)
+            const execution = util.convertHrtime(end)
             if (stderr) return message.channel.send(stderr, {
                 split: true,
                 code: "js"
             })
 
-            return message.channel.send(stdout, {
+            return message.channel.send(`Execution time: **${execution} seconds** \n \`\`\`bash\n${stdout}\`\`\``, {
                 split: true,
-                code: "bash"
             })
         } catch (err) {
             return message.channel.send(err, {

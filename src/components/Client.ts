@@ -13,12 +13,13 @@ import * as emojis from "./resources/Emojis"
 export default class Tweetcord extends Client {
     config: Options;
     logger: any
-    commands: Collection<string, Command>;
+    commands: Collection<string, Command>;    
     constructor(options: Options, clientOptions: ClientOptions) {
         super(clientOptions);
         this.config = options;
         this.logger = logger
         this.commands = new Collection()
+
     }
     private handleMessage(message: Message) {
         const channel = message.channel as TextChannel;
