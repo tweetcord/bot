@@ -23,7 +23,7 @@ export default class Eval extends Command {
                 code: "js"
             })
 
-            return message.channel.send(`> Execution time: **${execution.toFixed(5)} seconds** \n\`\`\`bash\n${stdout}\`\`\``, {
+            return message.channel.send(`> Execution time: **${execution.toFixed(5)} seconds** \n\`\`\`bash\n$ ${code}\n${stdout}\`\`\``, {
                 split: true,
             })
         } catch (err) {
