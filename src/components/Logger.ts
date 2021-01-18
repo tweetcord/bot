@@ -9,7 +9,7 @@ export default class Logger {
     }
 
     public info(input: any) {
-  return this.log(input)
+        return this.log(input)
     }
 
     public warn(input: any) {

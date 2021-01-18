@@ -23,19 +23,19 @@ export default class Tweetcord extends Client {
     private handleMessage(message: Message) {
         const channel = message.channel as TextChannel;
         if (!message.content.startsWith(this.config.prefix) || message.author.bot || message.webhookID || !channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
-        const args = message.content.slice(this.config.prefix.length).trim().split(/ +/g)
-        const command: Command = this.findCommand(args.shift())
-        if (command) {
-            if (command.nsfwOnly && !channel.nsfw && this.config.owner !== message.author.id) {
+        const [command, ...args] = message.content.slice(this.config.prefix.length).trim().split(/ +/g)
+        const cmd: Command = this.findCommand(command)
+        if (cmd) {
+            if (cmd.nsfwOnly && !channel.nsfw && this.config.owner !== message.author.id) {
                 const embed = embeds.nsfw()
                 return message.channel.send({ embed })
             }
-            if (command.ownerOnly && message.author.id !== this.config.owner) {
+            if (cmd.ownerOnly && message.author.id !== this.config.owner) {
                 return message.channel.send(`${emojis.X} This command is restricted to bot developers.`)
             }
 
             try {
-                return command.run(message, args)
+                return cmd.run(message, args)
             } catch (e) {
                 Sentry.captureException(e)
                 this.logger.error(e);

@@ -1,5 +1,6 @@
 import Tweetcord from "./components/Client";
 import * as config from "./Config"
+
 const client = new Tweetcord({
     prefix: "!t",
     token: config.token,
