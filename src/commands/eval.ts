@@ -16,8 +16,6 @@ export default class Eval extends Command {
 
             let result: any = await eval(isAsync ? `(async()=>{${code}})();` : code)
             if (typeof result !== "string") result = inspect(result, { depth: 0 });
-            console.log(typeof result, code);
-
             return message.channel.send(result.replace(new RegExp(message.client.token, 'gi'), "[TOKEN]"), {
                 code: "js",
                 split: true
