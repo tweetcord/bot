@@ -14,16 +14,24 @@ export default class Eval extends Command {
     }
     public async run(message: Message, args: string[]): Promise<Message | Message[]> {
         const code = args.join(" ")
-        const { stderr, stdout } = await execute(code)
+        try {
+            const { stderr, stdout } = await execute(code)
 
-        if (stderr) return message.channel.send(stderr, {
-            split: true,
-            code: "js"
-        })
+            if (stderr) return message.channel.send(stderr, {
+                split: true,
+                code: "js"
+            })
 
-        return message.channel.send(stdout, {
-            split: true,
-            code: "bash"
-        })
+            return message.channel.send(stdout, {
+                split: true,
+                code: "bash"
+            })
+        } catch (err) {
+            return message.channel.send(err, {
+                split: true,
+                code: "js"
+            })
+        }
+
     }
 }
