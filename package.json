@@ -17,11 +17,14 @@
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "hot-shots": "^8.3.0"
+    "hot-shots": "^8.3.0",
+    "lexure": "^0.17.0",
+    "twitter-text": "^3.1.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
     "@types/node": "^14.14.22",
+    "@types/twitter-text": "^3.1.0",
     "morgan": "^1.10.0",
     "rimraf": "^3.0.2"
   }
