@@ -9,6 +9,11 @@ app.listen(8080, () => console.log("Started api in 8080"))
 
 
 app.post("/vote", (req: Request, res: Response) => {
-    return console.log(JSON.parse(req.body))
+    if (!req.headers.authorization || req.headers.authorization !== config.dbl_webhook_token) {
+        return res.status(401);
+    }
+    const body = JSON.parse(req.body)
+    console.log(body)
+    return res.status(200)
 })
 
