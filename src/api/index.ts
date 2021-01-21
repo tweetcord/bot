@@ -12,8 +12,10 @@ app.post("/vote", (req: Request, res: Response) => {
     if (!req.headers.authorization || req.headers.authorization !== config.dbl_webhook_token) {
         return res.status(401);
     }
-    // const body = JSON.parse(req.body)
-    console.log(req.headers)
+    
+    const body = JSON.parse(req.body)
+    console.log(req.body, body)
+    
     return res.status(200)
 })
 
