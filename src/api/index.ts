@@ -1,5 +1,7 @@
 import express, { Request, Response } from "express";
 import morgan from "morgan";
+import * as config from "../Config"
+
 
 const app = express()
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
@@ -7,8 +9,6 @@ app.listen(8080, () => console.log("Started api in 8080"))
 
 
 app.post("/vote", (req: Request, res: Response) => {
-    console.log("asd")
-    return console.log(req.body)
+    return console.log(JSON.parse(req.body))
 })
 
-app.get("/test", (req, res) => { res.json({"sa":"as"}) })
