@@ -7,6 +7,7 @@ app.listen(8080, () => console.log("Started api in 8080"))
 
 
 app.post("/vote", (req: Request, res: Response) => {
+    console.log("asd")
     return console.log(req.body)
 })
 
