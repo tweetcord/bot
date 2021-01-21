@@ -6,7 +6,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.listen(8080, () => console.log("Started api in 8080"))
 
 
-app.get("/vote", (req: Request, res: Response) => {
+app.post("/vote", (req: Request, res: Response) => {
     return console.log(req.body)
 })
 
