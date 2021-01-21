@@ -1,4 +1,4 @@
-import { MessageEmbed, PermissionResolvable } from "discord.js";
+import { MessageEmbed, PermissionResolvable, Snowflake } from "discord.js";
 
 export interface Options {
     token: string;
@@ -20,4 +20,12 @@ export interface CommandOptions {
 export interface EventOptions {
     name: string,
     type: "on" | "once"
+}
+
+export interface TopGGVote {
+    bot: Snowflake
+    user: Snowflake
+    type: string
+    query: string
+    isWeekend: boolean
 }

@@ -2,7 +2,8 @@ import express, { Request, Response } from "express";
 import morgan from "morgan";
 import bodyparser from "body-parser"
 import * as config from "../Config"
-
+import { TopGGVote } from "../components/Types";
+import axios from "axios"
 
 const app = express()
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
@@ -16,8 +17,22 @@ app.post("/vote", (req: Request, res: Response) => {
         return res.status(401);
     }
     
-    console.log(req.body)
-    
-    return res.status(200)
+    const data: TopGGVote = req.body;
+
+
+    axios({
+        url: config.vote_webhook,
+        method: "POST",
+        data: {
+            content: `<@${data.user}> (\`\`${data.user}\`\`) just voted.`,
+            username: "top.gg",
+            avatar_url: "https://cdn.discordapp.com/icons/264445053596991498/a_a8aec6ad1a286d0cfeae8845886dfe2a.png"
+        }
+    }).then(() => {
+        return res.status(200)
+    }).catch(err => {
+        console.error(err)
+        return res.status(500)
+    })
 })
 
