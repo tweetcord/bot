@@ -11,3 +11,4 @@ app.post("/vote", (req: Request, res: Response) => {
     return console.log(req.body)
 })
 
+app.get("/test", (req, res) => { res.json({"sa":"as"}) })
