@@ -13,7 +13,7 @@ app.post("/vote", (req: Request, res: Response) => {
         return res.status(401);
     }
     // const body = JSON.parse(req.body)
-    console.log(req)
+    console.log(req.body)
     return res.status(200)
 })
 
