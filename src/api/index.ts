@@ -6,6 +6,7 @@ import * as config from "../Config"
 
 const app = express()
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+
 app.use(bodyparser.json())
 app.listen(8080, () => console.log("Started api in 8080"))
 
@@ -15,7 +16,6 @@ app.post("/vote", (req: Request, res: Response) => {
         return res.status(401);
     }
     
-    const body = JSON.parse(req.body)
     console.log(req.body)
     
     return res.status(200)
