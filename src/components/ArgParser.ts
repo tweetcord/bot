@@ -19,7 +19,7 @@ export default class ArgumentParser {
                 ["「", "」"]
             ]);
 
-        const lout = lexer.lexCommand(s => s.startsWith('!') ? 1 : null);
+        const lout = lexer.lexCommand(s => s.startsWith('tw') ? 2 : null);
         if (lout == null) {
             return null;
         }

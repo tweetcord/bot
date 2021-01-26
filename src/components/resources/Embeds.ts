@@ -1,3 +1,6 @@
+import { MessageEmbed, Util } from "discord.js"
+import { FullUser } from "twitter-d"
+
 export default class Embeds {
      public static nsfw() {
         return {
@@ -11,6 +14,18 @@ export default class Embeds {
             "image": {
                 "url": "https://i.imgur.com/W1XfLOe.gif"
 
+            }
+        }
+    }
+    public static user(data: FullUser) {
+        return {
+            "author": {
+                "name": data.screen_name,
+                "iconURL": data.profile_image_url_https.replace("_normal", "")
+            },
+            "title": Util.escapeMarkdown(data.name),
+            "thumbnail": {
+                "url": data.profile_image_url_https.replace("_normal", "")
             }
         }
     }

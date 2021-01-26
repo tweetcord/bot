@@ -1,8 +1,8 @@
 import { Client, Message } from "discord.js";
-import Command from "../components/Command";
+import Command from "../../components/Command";
 import { inspect, promisify } from "util";
 import { exec } from "child_process";
-import util from "../components/Util";
+import util from "../../components/Util";
 const execute = promisify(exec)
 export default class Eval extends Command {
     constructor(client: Client) {

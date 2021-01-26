@@ -1,5 +1,5 @@
 import { Client, Message } from "discord.js";
-import Command from "../components/Command";
+import Command from "../../components/Command";
 
 export default class Ping extends Command {
     constructor(client: Client) {

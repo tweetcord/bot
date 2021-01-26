@@ -10,12 +10,14 @@ import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import * as emojis from "./resources/Emojis"
 import { StatsD } from "hot-shots";
+import Twitter from "twitter-lite"
 
 export default class Tweetcord extends Client {
     config: Options;
     logger: any
-    commands: Collection<string, Command>;  
+    commands: Collection<string, Command>;
     ddog: StatsD
+    twitter: Twitter
     constructor(options: Options, clientOptions: ClientOptions) {
         super(clientOptions);
         this.config = options;
@@ -25,7 +27,12 @@ export default class Tweetcord extends Client {
             port: 8080,
             errorHandler: Sentry.captureException
         })
-
+        this.twitter = new Twitter({
+            consumer_key: 'akDdJn4rNUlmKywGt15bJmscD',
+            consumer_secret: 'd7GUatwC2g7wWRtKRhe253NFJjqCN6rRbxHzUqo1gvLNz62B4H',
+            access_token_key: '4061434829-brpl5WlaDyol0p2WrzFLghMVtKo3xu5h35MC44T',
+            access_token_secret: 'ON1vIv7qrGjg4Yl6nW1b3MaOT10lkE8aOBZ56zukcSYau'
+        })
     }
     private handleMessage(message: Message) {
         this.ddog.increment("messages")
@@ -41,7 +48,6 @@ export default class Tweetcord extends Client {
             if (cmd.ownerOnly && message.author.id !== this.config.owner) {
                 return message.channel.send(`${emojis.X} This command is restricted to bot developers.`)
             }
-
             try {
                 this.ddog.increment("commandExecuted")
                 return cmd.run(message, args)
