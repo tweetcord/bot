@@ -12,7 +12,7 @@ export default class ArgumentParser {
     }
 
     public parse(s: string) {
-        const lexer = new Lexer()
+        const lexer = new Lexer(this.message.content)
             .setQuotes([
                 ['"', '"'],
                 ['“', '”'],

@@ -9,6 +9,10 @@ const client = new Tweetcord({
     sentry: config.sentry,
     owner: "534099893979971584",
 }, {
+    cacheEmojis: false,
+    cacheOverwrites: false,
+    cacheChannels: false,
+    cacheRoles: false,
     presence: {
         activity: {
             name: 'new things',

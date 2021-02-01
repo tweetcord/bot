@@ -10,10 +10,9 @@ export class TwitterClient extends Twitter {
         })
     }
     public async getUser(options: Object): Promise<any> {
-        const { data } = await this.get("users/lookup", options)
+        const data = await this.get("users/lookup", options)
         if (!data) return "No users with this name";
 
         return embeds.user(data)
-
     }
 }
