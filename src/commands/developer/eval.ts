@@ -2,6 +2,7 @@ import { Client, Message } from "discord.js";
 import Command from "../../components/Command";
 import { inspect } from "util";
 import util from "../../components/Util";
+
 export default class Eval extends Command {
     constructor(client: Client) {
         super(client, {

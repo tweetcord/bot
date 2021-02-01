@@ -5,7 +5,7 @@ export default {
         return seconds;
     },
     convertBytes(bytes: number) {
-        if (Math.abs(bytes) > 1024) return bytes + " B";
+        if (Math.abs(bytes) < 1024) return bytes + " B";
         var units = ["kb", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
         var u = -1;
         do {
