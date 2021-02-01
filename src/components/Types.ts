@@ -1,4 +1,4 @@
-import { MessageEmbed, PermissionResolvable, Snowflake } from "discord.js";
+import { MessageEmbed, PermissionResolvable, Permissions, Snowflake } from "discord.js";
 
 export interface Options {
     token: string;
@@ -13,8 +13,8 @@ export interface CommandOptions {
     nsfwOnly?: Boolean;
     ownerOnly?: Boolean;
     supportServerOnly?: Boolean;
-    userPermissions?: PermissionResolvable;
-    botPermissions?: PermissionResolvable;    
+    userPermissions?: PermissionResolvable[]
+    botPermissions?: PermissionResolvable[];    
 }
 
 export interface EventOptions {

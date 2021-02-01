@@ -8,7 +8,7 @@ export default class Eval extends Command {
     constructor(client: Client) {
         super(client, {
             triggers: ["exec", "ex"],
-            ownerOnly: true
+            ownerOnly: true,
         });
     }
     public async run(message: Message, args: string[]): Promise<Message | Message[]> {

@@ -1,5 +1,4 @@
 import { Client, Message } from "discord.js";
-import { isValidUsername } from "twitter-text";
 import { Lexer, Parser, prefixedStrategy, Args } from "lexure"
 
 

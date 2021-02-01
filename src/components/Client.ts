@@ -19,6 +19,7 @@ export default class Tweetcord extends Client {
     commands: Collection<string, Command>;
     ddog: StatsD
     twitter: Twitter
+
     constructor(options: Options, clientOptions: ClientOptions) {
         super(clientOptions);
         this.config = options;
@@ -43,6 +44,9 @@ export default class Tweetcord extends Client {
             }
             if (cmd.ownerOnly && message.author.id !== this.config.owner) {
                 return message.channel.send(`${emojis.X} This command is restricted to bot developers.`)
+            }
+            if (new Array(cmd.botPermissions).length) {
+                
             }
             try {
                 this.ddog.increment("commandExecuted")

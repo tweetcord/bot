@@ -7,8 +7,8 @@ class Command {
     ownerOnly: Boolean;
     supportServerOnly: Boolean;
     help: any;
-    userPermissions: PermissionResolvable;
-    botPermissions: PermissionResolvable;
+    userPermissions: PermissionResolvable | PermissionResolvable[];
+    botPermissions: PermissionResolvable | PermissionResolvable[];
 
     constructor(client: Client, options: CommandOptions) {
         this.bot = client
