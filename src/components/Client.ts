@@ -12,6 +12,7 @@ import * as emojis from "./resources/Emojis"
 import { StatsD } from "hot-shots";
 import Twitter from "twitter-lite"
 import { TwitterClient } from "./Twitter"
+
 export default class Tweetcord extends Client {
     config: Options;
     logger: any

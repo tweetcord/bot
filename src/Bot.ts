@@ -10,9 +10,10 @@ const client = new Tweetcord({
     owner: "534099893979971584",
 }, {
     cacheEmojis: false,
-    cacheOverwrites: false,
+    cacheOverwrites: true,
     cacheChannels: false,
     cacheRoles: false,
+    cachePresences: false,
     presence: {
         activity: {
             name: 'new things',

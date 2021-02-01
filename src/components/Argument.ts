@@ -11,7 +11,7 @@ export default class ArgumentParser {
         this.bot = bot
     }
 
-    public parse(s: string) {
+    public parse() {
         const lexer = new Lexer(this.message.content)
             .setQuotes([
                 ['"', '"'],
