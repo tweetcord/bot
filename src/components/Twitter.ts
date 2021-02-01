@@ -1,6 +1,4 @@
 import Twitter from "twitter-lite"
-import { User } from "twitter-d";
-import { MessageEmbed } from "discord.js";
 import embeds from "./resources/Embeds";
 export class TwitterClient extends Twitter {
     constructor() {
