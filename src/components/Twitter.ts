@@ -13,6 +13,6 @@ export class TwitterClient extends Twitter {
         const data = await this.get("users/lookup", options)
         if (!data) return "No users with this name";
 
-        return embeds.user(data)
+        return embeds.user(data[0])
     }
 }
