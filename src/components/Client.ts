@@ -45,11 +45,9 @@ export default class Tweetcord extends Client {
             if (cmd.ownerOnly && message.author.id !== this.config.owner) {
                 return message.channel.send(`${emojis.X} This command is restricted to bot developers.`)
             }
-            if (new Array(cmd.botPermissions).length) {
-                
-            }
             try {
                 this.ddog.increment("commandExecuted")
+                console.log(cmd.botPermissions);
                 return cmd.run(message, args)
             } catch (e) {
                 Sentry.captureException(e)
