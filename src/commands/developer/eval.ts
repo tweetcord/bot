@@ -27,7 +27,6 @@ export default class Eval extends Command {
                 split: true
             })
         } catch (error) {
-            console.log("error");
             return message.channel.send(error.message, {
                 split: true
             })

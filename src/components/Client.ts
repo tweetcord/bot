@@ -59,7 +59,6 @@ export default class Tweetcord extends Client {
                 `)
             }
             try {
-                console.log(cmd.botPermissions);
                 return cmd.run(message, args)
             } catch (e) {
                 Sentry.captureException(e)
