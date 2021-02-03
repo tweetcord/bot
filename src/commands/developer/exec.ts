@@ -9,7 +9,6 @@ export default class Eval extends Command {
         super(client, {
             triggers: ["exec", "ex"],
             ownerOnly: true,
-            botPermissions: ["ADMINISTRATOR", "MANAGE_CHANNELS"]
         });
     }
     public async run(message: Message, args: string[]): Promise<Message | Message[]> {
