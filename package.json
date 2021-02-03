@@ -8,7 +8,8 @@
   "private": true,
   "scripts": {
     "build": "yarn --silent && tsc",
-    "start": "yarn build && cd dist/ && node Bot.js"
+    "start": "yarn build && cd dist/ && node Bot.js",
+    "update": "git pull && pm2 restart 2 && pm2 logs 2"
   },
   "dependencies": {
     "@sentry/node": "^6.0.4",
