@@ -1,4 +1,4 @@
-import { Client, ClientOptions, Collection, Message, TextChannel } from "discord.js-light";
+import { Client, ClientOptions, Collection, Message, PermissionResolvable, TextChannel } from "discord.js-light";
 import Command from "./Command";
 import Event from "./Event";
 import { resolve } from "path";
@@ -44,6 +44,16 @@ export default class Tweetcord extends Client {
             }
             if (cmd.ownerOnly && message.author.id !== this.config.owner) {
                 return message.channel.send(`${emojis.X} This command is restricted to bot developers.`)
+            }
+            if (cmd.botPermissions) {
+                const missing = []
+                for (const perm of cmd.botPermissions) {
+                    if (!message.guild.me.permissions.has(perm)) missing.push(perm)
+                }
+                return message.channel.send(`
+                ${emojis.X} I am missing following permissions to run this command:
+                 \`\`\`diff\n-${missing.map(a => a).join("\n -")}\`\`\`
+                `)
             }
             try {
                 this.ddog.increment("commandExecuted")

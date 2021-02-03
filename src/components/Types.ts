@@ -13,8 +13,8 @@ export interface CommandOptions {
     nsfwOnly?: Boolean;
     ownerOnly?: Boolean;
     supportServerOnly?: Boolean;
-    userPermissions?: PermissionResolvable[]
-    botPermissions?: PermissionResolvable[];    
+    userPermissions?: Array<PermissionResolvable>
+    botPermissions?: Array<PermissionResolvable>  
 }
 
 export interface EventOptions {
