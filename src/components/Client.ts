@@ -9,7 +9,6 @@ import embeds from "./resources/Embeds"
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import * as emojis from "./resources/Emojis"
-import { StatsD } from "hot-shots";
 import Twitter from "twitter-lite"
 import { TwitterClient } from "./Twitter"
 
@@ -17,7 +16,6 @@ export default class Tweetcord extends Client {
     config: Options;
     logger: any
     commands: Collection<string, Command>;
-    ddog: StatsD
     twitter: Twitter
 
     constructor(options: Options, clientOptions: ClientOptions) {
@@ -25,14 +23,9 @@ export default class Tweetcord extends Client {
         this.config = options;
         this.logger = logger
         this.commands = new Collection()
-        this.ddog = new StatsD({
-            port: 8080,
-            errorHandler: Sentry.captureException
-        })
         this.twitter = new TwitterClient()
     }
     private handleMessage(message: Message) {
-        this.ddog.increment("messages")
         const channel = message.channel as TextChannel;
         if (!message.content.startsWith(this.config.prefix) || message.author.bot || message.webhookID) return;
         const [command, ...args] = message.content.slice(this.config.prefix.length).trim().split(/ +/g)
@@ -54,9 +47,18 @@ export default class Tweetcord extends Client {
                 ${emojis.X} I am missing following permissions to run this command:
                  \`\`\`diff\n- ${missing.map(a => a).join("\n- ")}\`\`\`
                 `)
+            } 
+            if (cmd.userPermissions) {
+                const missing = []
+                for (const perm of cmd.userPermissions) {
+                    if (!message.member.permissions.has(perm)) missing.push(perm)
+                }
+                return message.channel.send(`
+                ${emojis.X} You are missing following permissions to run this command:
+                 \`\`\`diff\n- ${missing.map(a => a).join("\n- ")}\`\`\`
+                `)
             }
             try {
-                this.ddog.increment("commandExecuted")
                 console.log(cmd.botPermissions);
                 return cmd.run(message, args)
             } catch (e) {
