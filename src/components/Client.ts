@@ -52,7 +52,7 @@ export default class Tweetcord extends Client {
                 }
                 return message.channel.send(`
                 ${emojis.X} I am missing following permissions to run this command:
-                 \`\`\`diff\n- ${missing.map(a => a).join("\n -")}\`\`\`
+                 \`\`\`diff\n- ${missing.map(a => a).join("\n- ")}\`\`\`
                 `)
             }
             try {
