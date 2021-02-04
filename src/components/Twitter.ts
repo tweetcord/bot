@@ -1,6 +1,8 @@
 import Twitter from "twitter-lite"
 import embeds from "./resources/Embeds";
-export class TwitterClient extends Twitter {
+
+
+export default class TwitterClient extends Twitter {
     constructor() {
         super({
             consumer_key: 'akDdJn4rNUlmKywGt15bJmscD',
@@ -12,7 +14,7 @@ export class TwitterClient extends Twitter {
     public async getUser(options: Object): Promise<any> {
         const data = await this.get("users/lookup", options)
         if (!data) return "No users with this name";
-
         return embeds.user(data[0])
     }
+
 }

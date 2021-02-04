@@ -2,9 +2,9 @@ import { MessageEmbed, PermissionResolvable, Permissions, Snowflake } from "disc
 
 export interface Options {
     token: string;
-    owner: string | Array<string>;
-    prefix: string;
-    sentry: string;
+    owner?: string | Array<string>;
+    prefix?: string;
+    sentry?: string;
 }
 
 export interface CommandOptions {

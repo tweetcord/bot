@@ -1,7 +1,9 @@
 import { Client, Message, PermissionResolvable } from "discord.js";
+import Tweetcord from "./Client";
 import { CommandOptions } from "./Types";
+
 class Command {
-    bot: Client;
+    bot: Tweetcord;
     triggers: string[];
     nsfwOnly: Boolean;
     ownerOnly: Boolean;
@@ -10,7 +12,7 @@ class Command {
     userPermissions: Array<PermissionResolvable>;
     botPermissions: Array<PermissionResolvable>
 
-    constructor(client: Client, options: CommandOptions) {
+    constructor(client: Tweetcord, options: CommandOptions) {
         this.bot = client
         this.triggers = options.triggers;
         this.nsfwOnly = options.nsfwOnly;

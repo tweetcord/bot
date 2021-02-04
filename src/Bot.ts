@@ -1,14 +1,8 @@
 import Tweetcord from "./components/Client";
-import * as config from "./Config"
 
 require("./api/index")
 
 const client = new Tweetcord({
-    prefix: "!t",
-    token: config.token,
-    sentry: config.sentry,
-    owner: "534099893979971584",
-}, {
     cacheEmojis: false,
     cacheOverwrites: true,
     cacheChannels: false,
