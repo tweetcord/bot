@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import morgan from "morgan";
 import bodyparser from "body-parser"
-import * as config from "../Config"
 import { TopGGVote } from "../components/Types";
 import axios from "axios"
 
@@ -11,7 +10,7 @@ app.listen(8080, () => console.log("Started api in 8080"))
 
 
 app.post("/vote", (req: Request, res: Response) => {
-    if (!req.headers.authorization || req.headers.authorization !== config.dbl_webhook_token) {
+    if (!req.headers.authorization || req.headers.authorization !== process.env.DBL_WEBHOOK_TOKEN) {
         return res.status(401);
     }
     
@@ -19,7 +18,7 @@ app.post("/vote", (req: Request, res: Response) => {
 
 
     axios({
-        url: config.vote_webhook,
+        url: process.env.VOTE_WEBHOOK,
         method: "POST",
         data: {
             content: `<@${data.user}> (\`${data.user}\`) just voted.`,
