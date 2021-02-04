@@ -10,10 +10,11 @@ import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import * as emojis from "./resources/Emojis"
 import TwitterClient  from "./Twitter"
-import {config} from "dotenv"
+import { config } from "dotenv"
 
 config({
-    path: "../.env"
+    path: "../.env",
+    debug: true
 })
 
 export default class Tweetcord extends Client {
@@ -122,8 +123,6 @@ export default class Tweetcord extends Client {
         this.on("message", this.handleMessage)
         this.loadCommands(resolve("commands"))
         this.loadEvents(resolve("events"))
-        console.log(process.env)
-        console.log(require("../.env"))
         this.login(process.env.DISCORD_TOKEN)
     }
 
