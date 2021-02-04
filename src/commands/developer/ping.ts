@@ -2,7 +2,7 @@ import { Client, Message } from "discord.js";
 import Command from "../../components/Command";
 
 export default class Ping extends Command {
-    constructor(client: Client) {
+    constructor(client) {
         super(client, {
             triggers: ["ping", "latency"],
         });

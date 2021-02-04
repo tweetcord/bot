@@ -1,8 +1,7 @@
 import { Client, Message } from "discord.js";
-import Tweetcord from "../../components/Client";
 import Command from "../../components/Command";
 export default class User extends Command {
-    constructor(client: Tweetcord) {
+    constructor(client) {
         super(client, {
             triggers: ["user", "u"],
             nsfwOnly: true

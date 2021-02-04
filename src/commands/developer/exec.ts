@@ -5,7 +5,7 @@ import { exec } from "child_process";
 import util from "../../components/Util";
 const execute = promisify(exec)
 export default class Eval extends Command {
-    constructor(client: Client) {
+    constructor(client) {
         super(client, {
             triggers: ["exec", "ex"],
             ownerOnly: true,

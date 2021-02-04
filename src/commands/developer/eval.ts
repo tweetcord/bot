@@ -4,7 +4,7 @@ import { inspect } from "util";
 import util from "../../components/Util";
 
 export default class Eval extends Command {
-    constructor(client: Client) {
+    constructor(client) {
         super(client, {
             triggers: ["eval", "e"],
             ownerOnly: true

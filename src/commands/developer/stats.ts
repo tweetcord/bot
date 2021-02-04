@@ -2,7 +2,7 @@ import { Client, Message } from "discord.js";
 import Command from "../../components/Command";
 import util from "../../components/Util";
 export default class Stats extends Command {
-    constructor(client: Client) {
+    constructor(client) {
         super(client, {
             triggers: ["stats", "botinfo"],
         });
