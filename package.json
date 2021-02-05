@@ -12,7 +12,7 @@
     "update": "git pull && pm2 restart 2 && pm2 logs 2"
   },
   "dependencies": {
-    "@sentry/node": "^6.0.4",
+    "@sentry/node": "^6.1.0",
     "@sentry/tracing": "^6.0.4",
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
