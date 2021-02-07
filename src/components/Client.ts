@@ -123,6 +123,7 @@ export default class Tweetcord extends Client {
         this.on("message", this.handleMessage)
         this.loadCommands(resolve("commands"))
         this.loadEvents(resolve("events"))
+        console.log(process.env.DISCORD_TOKEN);
         this.login(process.env.DISCORD_TOKEN)
     }
 
