@@ -6,7 +6,7 @@ import axios from "axios"
 
 const app = express()
 app.use(bodyparser.json())
-app.listen(8080, () => console.log("Started api in 8080"))
+app.listen(8000, () => console.log("Started api in 8080"))
 
 
 app.post("/vote", (req: Request, res: Response) => {
