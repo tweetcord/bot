@@ -820,10 +820,10 @@ twitter-d@^0.4.0:
   resolved "https://registry.yarnpkg.com/twitter-d/-/twitter-d-0.4.0.tgz#3b7e2dd480c38699f4199124b77511c6f7bc8e29"
   integrity sha512-t8z7qqq0yt1dD7BUISRvASw9mtYRMSTTVzmkvjz8oM9ZN++LEC6Ix8WEXZS0RtswnGgwdSPTxY9qyHcYgPexdA==
 
-twitter-lite@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/twitter-lite/-/twitter-lite-0.14.0.tgz#5ec32d31e693007572d060858f2746ac8aed1a7d"
-  integrity sha512-AP7jnuEBIMA18fi3IDWT7fTOJVpZrl1ZwJKunGf2iknKv5BH4mpwBvJmu3RP59XHZFL3ckUcGGRw/INVRikBBg==
+twitter-lite@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/twitter-lite/-/twitter-lite-1.1.0.tgz#77f250cc73f14ecc5a493ddb81ff0a3e9ae72680"
+  integrity sha512-v37I0zyYXjn3/zdm/ii+1RiBFZ2SCB3wLl1N5nfW8TUqoNDYBR66oXBFbQavKEvjg5WqcTUzNhAhe6FkgylPsw==
   dependencies:
     cross-fetch "^3.0.0"
     oauth-1.0a "^2.2.4"

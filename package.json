@@ -23,7 +23,7 @@
     "express": "^4.17.1",
     "hot-shots": "^8.3.0",
     "lexure": "^0.17.0",
-    "twitter-lite": "^0.14.0",
+    "twitter-lite": "^1.1.0",
     "twitter-text": "^3.1.0"
   },
   "devDependencies": {
