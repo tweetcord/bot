@@ -13,12 +13,11 @@ import TwitterClient  from "./Twitter"
 import { config } from "dotenv"
 
 config({
-    path: "../.env",
+    path: "../",
     debug: true
 })
 
 export default class Tweetcord extends Client {
-    config: Options;
     logger: any
     commands: Collection<string, Command>;
     twitter: TwitterClient
