@@ -357,10 +357,10 @@ destroy@~1.0.4:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
 
-discord.js-light@^3.5.2:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/discord.js-light/-/discord.js-light-3.5.2.tgz#8891bc57e7fd398595c567f4f3d3b14fc2a5344e"
-  integrity sha512-r45keJ9+J4ynJn3r8AGfKe3DnwlMJdsVKzjtMYxRoRiNLRgSNoswil0tjiOy/E0WiPfETqpy9sHZ8/+2dObzzw==
+discord.js-light@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/discord.js-light/-/discord.js-light-3.5.3.tgz#54f44deb46c701bb13986beda80ae83f81a62278"
+  integrity sha512-LyB+UHEOkl6A2bd16VnBKfgRX3+6FE1IdS4mTTEfAIlODFwha9sz7/RedsK/RApo8JDqLwBNTDgI0m2KY4f87A==
   dependencies:
     discord.js "12.5.1"
 
@@ -820,10 +820,10 @@ twitter-d@^0.4.0:
   resolved "https://registry.yarnpkg.com/twitter-d/-/twitter-d-0.4.0.tgz#3b7e2dd480c38699f4199124b77511c6f7bc8e29"
   integrity sha512-t8z7qqq0yt1dD7BUISRvASw9mtYRMSTTVzmkvjz8oM9ZN++LEC6Ix8WEXZS0RtswnGgwdSPTxY9qyHcYgPexdA==
 
-twitter-lite@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/twitter-lite/-/twitter-lite-0.14.0.tgz#5ec32d31e693007572d060858f2746ac8aed1a7d"
-  integrity sha512-AP7jnuEBIMA18fi3IDWT7fTOJVpZrl1ZwJKunGf2iknKv5BH4mpwBvJmu3RP59XHZFL3ckUcGGRw/INVRikBBg==
+twitter-lite@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/twitter-lite/-/twitter-lite-1.1.0.tgz#77f250cc73f14ecc5a493ddb81ff0a3e9ae72680"
+  integrity sha512-v37I0zyYXjn3/zdm/ii+1RiBFZ2SCB3wLl1N5nfW8TUqoNDYBR66oXBFbQavKEvjg5WqcTUzNhAhe6FkgylPsw==
   dependencies:
     cross-fetch "^3.0.0"
     oauth-1.0a "^2.2.4"
