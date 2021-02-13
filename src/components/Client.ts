@@ -11,7 +11,7 @@ import TwitterClient from "./Twitter"
 import { config } from "dotenv";
 
 config({
-    path: join("..", ".")
+    path: join("..", ".env")
 });
 
 export default class Tweetcord extends Client {
