@@ -1,13 +1,11 @@
-import { Client, ClientOptions, Collection, Message, PermissionResolvable, TextChannel } from "discord.js-light";
+import { Client, ClientOptions, Collection, Message, TextChannel } from "discord.js-light";
 import Command from "./Command";
 import Event from "./Event";
 import { resolve } from "path";
 import { statSync, readdir } from "fs";
-import { Options } from "./Types";
 import * as logger from "./Logger";
 import embeds from "./resources/Embeds"
 import * as Sentry from '@sentry/node';
-import * as Tracing from '@sentry/tracing';
 import * as emojis from "./resources/Emojis"
 import TwitterClient  from "./Twitter"
 
@@ -116,7 +114,7 @@ export default class Tweetcord extends Client {
         this.on("message", this.handleMessage)
         this.loadCommands(resolve("commands"))
         this.loadEvents(resolve("events"))
-        console.log(process.env.DISCORD_TOKEN);
+        console.log(process.env);
         this.login(process.env.DISCORD_TOKEN)
     }
 
