@@ -13,7 +13,6 @@ import TwitterClient  from "./Twitter"
 import { config } from "dotenv"
 
 config({
-    path: "../",
     debug: true
 })
 

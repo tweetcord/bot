@@ -1,7 +1,6 @@
 import Twitter from "twitter-lite"
 import embeds from "./resources/Embeds";
 
-
 export default class TwitterClient extends Twitter {
     constructor() {
         super({
