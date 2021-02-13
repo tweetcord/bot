@@ -8,11 +8,8 @@ import embeds from "./resources/Embeds"
 import * as Sentry from '@sentry/node';
 import * as emojis from "./resources/Emojis"
 import TwitterClient from "./Twitter"
-import { config } from "dotenv";
+// import * as config from "../config.json";
 
-config({
-    path: join("..", ".env")
-});
 
 export default class Tweetcord extends Client {
     logger: any

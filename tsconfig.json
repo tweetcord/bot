@@ -19,6 +19,7 @@
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+        "resolveJsonModule": true,
     },
     "include": [
         "src/**/*"
