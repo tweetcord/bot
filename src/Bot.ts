@@ -1,6 +1,11 @@
 import Tweetcord from "./components/Client";
+import { config } from "dotenv"
 
 require("./api/index")
+config({
+    path: "../",
+    debug: true
+})
 
 const client = new Tweetcord({
     cacheEmojis: false,

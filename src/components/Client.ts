@@ -10,12 +10,6 @@ import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import * as emojis from "./resources/Emojis"
 import TwitterClient  from "./Twitter"
-import { config } from "dotenv"
-
-config({
-    path: "../",
-    debug: true
-})
 
 export default class Tweetcord extends Client {
     logger: any
