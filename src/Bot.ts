@@ -3,7 +3,6 @@ import { config } from "dotenv"
 
 require("./api/index")
 config({
-    path: "../",
     debug: true
 })
 
