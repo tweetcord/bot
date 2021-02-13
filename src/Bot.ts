@@ -1,7 +1,8 @@
+require("./api/index")
+
 import Tweetcord from "./components/Client";
 import { config } from "dotenv"
 
-require("./api/index")
 config({
     debug: true
 })
