@@ -10,6 +10,9 @@ import * as emojis from "./resources/Emojis"
 import TwitterClient from "./Twitter"
 // import * as config from "../config.json";
 
+import env from "dotenv-json"
+
+env()
 
 export default class Tweetcord extends Client {
     logger: any
@@ -112,12 +115,12 @@ export default class Tweetcord extends Client {
     }
 
     public init() {
-        Sentry.init({ dsn: process.env.SENTRY, tracesSampleRate: 0.2 })
+        Sentry.init({ dsn: process.env.sentry, tracesSampleRate: 0.2 })
         this.on("message", this.handleMessage)
         this.loadCommands(resolve("commands"))
         this.loadEvents(resolve("events"))
-        console.log(process.env);
-        this.login(process.env.DISCORD_TOKEN)
+       // console.log(process.env);
+        this.login(process.env.discord_token)
     }
 
 }
