@@ -1,13 +1,18 @@
 import { Client, ClientOptions, Collection, Message, TextChannel } from "discord.js-light";
 import Command from "./Command";
 import Event from "./Event";
-import { resolve } from "path";
+import { join, resolve } from "path";
 import { statSync, readdir } from "fs";
 import * as logger from "./Logger";
 import embeds from "./resources/Embeds"
 import * as Sentry from '@sentry/node';
 import * as emojis from "./resources/Emojis"
-import TwitterClient  from "./Twitter"
+import TwitterClient from "./Twitter"
+import { config } from "dotenv";
+
+config({
+    path: join("..", ".")
+});
 
 export default class Tweetcord extends Client {
     logger: any
@@ -43,7 +48,7 @@ export default class Tweetcord extends Client {
                 ${emojis.X} I am missing following permissions to run this command:
                  \`\`\`diff\n- ${missing.map(a => a).join("\n- ")}\`\`\`
                 `)
-            } 
+            }
             if (cmd.userPermissions) {
                 const missing = []
                 for (const perm of cmd.userPermissions) {
