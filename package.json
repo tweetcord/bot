@@ -1,15 +1,16 @@
 {
   "name": "tweetcord",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/Bot.js",
   "repository": "https://github.com/tweetcord/bot",
   "author": "https://github.com/NMW03",
   "license": "MIT",
   "private": true,
   "scripts": {
     "build": "yarn --silent && tsc",
-    "start": "yarn build && cd dist/ && node Bot.js",
-    "update": "git pull && yarn start && pm2 restart 2 && pm2 logs 2"
+    "start": "rm dist/ && yarn build && node dist/Bot.js",
+    "update": "git pull && yarn start && pm2 restart 2 && pm2 logs 2",
+    "dev": "devScript"
   },
   "dependencies": {
     "@sentry/node": "^6.1.0",
@@ -19,6 +20,7 @@
     "chalk": "^4.1.0",
     "discord.js": "^12.5.1",
     "discord.js-light": "^3.5.3",
+    "dotenv": "^8.2.0",
     "dotenv-json": "^1.0.0",
     "express": "^4.17.1",
     "hot-shots": "^8.3.0",
