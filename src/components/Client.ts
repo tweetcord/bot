@@ -9,6 +9,7 @@ import * as Sentry from '@sentry/node';
 import * as emojis from "./resources/Emojis"
 import TwitterClient from "./Twitter"
 import * as dotenv from "dotenv";
+import ArgumentParser from "./Argument";
 
 dotenv.config()
 
@@ -26,9 +27,13 @@ export default class Tweetcord extends Client {
     private handleMessage(message: Message) {
         const channel = message.channel as TextChannel;
         if (!message.content.startsWith("t.") || message.author.bot || message.webhookID) return;
+        const parser = new ArgumentParser(message, this)
+
         const owners = ["534099893979971584", "548547460276944906"]
         const [command, ...args] = message.content.slice(2).trim().split(/ +/g)
+        // const [command, ...args] = parser.parse()
         const cmd: Command = this.findCommand(command)
+        
         if (cmd) {
             if (cmd.nsfwOnly && !channel.nsfw && !owners.includes(message.author.id)) {
                 const embed = embeds.nsfw()
@@ -42,7 +47,7 @@ export default class Tweetcord extends Client {
                 for (const perm of cmd.botPermissions) {
                     if (!message.guild.me.permissions.has(perm)) missing.push(perm)
                 }
-                return message.channel.send(`
+                if (missing.length > 0) return message.channel.send(`
                 ${emojis.X} I am missing following permissions to run this command:
                  \`\`\`diff\n- ${missing.map(a => a).join("\n- ")}\`\`\`
                 `)
@@ -52,7 +57,7 @@ export default class Tweetcord extends Client {
                 for (const perm of cmd.userPermissions) {
                     if (!message.member.permissions.has(perm)) missing.push(perm)
                 }
-                return message.channel.send(`
+                if (missing.length > 0) return message.channel.send(`
                 ${emojis.X} You are missing following permissions to run this command:
                  \`\`\`diff\n- ${missing.map(a => a).join("\n- ")}\`\`\`
                 `)
@@ -115,9 +120,9 @@ export default class Tweetcord extends Client {
     public init() {
         Sentry.init({ dsn: process.env.sentry, tracesSampleRate: 0.2 })
         this.on("message", this.handleMessage)
-        this.loadCommands(resolve("commands"))
-        this.loadEvents(resolve("events"))
-       // console.log(process.env);
+        this.loadCommands(resolve("src/commands"))
+        this.loadEvents(resolve("src/events"))
+        console.log(process.env.SENTRY);
         this.login(process.env.discord_token)
     }
 
