@@ -8,10 +8,7 @@ import embeds from "./resources/Embeds"
 import * as Sentry from '@sentry/node';
 import * as emojis from "./resources/Emojis"
 import TwitterClient from "./Twitter"
-import * as dotenv from "dotenv";
 import ArgumentParser from "./Argument";
-
-dotenv.config()
 
 export default class Tweetcord extends Client {
     logger: any
@@ -27,7 +24,7 @@ export default class Tweetcord extends Client {
     private handleMessage(message: Message) {
         const channel = message.channel as TextChannel;
         if (!message.content.startsWith("t.") || message.author.bot || message.webhookID) return;
-        const parser = new ArgumentParser(message, this)
+        // const parser = new ArgumentParser(message, this)
 
         const owners = ["534099893979971584", "548547460276944906"]
         const [command, ...args] = message.content.slice(2).trim().split(/ +/g)
@@ -120,8 +117,8 @@ export default class Tweetcord extends Client {
     public init() {
         Sentry.init({ dsn: process.env.sentry, tracesSampleRate: 0.2 })
         this.on("message", this.handleMessage)
-        this.loadCommands(resolve("commands"))
-        this.loadEvents(resolve("events"))
+        this.loadCommands("../commands")
+        this.loadEvents("../events")
         console.log(process.env.SENTRY);
         this.login(process.env.discord_token)
     }

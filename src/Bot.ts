@@ -1,6 +1,8 @@
 import Tweetcord from "./components/Client";
+import * as dotenv from "dotenv";
 require("./api/index")
 
+dotenv.config()
 
 const client = new Tweetcord({
     cacheEmojis: false,
