@@ -120,8 +120,8 @@ export default class Tweetcord extends Client {
     public init() {
         Sentry.init({ dsn: process.env.sentry, tracesSampleRate: 0.2 })
         this.on("message", this.handleMessage)
-        this.loadCommands(resolve("src/commands"))
-        this.loadEvents(resolve("src/events"))
+        this.loadCommands(resolve("commands"))
+        this.loadEvents(resolve("events"))
         console.log(process.env.SENTRY);
         this.login(process.env.discord_token)
     }
