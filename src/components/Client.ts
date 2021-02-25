@@ -94,7 +94,7 @@ export default class Tweetcord extends Client {
 
     private loadEvents(): void {
         try {
-            const files = readdirSync(__dirname + "/events");
+            const files = readdirSync("../events");
             for (const name of files) {
                 const event: Event = new (require(`../events/${name}`).default)(this)
                 if (event.type === 'once') this.once(event.name, event.run);
