@@ -9,6 +9,7 @@ import * as Sentry from '@sentry/node';
 import * as emojis from "./resources/Emojis"
 import TwitterClient from "./Twitter"
 import ArgumentParser from "./Argument";
+import * as config from "../settings.json";
 
 export default class Tweetcord extends Client {
     logger: any
@@ -24,7 +25,7 @@ export default class Tweetcord extends Client {
     private handleMessage(message: Message) {
         const channel = message.channel as TextChannel;
         if (!message.content.startsWith("t.") || message.author.bot || message.webhookID) return;
-        // const parser = new ArgumentParser(message, this)
+        // const parser = new ArgumentParsr(message, this)
 
         const owners = ["534099893979971584", "548547460276944906"]
         const [command, ...args] = message.content.slice(2).trim().split(/ +/g)
@@ -115,12 +116,11 @@ export default class Tweetcord extends Client {
     }
 
     public init() {
-        Sentry.init({ dsn: process.env.sentry, tracesSampleRate: 0.2 })
+        Sentry.init({ dsn: config.SENTRY, tracesSampleRate: 0.2 })
         this.on("message", this.handleMessage)
-        this.loadCommands("../commands")
-        this.loadEvents("../events")
-        console.log(process.env.SENTRY);
-        this.login(process.env.discord_token)
+        this.loadCommands("commands")
+        this.loadEvents("events")
+        this.login(config.DISCORD_TOKEN)
     }
 
 }

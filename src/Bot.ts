@@ -1,8 +1,5 @@
 import Tweetcord from "./components/Client";
-import * as dotenv from "dotenv";
 require("./api/index")
-
-dotenv.config()
 
 const client = new Tweetcord({
     cacheEmojis: false,
@@ -12,17 +9,17 @@ const client = new Tweetcord({
     cachePresences: false,
     presence: {
         activity: {
-            name: 'new things',
-            type: 'WATCHING'
+            name: 'tweets',
+            type: 'LISTENING'
         }
     },
     ws: {
         intents: 1585
     },
     restRequestTimeout: 60e3,
-    messageCacheMaxSize: 10,
-    messageCacheLifetime: 60,
-    messageSweepInterval: 120,
+    messageCacheMaxSize: 1,
+    messageCacheLifetime: 10,
+    messageSweepInterval: 15,
     messageEditHistoryMaxSize: 0,
 })
 

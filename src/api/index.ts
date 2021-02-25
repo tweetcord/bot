@@ -2,22 +2,19 @@ import express, { Request, Response } from "express";
 import bodyparser from "body-parser"
 import { TopGGVote } from "../components/Types";
 import axios from "axios"
-
+import { DBL_WEBHOOK_TOKEN, DBL_WEBHOOK } from "../settings.json";
 const app = express()
 app.use(bodyparser.json())
 app.listen(8080, () => console.log("Started api in 8080"))
 
 
 app.post("/vote", (req: Request, res: Response) => {
-    if (!req.headers.authorization || req.headers.authorization !== process.env.DBL_WEBHOOK_TOKEN) {
+    if (!req.headers.authorization || req.headers.authorization !== DBL_WEBHOOK_TOKEN) {
         return res.status(401);
     }
-    
     const data: TopGGVote = req.body;
-
-
     axios({
-        url: process.env.VOTE_WEBHOOK,
+        url: DBL_WEBHOOK,
         method: "POST",
         data: {
             content: `<@${data.user}> (\`${data.user}\`) just voted.`,
