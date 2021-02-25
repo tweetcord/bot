@@ -2,7 +2,7 @@ import { Client, ClientOptions, Collection, Message, TextChannel } from "discord
 import Command from "./Command";
 import Event from "./Event";
 import { join, resolve } from "path";
-import { statSync, readdir } from "fs";
+import { statSync, readdir, readdirSync } from "fs";
 import * as logger from "./Logger";
 import embeds from "./resources/Embeds"
 import * as Sentry from '@sentry/node';
@@ -25,13 +25,13 @@ export default class Tweetcord extends Client {
     private handleMessage(message: Message) {
         const channel = message.channel as TextChannel;
         if (!message.content.startsWith("t.") || message.author.bot || message.webhookID) return;
-        // const parser = new ArgumentParsr(message, this)
 
         const owners = ["534099893979971584", "548547460276944906"]
         const [command, ...args] = message.content.slice(2).trim().split(/ +/g)
+        // const parser = new ArgumentParsr(message, this)
         // const [command, ...args] = parser.parse()
         const cmd: Command = this.findCommand(command)
-        
+
         if (cmd) {
             if (cmd.nsfwOnly && !channel.nsfw && !owners.includes(message.author.id)) {
                 const embed = embeds.nsfw()
@@ -71,55 +71,46 @@ export default class Tweetcord extends Client {
         }
     }
 
-    private findCommand(name: string) {
+    private findCommand(name: string): Command | undefined {
         return this.commands.get(name) ?? this.commands.find(a => a.triggers.includes(name))
     }
 
-    private loadCommands(dir) {
+    private loadCommands(): void {
         try {
-            readdir(dir, (err: Error, commands) => {
-                if (err) throw err;
-                for (const commandName of commands) {
-                    const stat = statSync(dir + "/" + commandName)
-                    if (stat.isDirectory()) return this.loadCommands(dir + "/" + commandName);
-                    const path = dir + '/' + commandName;
-                    const command: Command = new (require(resolve(path)).default)(this)
+            const files = readdirSync(__dirname + "/commands");
+
+            for (const category of files) {
+                const cat = require(`../commands/${category}`)
+                cat.forEach((name: string) => {
+                    const command: Command = new (require(`../commands/${category}/${name}`).default)(this);
                     this.commands.set(command.triggers[0], command)
-                }
-                return true;
-            })
-        } catch (error) {
-            Sentry.captureException(error)
-            this.logger.error(error)
-            return false;
+                })
+            }
+        } catch (err) {
+            Sentry.captureException(err)
+            return console.error(err);
         }
     }
 
-    private loadEvents(dir) {
+    private loadEvents(): void {
         try {
-            readdir(dir, (err: Error, events) => {
-                if (err) throw err;
-                for (const eventName of events) {
-                    const path = dir + '/' + eventName;
-                    const event: Event = new (require(resolve(path)).default)(this)
-                    if (event.type === "once") this.once(event.name, event.run)
-                    this.on(event.name, event.run)
-                }
-                return true;
-            })
-
+            const files = readdirSync(__dirname + "/events");
+            for (const name of files) {
+                const event: Event = new (require(`../events/${name}`).default)(this)
+                if (event.type === 'once') this.once(event.name, event.run);
+                this.on(event.name, event.run)
+            }
         } catch (error) {
             Sentry.captureException(error)
             this.logger.error(error)
-            return false;
         }
     }
 
     public init() {
         Sentry.init({ dsn: config.SENTRY, tracesSampleRate: 0.2 })
         this.on("message", this.handleMessage)
-        this.loadCommands("commands")
-        this.loadEvents("events")
+        this.loadCommands()
+        this.loadEvents()
         this.login(config.DISCORD_TOKEN)
     }
 
