@@ -7,9 +7,6 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "yarn --silent && tsc",
-    "start": "yarn build && node dist/Bot.js",
-    "update": "git pull && yarn start && pm2 restart 2 && pm2 logs 2",
     "dev": "devScript"
   },
   "dependencies": {
