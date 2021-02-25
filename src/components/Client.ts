@@ -77,12 +77,12 @@ export default class Tweetcord extends Client {
 
     private loadCommands(): void {
         try {
-            const files = readdirSync(".././commands");
+            const files = readdirSync(join(__dirname, "..", "commands"));
 
             for (const category of files) {
-                const cat = require(`.././commands/${category}`)
+                const cat = require(join(__dirname, "..", "commands", category))
                 cat.forEach((name: string) => {
-                    const command: Command = new (require(`.././commands/${category}/${name}`).default)(this);
+                    const command: Command = new (require(join(__dirname, "..", "commands", category, name)).default)(this);
                     this.commands.set(command.triggers[0], command)
                 })
             }
@@ -94,9 +94,9 @@ export default class Tweetcord extends Client {
 
     private loadEvents(): void {
         try {
-            const files = readdirSync(".././events");
+            const files = readdirSync(join(__dirname, "..", "events"));
             for (const name of files) {
-                const event: Event = new (require(`.././events/${name}`).default)(this)
+                const event: Event = new (require(join(__dirname, "..", "events", name)).default)(this)
                 if (event.type === 'once') this.once(event.name, event.run);
                 this.on(event.name, event.run)
             }
