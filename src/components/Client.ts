@@ -77,7 +77,7 @@ export default class Tweetcord extends Client {
 
     private loadCommands(): void {
         try {
-            const files = readdirSync(__dirname + "/commands");
+            const files = readdirSync("../commands");
 
             for (const category of files) {
                 const cat = require(`../commands/${category}`)
@@ -100,9 +100,9 @@ export default class Tweetcord extends Client {
                 if (event.type === 'once') this.once(event.name, event.run);
                 this.on(event.name, event.run)
             }
-        } catch (error) {
-            Sentry.captureException(error)
-            this.logger.error(error)
+        } catch (err) {
+            Sentry.captureException(err)
+            return console.error(err);
         }
     }
 
