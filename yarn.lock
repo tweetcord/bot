@@ -308,10 +308,10 @@ destroy@~1.0.4:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
 
-discord.js-light@^3.5.3:
-  version "3.5.3"
-  resolved "https://registry.yarnpkg.com/discord.js-light/-/discord.js-light-3.5.3.tgz#54f44deb46c701bb13986beda80ae83f81a62278"
-  integrity sha512-LyB+UHEOkl6A2bd16VnBKfgRX3+6FE1IdS4mTTEfAIlODFwha9sz7/RedsK/RApo8JDqLwBNTDgI0m2KY4f87A==
+discord.js-light@^3.5.4:
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/discord.js-light/-/discord.js-light-3.5.4.tgz#328b793c8894a568b81cca535fd08bd8bc022b83"
+  integrity sha512-p1/a5F+uzTtZJOmmjP3e6N9WaA8zNTVNDgYtjamv++sI5FMPb4Dg/6K13c2a4W7GrXxWrrHhzfkHd3COP3bEoQ==
   dependencies:
     discord.js "12.5.1"
 
@@ -328,11 +328,6 @@ discord.js@12.5.1, discord.js@^12.5.1:
     setimmediate "^1.0.5"
     tweetnacl "^1.0.3"
     ws "^7.3.1"
-
-dotenv@^8.2.0:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
-  integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
 ee-first@1.1.1:
   version "1.1.1"
