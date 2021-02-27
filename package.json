@@ -1,7 +1,7 @@
 {
   "name": "tweetcord",
   "version": "1.0.0",
-  "main": "dist/Bot.js",
+  "main": "index.js",
   "repository": "https://github.com/tweetcord/bot",
   "author": "https://github.com/NMW03",
   "license": "MIT",

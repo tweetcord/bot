@@ -40,26 +40,6 @@ export default class Tweetcord extends Client {
             if (cmd.ownerOnly && !owners.includes(message.author.id)) {
                 return message.channel.send(`${emojis.X} This command is restricted to bot developers.`)
             }
-            if (cmd.botPermissions) {
-                const missing = []
-                for (const perm of cmd.botPermissions) {
-                    if (!message.guild.me.permissions.has(perm)) missing.push(perm)
-                }
-                if (missing.length > 0) return message.channel.send(`
-                ${emojis.X} I am missing following permissions to run this command:
-                 \`\`\`diff\n- ${missing.map(a => a).join("\n- ")}\`\`\`
-                `)
-            }
-            if (cmd.userPermissions) {
-                const missing = []
-                for (const perm of cmd.userPermissions) {
-                    if (!message.member.permissions.has(perm)) missing.push(perm)
-                }
-                if (missing.length > 0) return message.channel.send(`
-                ${emojis.X} You are missing following permissions to run this command:
-                 \`\`\`diff\n- ${missing.map(a => a).join("\n- ")}\`\`\`
-                `)
-            }
             try {
                 return cmd.run(message, args)
             } catch (e) {
