@@ -15,7 +15,7 @@
     "body-parser": "^1.19.0",
     "chalk": "^4.1.1",
     "discord.js": "^12.5.1",
-    "discord.js-light": "^3.5.10",
+    "discord.js-light": "^3.5.11",
     "express": "^4.17.1",
     "lexure": "^0.17.0",
     "twitter-lite": "^1.1.0"

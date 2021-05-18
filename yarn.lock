@@ -308,10 +308,10 @@ destroy@~1.0.4:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
 
-discord.js-light@^3.5.10:
-  version "3.5.10"
-  resolved "https://registry.yarnpkg.com/discord.js-light/-/discord.js-light-3.5.10.tgz#8e46c5894c2ad8b3058a4f651b4fd76702e358c5"
-  integrity sha512-9sOwB9nD0uOabiw4TCvLIG+gEBAdzA1bxzyy0Z4uon1lDAJvzRUdf3pd4axCvuUwUg3Pi9ypxe6yFhmFFYlkDQ==
+discord.js-light@^3.5.11:
+  version "3.5.11"
+  resolved "https://registry.yarnpkg.com/discord.js-light/-/discord.js-light-3.5.11.tgz#169058ca38ddb1b58e220a7377352cf51e0f8932"
+  integrity sha512-FaOdReT+8CJsHXnjxlG7oK08uqVtIVaEXsbpS7V1O5DK6WSar29KsewkUcDHnCkU89MRhXsgNXhk7cVg0qYkGA==
   dependencies:
     discord.js "12.5.3"
 
