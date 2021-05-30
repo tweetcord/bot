@@ -11,6 +11,9 @@
   "dependencies": {
     "@types/node": "^15.3.0",
     "discord.js-light": "^3.5.11",
+    "dotenv": "^10.0.0",
+    "kurasuta": "^2.2.3",
+    "lexure": "^0.17.0",
     "slash-create": "^3.1.0"
   }
 }
