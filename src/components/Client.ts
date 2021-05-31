@@ -1,10 +1,21 @@
-import { Client, Collection, Message, TextChannel } from "discord.js-light";
-import { join } from "path";
-import { readdirSync, readFileSync } from "fs";
+import { Client, Collection, Message, MessageEmbed, TextChannel } from "discord.js-light";
+import { join, resolve } from "path";
+import { readdirSync } from "fs";
 import { Command } from "./Command";
+import { Args, Lexer, longStrategy, Parser } from "lexure";
+import Twitter from "twitter-lite";
+
+
+declare module "discord.js-light" {
+    export interface Client {
+        readonly commands: Collection<string, Command>
+        twitter: Twitter
+    }
+}
 
 export class Tweetcord extends Client {
-    private readonly commands: Collection<string, Command>;
+    readonly commands: Collection<string, Command>;
+    public twitter: Twitter
     public constructor() {
         super({
             allowedMentions: {
@@ -16,7 +27,7 @@ export class Tweetcord extends Client {
             cacheRoles: false,
             messageCacheMaxSize: 0,
             messageEditHistoryMaxSize: 0,
-            restRequestTimeout: 60e3,
+            // restRequestTimeout: 60e3,
             presence: {
                 activity: {
                     name: "new things",
@@ -25,10 +36,20 @@ export class Tweetcord extends Client {
             }
         })
         this.on("message", this.handleMessage)
+        this.on("ready", () => {
+            console.log("Bot is ready")
+        })
         this.commands = new Collection();
+        this.twitter = new Twitter({
+            consumer_key: process.env.TWITTER_CONSUMER_KEY!,
+            consumer_secret: process.env.TWITTER_CONSUMER_SECRET!,
+            access_token_key: process.env.TWITTER_ACCESS_TOKEN,
+            access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+        })
     }
     public init() {
-
+        this.loadCommands(resolve('dist/commands'))
+        this.login(process.env.DISCORD_TOKEN)
     }
     private findCommand(name: string): Command | undefined {
         return this.commands.get(name) ?? this.commands.find(a => a.triggers.includes(name))
@@ -39,9 +60,17 @@ export class Tweetcord extends Client {
         const owners = ["534099893979971584", "548547460276944906"]
 
         if (!m.content.startsWith(prefix) || m.author.bot || m.webhookID) return;
-        const [cmd, ...args] = m.content.slice(prefix.length).trim().split(/ +/g)
-        const command = this.findCommand(cmd)
 
+        const lexer = new Lexer(m.content).setQuotes([
+            ['"', '"'],
+            ['“', '”']
+        ])
+        const res = lexer.lexCommand(s => s.startsWith(prefix) ? prefix.length : null);
+        if (!res) return;
+        const parser = new Parser(res[1]()).setUnorderedStrategy(longStrategy());
+
+        const command = this.findCommand(res[0].value)
+        const args = new Args(parser.parse())
         if (command) {
             if (command.nsfwOnly && !channel.nsfw && !owners.includes(m.author.id)) {
                 return m.channel.send({
@@ -67,11 +96,8 @@ export class Tweetcord extends Client {
         }
     }
 
-    private parseArgs(m) {
-        
-    }
     private async loadCommands(folder: string) {
-        const commandFiles = readdirSync(folder).filter((file) => file.endsWith(".ts"));
+        const commandFiles = readdirSync(folder)
 
         for (const file of commandFiles) {
             const mod = await import(join(folder, file));

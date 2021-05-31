@@ -1,5 +1,6 @@
 import { Message, BitFieldResolvable, PermissionString, Snowflake } from 'discord.js';
 import { Args } from 'lexure';
+import { Tweetcord } from './Client';
 
 interface CommandFlags {
     [key: string]: string;
@@ -7,14 +8,14 @@ interface CommandFlags {
 
 interface CommandDescription {
     text: string;
-    usage: string;
-    example: string;
-    flags: CommandFlags;
+    usage?: string;
+    example?: string;
+    flags?: CommandFlags;
 }
 
 interface CommandOptions {
-    nsfwOnly: boolean;
-    triggers?: string[];
+    nsfwOnly?: boolean;
+    triggers: string[];
     ownerOnly?: boolean;
     ignoreNSFW?: Snowflake[];
     description: CommandDescription;
@@ -23,6 +24,7 @@ interface CommandOptions {
 }
 
 export abstract class Command {
+    public bot: Tweetcord;
     public triggers: string[];
     public ownerOnly: boolean;
     public nsfwOnly: boolean;
@@ -30,7 +32,7 @@ export abstract class Command {
     public description: CommandDescription;
     public botPerms?: BitFieldResolvable<PermissionString>;
     public userPerms?: BitFieldResolvable<PermissionString>;
-    public constructor(data: CommandOptions) {
+    public constructor(client: Tweetcord, data: CommandOptions) {
         this.triggers = data?.triggers || []
         this.ownerOnly = data.ownerOnly ?? false
         this.nsfwOnly = data.nsfwOnly ?? false
@@ -38,6 +40,8 @@ export abstract class Command {
         this.description = data.description
         this.botPerms = data.botPerms
         this.userPerms = data.userPerms
+
+        this.bot = client;
     }
     public abstract execute(message: Message, args: Args): Message | void | Promise<Message | void>
 }

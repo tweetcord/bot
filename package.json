@@ -4,16 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && node dist/shard.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^15.3.0",
+    "discord.js": "^12.5.3",
     "discord.js-light": "^3.5.11",
     "dotenv": "^10.0.0",
     "kurasuta": "^2.2.3",
     "lexure": "^0.17.0",
-    "slash-create": "^3.1.0"
+    "twitter-lite": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^15.6.1",
+    "twitter-d": "^0.4.0"
   }
 }
