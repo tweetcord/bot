@@ -17,7 +17,11 @@
     "twitter-lite": "^1.1.0"
   },
   "devDependencies": {
+    "@types/color-thief-node": "^1.0.1",
     "@types/node": "^15.6.1",
+    "@types/signale": "^1.4.1",
+    "color-thief-node": "^1.0.4",
+    "signale": "^1.4.0",
     "twitter-d": "^0.4.0"
   }
 }

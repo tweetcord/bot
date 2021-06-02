@@ -2,9 +2,9 @@ import { Client, Collection, Message, MessageEmbed, TextChannel } from "discord.
 import { join, resolve } from "path";
 import { readdirSync } from "fs";
 import { Command } from "./Command";
-import { Args, Lexer, longStrategy, Parser } from "lexure";
+import { Args, Lexer, longStrategy, Parser, prefixedStrategy } from "lexure";
 import Twitter from "twitter-lite";
-
+import { baseLogger } from "../util/logger";
 
 declare module "discord.js-light" {
     export interface Client {
@@ -35,10 +35,10 @@ export class Tweetcord extends Client {
                 }
             }
         })
-        this.on("message", this.handleMessage)
         this.on("ready", () => {
-            console.log("Bot is ready")
+            return baseLogger.info("Bot is ready")
         })
+        this.on("message", this.handleMessage)
         this.commands = new Collection();
         this.twitter = new Twitter({
             consumer_key: process.env.TWITTER_CONSUMER_KEY!,
@@ -59,18 +59,34 @@ export class Tweetcord extends Client {
         const channel = m.channel as TextChannel
         const owners = ["534099893979971584", "548547460276944906"]
 
-        if (!m.content.startsWith(prefix) || m.author.bot || m.webhookID) return;
+        if (!m.content.startsWith(prefix)
+            || m.author.bot
+            || m.webhookID
+        ) return;
 
-        const lexer = new Lexer(m.content).setQuotes([
-            ['"', '"'],
-            ['“', '”']
-        ])
-        const res = lexer.lexCommand(s => s.startsWith(prefix) ? prefix.length : null);
-        if (!res) return;
-        const parser = new Parser(res[1]()).setUnorderedStrategy(longStrategy());
+        const lexer = new Lexer(m.content)
+            .setQuotes([
+                ['"', '"'],
+                ['“', '”'], // iOS
+                ["「", "」"]
+            ]);
 
-        const command = this.findCommand(res[0].value)
-        const args = new Args(parser.parse())
+        const lout = lexer.lexCommand(s => s.startsWith(prefix) ? prefix.length : null);
+        if (lout == null) {
+            return null;
+        }
+
+        const [c, getTokens] = lout;
+        const tokens = getTokens();
+        const parser = new Parser(tokens)
+            .setUnorderedStrategy(prefixedStrategy(
+                ['--', '-', '—'],
+                ['=', ':']
+            ));
+
+        const pout = parser.parse();
+        const command = this.findCommand(c.value)
+        const args = new Args(pout)
         if (command) {
             if (command.nsfwOnly && !channel.nsfw && !owners.includes(m.author.id)) {
                 return m.channel.send({
