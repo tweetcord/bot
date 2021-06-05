@@ -1,16 +1,11 @@
-import * as signale from 'signale';
-const options: signale.SignaleOptions<'command'> | undefined = {
-    config: { displayDate: true, displayTimestamp: true },
-    types: {
-        command: {
-            badge: '💬',
-            color: 'gray',
-            label: 'command',
-            logLevel: 'debug'
-        }
-    }
-};
+import { Logger } from "tslog";
 
-const logger: signale.Signale<signale.DefaultMethods | 'command'> = new signale.Signale(options);
+const logger = new Logger({
+    colorizePrettyLogs: true,
+    dateTimeTimezone: "Asia/Baku",
+    dateTimePattern: "day-month-year hour:minute:second.millisecond",
+    exposeErrorCodeFrame: true,
+    
+})
 
 export const baseLogger = logger;

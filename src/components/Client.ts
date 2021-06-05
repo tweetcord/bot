@@ -4,7 +4,7 @@ import { readdirSync } from "fs";
 import { Command } from "./Command";
 import { Args, Lexer, longStrategy, Parser, prefixedStrategy } from "lexure";
 import Twitter from "twitter-lite";
-import { baseLogger } from "../util/logger";
+import {baseLogger} from "../util/logger";
 
 declare module "discord.js-light" {
     export interface Client {
@@ -33,10 +33,11 @@ export class Tweetcord extends Client {
                     name: "new things",
                     type: "WATCHING"
                 }
-            }
+            },
+            intents: 1585
         })
         this.on("ready", () => {
-            return baseLogger.info("Bot is ready")
+            return console.log("Bot is ready");
         })
         this.on("message", this.handleMessage)
         this.commands = new Collection();
