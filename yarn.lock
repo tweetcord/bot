@@ -227,10 +227,10 @@ discord.js@^12.5.1:
     tweetnacl "^1.0.3"
     ws "^7.4.4"
 
-discord.js@^13.0.0-dev.5af2ef5fbc7ad11281f38384c360ae79efe63b39:
-  version "13.0.0-dev.5af2ef5fbc7ad11281f38384c360ae79efe63b39"
-  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-13.0.0-dev.5af2ef5fbc7ad11281f38384c360ae79efe63b39.tgz#dd1de996fe13bcf96f9af0ea771e11510b934d43"
-  integrity sha512-UStXNWdfEfn0pU9iQaITRH5lvttd4lAcNyszmT+aTgw86ZHewfUC4CzoK8vtpiQLNwjX3AaM0qGaOCB8kK+1LQ==
+discord.js@^13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22:
+  version "13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22.tgz#660c333e2c0b6dcd570e2b036edf82e23cbd38c0"
+  integrity sha512-5luHBdny+Mx4N5TvCJofL4N+YcySNtlrHupR2tuKI0z53V1/VAN5hvba1n42JzO5r+PmeCZlU8Xg+8dMsxwt7Q==
   dependencies:
     "@discordjs/collection" "^0.1.6"
     "@discordjs/form-data" "^3.0.1"
@@ -649,12 +649,7 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-ws@^7.4.4:
-  version "7.4.5"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.5.tgz#a484dd851e9beb6fdb420027e3885e8ce48986c1"
-  integrity sha512-xzyu3hFvomRfXKH8vOFMU3OguG6oOvhXMo3xsGy3xWExqaM2dxBbVxuD99O7m3ZUFMvvscsZDqxfgMaRr/Nr1g==
-
-ws@^7.4.6:
+ws@^7.4.4, ws@^7.4.6:
   version "7.4.6"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.6.tgz#5654ca8ecdeee47c33a9a4bf6d28e2be2980377c"
   integrity sha512-YmhHDO4MzaDLB+M9ym/mDA5z0naX8j7SIlT8f8z+I0VtzsRbekxEutHSme7NPS2qE8StCYQNUnfWdXta/Yu85A==

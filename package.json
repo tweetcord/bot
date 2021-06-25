@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^13.0.0-dev.5af2ef5fbc7ad11281f38384c360ae79efe63b39",
+    "discord.js": "^13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22",
     "discord.js-light": "https://github.com/timotejroiko/discord.js-light.git#master",
     "dotenv": "^10.0.0",
     "kurasuta": "^2.2.3",
