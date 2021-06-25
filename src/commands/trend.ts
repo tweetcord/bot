@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import { Args } from "lexure";
 import { Tweetcord } from "../components/Client";
 import { Command } from "../components/Command";
-/// import * as woeid from "twitter-woeid"
+import {  } from "twitter-woeid"
 export default class Ping extends Command {
     public constructor(client: Tweetcord) {
         super(client, {

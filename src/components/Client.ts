@@ -1,10 +1,8 @@
-import { Client, Collection, Message, MessageEmbed, TextChannel } from "discord.js-light";
+import { Client, Collection, Interaction } from "discord.js-light";
 import { join, resolve } from "path";
 import { readdirSync } from "fs";
 import { Command } from "./Command";
-import { Args, Lexer, longStrategy, Parser, prefixedStrategy } from "lexure";
 import Twitter from "twitter-lite";
-import {baseLogger} from "../util/logger";
 
 declare module "discord.js-light" {
     export interface Client {
@@ -39,7 +37,7 @@ export class Tweetcord extends Client {
         this.on("ready", () => {
             return console.log("Bot is ready");
         })
-        this.on("message", this.handleMessage)
+        this.on("interaction", this.handleInteraction)
         this.commands = new Collection();
         this.twitter = new Twitter({
             consumer_key: process.env.TWITTER_CONSUMER_KEY!,
@@ -52,65 +50,9 @@ export class Tweetcord extends Client {
         this.loadCommands(resolve('dist/commands'))
         this.login(process.env.DISCORD_TOKEN)
     }
-    private findCommand(name: string): Command | undefined {
-        return this.commands.get(name) ?? this.commands.find(a => a.triggers.includes(name))
-    }
-    private handleMessage(m: Message) {
-        const prefix = "t."
-        const channel = m.channel as TextChannel
-        const owners = ["534099893979971584", "548547460276944906"]
-
-        if (!m.content.startsWith(prefix)
-            || m.author.bot
-            || m.webhookID
-        ) return;
-
-        const lexer = new Lexer(m.content)
-            .setQuotes([
-                ['"', '"'],
-                ['“', '”'], // iOS
-                ["「", "」"]
-            ]);
-
-        const lout = lexer.lexCommand(s => s.startsWith(prefix) ? prefix.length : null);
-        if (lout == null) {
-            return null;
-        }
-
-        const [c, getTokens] = lout;
-        const tokens = getTokens();
-        const parser = new Parser(tokens)
-            .setUnorderedStrategy(prefixedStrategy(
-                ['--', '-', '—'],
-                ['=', ':']
-            ));
-
-        const pout = parser.parse();
-        const command = this.findCommand(c.value)
-        const args = new Args(pout)
-        if (command) {
-            if (command.nsfwOnly && !channel.nsfw && !owners.includes(m.author.id)) {
-                return m.channel.send({
-                    embed: {
-                        "title": "You have to use this command in NSFW marked channels.",
-                        "url": "https://support.discord.com/hc/en-us/articles/115000084051-NSFW-Channels-and-Content",
-                        "color": 16711680,
-                        "timestamp": Date.now(),
-                        "footer": {
-                            "text": "If you wonder why, look at Discord Guidelines #6"
-                        },
-                        "image": {
-                            "url": "https://i.imgur.com/W1XfLOe.gif"
-                        }
-                    }
-                })
-            }
-            if (command.ownerOnly && !owners.includes(m.author.id)) {
-                return m.channel.send(`This command is restricted to bot developers.`)
-            }
-            return command.execute(m, args)
-
-        }
+    private handleInteraction(i: Interaction) {
+        if (!i.isCommand()) return;
+        i.reply("test")
     }
 
     private async loadCommands(folder: string) {
