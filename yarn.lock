@@ -209,9 +209,10 @@ discord-api-types@^0.18.1:
 
 "discord.js-light@https://github.com/timotejroiko/discord.js-light.git#master":
   version "4.0.0-dev"
-  resolved "https://github.com/timotejroiko/discord.js-light.git#8f5a65f932cdb9b95be21667aabb59ad11abe76c"
+  uid dd196e0513bdf1c9489586cb3e529f59a0a0f05d
+  resolved "https://github.com/timotejroiko/discord.js-light.git#dd196e0513bdf1c9489586cb3e529f59a0a0f05d"
   dependencies:
-    discord.js "github:discordjs/discord.js#918921e8211fc16e9b12d2502f3168264246ea22"
+    discord.js "github:discordjs/discord.js#985d4d6a438fc9123264f6a1c600f34fccc1825f"
 
 discord.js@^12.5.1:
   version "12.5.3"
@@ -241,9 +242,10 @@ discord.js@^13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22:
     node-fetch "^2.6.1"
     ws "^7.4.6"
 
-"discord.js@github:discordjs/discord.js#918921e8211fc16e9b12d2502f3168264246ea22":
+"discord.js@github:discordjs/discord.js#985d4d6a438fc9123264f6a1c600f34fccc1825f":
   version "13.0.0-dev"
-  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/918921e8211fc16e9b12d2502f3168264246ea22"
+  uid "985d4d6a438fc9123264f6a1c600f34fccc1825f"
+  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/985d4d6a438fc9123264f6a1c600f34fccc1825f"
   dependencies:
     "@discordjs/collection" "^0.1.6"
     "@discordjs/form-data" "^3.0.1"
