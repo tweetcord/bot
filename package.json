@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@types/color-thief-node": "^1.0.1",
-    "@types/node": "^15.12.4",
+    "@types/node": "^15.12.5",
     "color-thief-node": "^1.0.4",
     "twitter-d": "^0.4.0",
     "twitter-woeid": "^1.0.2"
