@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22",
+    "discord.js": "^13.0.0-dev.5842e35.1625011425",
     "discord.js-light": "https://github.com/timotejroiko/discord.js-light.git#master",
     "dotenv": "^10.0.0",
     "kurasuta": "^2.2.3",
@@ -17,9 +17,7 @@
     "twitter-lite": "^1.1.0"
   },
   "devDependencies": {
-    "@types/color-thief-node": "^1.0.1",
     "@types/node": "^15.12.5",
-    "color-thief-node": "^1.0.4",
     "twitter-d": "^0.4.0",
     "twitter-woeid": "^1.0.2"
   }

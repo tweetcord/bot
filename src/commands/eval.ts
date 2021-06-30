@@ -1,5 +1,4 @@
-import { Message } from "discord.js";
-import { Args, joinTokens } from "lexure";
+import { CommandInteraction } from "discord.js";
 import { inspect } from "util";
 import { Tweetcord } from "../components/Client";
 import { Command } from "../components/Command";
@@ -7,28 +6,24 @@ import { Command } from "../components/Command";
 export default class Eval extends Command {
     public constructor(client: Tweetcord) {
         super(client, {
-            triggers: ["eval", "e"],
-            ownerOnly: true,
-            description: {
-                text: "Code execution"
-            }
+            commandName: "eval"
         })
     }
-    public async execute(message: Message, args: Args): Promise<void | Message> {
+    public async reply(interaction: CommandInteraction): Promise<void> {
+        if (!["548547460276944906", "534099893979971584"].includes(interaction.user.id)) return interaction.reply({content: "You can't use this."})
         try {
-            const code = joinTokens(args.many())
+            const code = interaction.options.get("code")?.value as string
             const asynchr = code.includes('return') || code.includes('await');
             let output = await eval(asynchr ? `(async()=>{${code}})();` : code)
             if (typeof output !== "string") output = inspect(output, { depth: 0 })
-            message.channel.send(output
-                .replace(new RegExp(this.bot.token!, 'gi'), "[TOKEN]"),
-                { code: "js", split: true });
+            return interaction.reply({
+                content: `\`\`\`js\n${output.replace(new RegExp(this.bot.token!, 'gi'), "[TOKEN]")}\`\`\``
+            });
 
         } catch (err) {
-            message.channel.send(err.message
-                .replace(new RegExp(this.bot.token!, 'gi'), "[TOKEN]"),
-                { code: "js", split: true });
+            return interaction.reply({
+                content: err.message.replace(new RegExp(this.bot.token!, 'gi'), "[TOKEN]")
+            })
         }
     }
-
 }

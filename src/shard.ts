@@ -1,8 +1,7 @@
 import { join } from "path";
-import { Cluster, SharderEvents, ShardingManager } from "kurasuta";
+import { SharderEvents, ShardingManager } from "kurasuta";
 import { config } from "dotenv"
 import { Tweetcord } from "./components/Client";
-import chalk from "chalk"
 
 config()
 const sharder = new ShardingManager(join(__dirname, "index"), {
@@ -13,5 +12,5 @@ const sharder = new ShardingManager(join(__dirname, "index"), {
 sharder.spawn()
 
 sharder.on(SharderEvents.SHARD_READY, (sid) => {
- return console.log(chalk.red("[SHARD]"), `Shard ${sid} is ready.`)
+ return console.log(`Shard ${sid} is ready.`)
 })

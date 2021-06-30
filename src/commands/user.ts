@@ -1,27 +1,21 @@
-import { Message, Util } from "discord.js";
-import { Args, joinTokens } from "lexure";
+import { CommandInteraction, Util } from "discord.js";
 import { Tweetcord } from "../components/Client";
 import { Command } from "../components/Command";
 import { FullUser } from "twitter-d"
-import { getColorFromURL } from "color-thief-node"
 import moment from "moment"
-export default class Ping extends Command {
+
+export default class User extends Command {
     public constructor(client: Tweetcord) {
         super(client, {
-            triggers: ["user", "u"],
-            description: {
-                text: "User information"
-            }
+            commandName: "user"
         })
     }
-    public async execute(message: Message, args: Args): Promise<void | Message> {
+    public async reply(interaction: CommandInteraction): Promise<void> {
         let data = await this.bot.twitter.get("users/lookup", {
-            screen_name: args.single()
+            screen_name: interaction.options.get("username")?.value
         })
-        const user: FullUser = data[0]
-        const color = await getColorFromURL(user.profile_image_url_https.replace("_normal", ""))
+        const user: FullUser = data[0];
         const embed = {
-            color,
             title: `${Util.escapeMarkdown(user.name)} ${user.verified ? "<:verified:743873088185172108>" : ""}`,
             author: {
                 name: user.screen_name,
@@ -36,7 +30,7 @@ export default class Ping extends Command {
             },
             footer: {
                 text: `Twitter ID is ${user.id}`,
-                iconURL: message.author.displayAvatarURL()
+                iconURL: interaction.user.displayAvatarURL()
             },
             fields: [
                 {
@@ -71,20 +65,20 @@ export default class Ping extends Command {
                 },
                 {
                     name: "Account creation date",
+                  // TODO: Add timestamp markdown instead of this
                     value: `${moment.utc(Date.parse(user.created_at)).format("LL")} \n (${moment(moment.utc(Date.parse(user.created_at))).fromNow()})`,
                     inline: true
                 }
             ]
         }
         if (user.description) Object.assign(embed, {
-            description: `>>> ${user.description}`, // blockquote for description
+            description: `>>> ${user.description}`,
         })
         if (user.location) embed.fields.push({
             name: "Location",
             value: user.location,
             inline: true
         })
-        return message.channel.send({ embed })
+        return interaction.reply({ embeds: [embed], ephemeral: true });
     }
-
 }

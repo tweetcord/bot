@@ -1,47 +1,17 @@
-import { Message, BitFieldResolvable, PermissionString, Snowflake } from 'discord.js';
-import { Args } from 'lexure';
-import { Tweetcord } from './Client';
+import { Message, CommandInteraction } from "discord.js";
+import { Tweetcord } from "./Client";
 
-interface CommandFlags {
-    [key: string]: string;
-}
-
-interface CommandDescription {
-    text: string;
-    usage?: string;
-    example?: string;
-    flags?: CommandFlags;
-}
 
 interface CommandOptions {
-    nsfwOnly?: boolean;
-    triggers: string[];
-    ownerOnly?: boolean;
-    ignoreNSFW?: Snowflake[];
-    description: CommandDescription;
-    botPerms?: BitFieldResolvable<PermissionString>;
-    userPerms?: BitFieldResolvable<PermissionString>;
+    commandName: string
 }
-
 export abstract class Command {
     public bot: Tweetcord;
-    public triggers: string[];
-    public ownerOnly: boolean;
-    public nsfwOnly: boolean;
-    public ignoreNSFW: Snowflake[];
-    public description: CommandDescription;
-    public botPerms?: BitFieldResolvable<PermissionString>;
-    public userPerms?: BitFieldResolvable<PermissionString>;
-    public constructor(client: Tweetcord, data: CommandOptions) {
-        this.triggers = data?.triggers || []
-        this.ownerOnly = data.ownerOnly ?? false
-        this.nsfwOnly = data.nsfwOnly ?? false
-        this.ignoreNSFW = data.ignoreNSFW || []
-        this.description = data.description
-        this.botPerms = data.botPerms
-        this.userPerms = data.userPerms
-
+    public name: string;
+    public constructor(client: Tweetcord, i: CommandOptions) {
         this.bot = client;
+        this.name = i.commandName
     }
-    public abstract execute(message: Message, args: Args): Message | void | Promise<Message | void>
+    
+    public abstract reply(interaction: CommandInteraction): Promise<void> | Message
 }

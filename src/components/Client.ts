@@ -1,10 +1,10 @@
-import { Client, Collection, Interaction } from "discord.js-light";
+import { Client, Collection, Interaction, Message } from "discord.js";
 import { join, resolve } from "path";
 import { readdirSync } from "fs";
-import { Command } from "./Command";
 import Twitter from "twitter-lite";
+import { Command } from "./Command";
 
-declare module "discord.js-light" {
+declare module "discord.js" {
     export interface Client {
         readonly commands: Collection<string, Command>
         twitter: Twitter
@@ -19,25 +19,28 @@ export class Tweetcord extends Client {
             allowedMentions: {
                 parse: ["users"]
             },
-            cacheChannels: false,
-            cacheEmojis: false,
-            cachePresences: false,
-            cacheRoles: false,
+            //cacheChannels: false,
+            //cacheEmojis: false,
+            //cachePresences: false,
+            //cacheRoles: false,
+
             messageCacheMaxSize: 0,
-            messageEditHistoryMaxSize: 0,
-            // restRequestTimeout: 60e3,
+            restRequestTimeout: 60e3,
             presence: {
-                activity: {
+                activities: [{
                     name: "new things",
                     type: "WATCHING"
-                }
+                }]
             },
             intents: 1585
         })
         this.on("ready", () => {
             return console.log("Bot is ready");
         })
+        // @ts-ignore
         this.on("interaction", this.handleInteraction)
+        // @ts-ignore
+        this.on("message", this.handleMessage)
         this.commands = new Collection();
         this.twitter = new Twitter({
             consumer_key: process.env.TWITTER_CONSUMER_KEY!,
@@ -51,19 +54,25 @@ export class Tweetcord extends Client {
         this.login(process.env.DISCORD_TOKEN)
     }
     private handleInteraction(i: Interaction) {
-        if (!i.isCommand()) return;
-        i.reply("test")
+        try {
+            if (!i.isCommand()) return;
+            const command = this.findCommand(i.commandName)
+            command?.reply(i);
+        } catch (e) {
+            console.error(e);
+        }
     }
-
+    private findCommand(name: string): Command | undefined {
+        return this.commands.get(name)
+    }
     private async loadCommands(folder: string) {
-        const commandFiles = readdirSync(folder)
+        const commands = readdirSync(folder)
 
-        for (const file of commandFiles) {
-            const mod = await import(join(folder, file));
+        for (const command of commands) {
+            const mod = await import(join(folder, command));
             const cmdClass = Object.values(mod).find((d: any) => d.prototype instanceof Command) as any;
             const cmd: Command = new cmdClass(this);
-
-            this.commands.set(cmd.triggers[0], cmd);
+            this.commands.set(cmd.name, cmd)
         }
     }
 }
