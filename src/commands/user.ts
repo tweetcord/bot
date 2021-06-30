@@ -65,8 +65,7 @@ export default class User extends Command {
                 },
                 {
                     name: "Account creation date",
-                  // TODO: Add timestamp markdown instead of this
-                    value: `${moment.utc(Date.parse(user.created_at)).format("LL")} \n (${moment(moment.utc(Date.parse(user.created_at))).fromNow()})`,
+                    value: `<t:${Date.parse(user.created_at) / 1000}:R>`,
                     inline: true
                 }
             ]
