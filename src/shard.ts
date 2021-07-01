@@ -12,5 +12,8 @@ const sharder = new ShardingManager(join(__dirname, "index"), {
 sharder.spawn()
 
 sharder.on(SharderEvents.SHARD_READY, (sid) => {
- return console.log(`Shard ${sid} is ready.`)
+    return console.log(`Shard ${sid} is ready.`)
+})
+sharder.on(SharderEvents.SHARD_DISCONNECT, (c, id) => {
+    return console.log(`Shard ${id} disconnected; Close event: ${c}`);
 })

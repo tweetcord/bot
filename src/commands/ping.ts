@@ -12,6 +12,6 @@ export default class Ping extends Command {
         // TODO: Add more information 
         return interaction.reply({
             content: this.bot.ws.ping.toString()
-       })
+        });
     }
 }

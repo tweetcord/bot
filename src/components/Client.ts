@@ -37,10 +37,7 @@ export class Tweetcord extends Client {
         this.on("ready", () => {
             return console.log("Bot is ready");
         })
-        // @ts-ignore
         this.on("interaction", this.handleInteraction)
-        // @ts-ignore
-        this.on("message", this.handleMessage)
         this.commands = new Collection();
         this.twitter = new Twitter({
             consumer_key: process.env.TWITTER_CONSUMER_KEY!,
@@ -66,7 +63,7 @@ export class Tweetcord extends Client {
         return this.commands.get(name)
     }
     private async loadCommands(folder: string) {
-        const commands = readdirSync(folder)
+        const commands = readdirSync(folder);
 
         for (const command of commands) {
             const mod = await import(join(folder, command));
