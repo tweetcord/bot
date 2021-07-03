@@ -17,7 +17,7 @@
     "twitter-lite": "^1.1.0"
   },
   "devDependencies": {
-    "@types/node": "^15.12.5",
+    "@types/node": "^15.14.0",
     "twitter-d": "^0.4.0",
     "twitter-woeid": "^1.0.2"
   }
