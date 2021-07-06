@@ -2,7 +2,6 @@ import { CommandInteraction, Util } from "discord.js";
 import { Tweetcord } from "../components/Client";
 import { Command } from "../components/Command";
 import { FullUser } from "twitter-d"
-import moment from "moment"
 
 export default class User extends Command {
     public constructor(client: Tweetcord) {
@@ -11,6 +10,7 @@ export default class User extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<void> {
+        interaction.defer()
         let data = await this.bot.twitter.get("users/lookup", {
             screen_name: interaction.options.get("username")?.value
         })
@@ -78,6 +78,6 @@ export default class User extends Command {
             value: user.location,
             inline: true
         })
-        return interaction.reply({ embeds: [embed], ephemeral: true });
+        interaction.editReply({ embeds: [embed] });
     }
 }

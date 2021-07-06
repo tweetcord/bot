@@ -1,4 +1,4 @@
-import { Client, Collection, Interaction, Message } from "discord.js";
+import { Client, Collection, Interaction, Message, Options } from "discord.js";
 import { join, resolve } from "path";
 import { readdirSync } from "fs";
 import Twitter from "twitter-lite";
@@ -19,12 +19,21 @@ export class Tweetcord extends Client {
             allowedMentions: {
                 parse: ["users"]
             },
-            //cacheChannels: false,
-            //cacheEmojis: false,
-            //cachePresences: false,
-            //cacheRoles: false,
-
-            messageCacheMaxSize: 0,
+            makeCache: Options.cacheWithLimits({
+                MessageManager: 0,
+                PresenceManager: 0,
+                GuildBanManager: 0,
+                GuildEmojiManager: 0,
+                GuildEmojiRoleManager: 0,
+                GuildMemberRoleManager: 0,
+                GuildInviteManager: 0,
+                ReactionManager: 0,
+                ReactionUserManager: 0,
+                StageInstanceManager: 0,
+                ThreadManager: 0,
+                ThreadMemberManager: 0,
+                VoiceStateManager: 0
+            }),
             restRequestTimeout: 60e3,
             presence: {
                 activities: [{
@@ -37,7 +46,7 @@ export class Tweetcord extends Client {
         this.on("ready", () => {
             return console.log("Bot is ready");
         })
-        this.on("interaction", this.handleInteraction)
+        this.on("interactionCreate", this.handleInteraction)
         this.commands = new Collection();
         this.twitter = new Twitter({
             consumer_key: process.env.TWITTER_CONSUMER_KEY!,
