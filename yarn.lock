@@ -101,10 +101,10 @@ discord.js@^12.5.1:
     tweetnacl "^1.0.3"
     ws "^7.4.4"
 
-discord.js@^13.0.0-dev.610b0b4.1625357028:
-  version "13.0.0-dev.610b0b4.1625357028"
-  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-13.0.0-dev.610b0b4.1625357028.tgz#7e5f40b15980d05f42568a78290e166aab7597a3"
-  integrity sha512-uNHDkPSeVZ1HeXwagtEvDGqbUS8Hvtz2s39pwlkn6p9iQuDF+093mhvQSDiooGVSsWoU9sR2CHTwMSlZoRNIhg==
+discord.js@^13.0.0-dev.4206e35.1626350625:
+  version "13.0.0-dev.4206e35.1626350625"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-13.0.0-dev.4206e35.1626350625.tgz#e03baa68a09053fd382ad50879536b6895317767"
+  integrity sha512-gnWp8MSZZq4fItRIYgP8ZEh7Tlk0Rr8kUW71TNvFzmiibkbgCmpOvhqayw2mApJE8XXzHnyZ97vhiux6nlhiBw==
   dependencies:
     "@discordjs/builders" "^0.2.0"
     "@discordjs/collection" "^0.1.6"
