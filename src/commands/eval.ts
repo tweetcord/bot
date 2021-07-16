@@ -1,7 +1,7 @@
 import { CommandInteraction } from "discord.js";
 import { inspect } from "util";
-import { Tweetcord } from "../components/Client";
-import { Command } from "../components/Command";
+import Tweetcord from "../components/Client";
+import Command from "../components/Command";
 
 export default class Eval extends Command {
     public constructor(client: Tweetcord) {

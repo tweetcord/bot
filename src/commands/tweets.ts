@@ -1,6 +1,6 @@
-import { CommandInteraction, MessageActionRow, Message, Interaction } from "discord.js";
-import { Tweetcord } from "../components/Client";
-import { Command } from "../components/Command";
+import { CommandInteraction, MessageActionRow } from "discord.js";
+import Tweetcord from "../components/Client";
+import Command from "../components/Command";
 
 export default class Trend extends Command {
     public constructor(client: Tweetcord) {
@@ -16,25 +16,25 @@ export default class Trend extends Command {
 
         const row = new MessageActionRow().addComponents(
             {
-                customID: "first",
+                customId: "first",
                 emoji: "860524771832496138",
                 style: "PRIMARY",
                 type: "BUTTON",
             },
             {
-                customID: "previous",
+                customId: "previous",
                 emoji: "860524798181900308",
                 style: "PRIMARY",
                 type: "BUTTON",
             },
             {
-                customID: "next",
+                customId: "next",
                 emoji: "860524837675073556",
                 style: "PRIMARY",
                 type: "BUTTON"
             },
             {
-                customID: "last",
+                customId: "last",
                 emoji: "860524885230223370",
                 style: "PRIMARY",
                 type: "BUTTON"
@@ -49,9 +49,5 @@ export default class Trend extends Command {
         }
 
         interaction.reply({ content: `https://twitter.com/${data[0].user.screen_name}/status/${data[0].id_str}`, components: [row] })
-
-        const message = await interaction.fetchReply()
-        const filter = (i: Interaction) => i.user.id === message.author.id;
-
     }
 }

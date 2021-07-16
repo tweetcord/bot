@@ -1,6 +1,6 @@
 import { CommandInteraction } from "discord.js";
-import { Tweetcord } from "../components/Client";
-import { Command } from "../components/Command";
+import Tweetcord from "../components/Client";
+import Command from "../components/Command";
 
 export default class Ping extends Command {
     public constructor(client: Tweetcord) {

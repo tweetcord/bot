@@ -1,6 +1,6 @@
 import { CommandInteraction, Util } from "discord.js";
-import { Tweetcord } from "../components/Client";
-import { Command } from "../components/Command";
+import Tweetcord from "../components/Client";
+import Command from "../components/Command";
 import { FullUser } from "twitter-d"
 
 export default class User extends Command {
@@ -19,7 +19,7 @@ export default class User extends Command {
             title: `${Util.escapeMarkdown(user.name)} ${user.verified ? "<:verified:743873088185172108>" : ""}`,
             author: {
                 name: user.screen_name,
-                url: "https://twitter.com" + user.screen_name,
+                url: `https://twitter.com/${user.screen_name}`,
                 iconURL: user.profile_image_url_https.replace("_normal", "")
             },
             thumbnail: {

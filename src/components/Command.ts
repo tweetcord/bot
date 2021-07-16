@@ -1,11 +1,11 @@
 import { Message, CommandInteraction } from "discord.js";
-import { Tweetcord } from "./Client";
+import Tweetcord from "./Client";
 
 
 interface CommandOptions {
     commandName: string
 }
-export abstract class Command {
+export default abstract class Command {
     public bot: Tweetcord;
     public name: string;
     public constructor(client: Tweetcord, i: CommandOptions) {

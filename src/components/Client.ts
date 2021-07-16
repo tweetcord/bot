@@ -2,7 +2,7 @@ import { Client, Collection, Interaction, Message, Options } from "discord.js";
 import { join, resolve } from "path";
 import { readdirSync } from "fs";
 import Twitter from "twitter-lite";
-import { Command } from "./Command";
+import Command from "./Command";
 
 declare module "discord.js" {
     export interface Client {
@@ -11,7 +11,7 @@ declare module "discord.js" {
     }
 }
 
-export class Tweetcord extends Client {
+export default class Tweetcord extends Client {
     readonly commands: Collection<string, Command>;
     public twitter: Twitter
     public constructor() {
@@ -55,7 +55,7 @@ export class Tweetcord extends Client {
             access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
         })
     }
-    public init() {
+    public init(): void {
         this.loadCommands(resolve('dist/commands'))
         this.login(process.env.DISCORD_TOKEN)
     }
