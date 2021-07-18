@@ -9,9 +9,8 @@ export default class Ping extends Command {
         })
     }
     public reply(interaction: CommandInteraction): Promise<void> {
-        // TODO: Add more information 
         return interaction.reply({
-            content: this.bot.ws.ping.toString()
+            content: `🏓 Pong! ${this.bot.ws.ping.toString()}`
         });
     }
 }

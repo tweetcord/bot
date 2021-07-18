@@ -19,14 +19,15 @@ export default class Tweetcord extends Client {
             allowedMentions: {
                 parse: ["users"]
             },
+            userAgentSuffix: [
+                "Tweetcord/1.0.0"
+            ],
             makeCache: Options.cacheWithLimits({
                 MessageManager: 0,
                 PresenceManager: 0,
                 GuildBanManager: 0,
-                GuildEmojiManager: 0,
-                GuildEmojiRoleManager: 0,
-                GuildMemberRoleManager: 0,
-                GuildInviteManager: 0,
+                GuildMemberManager: 0,
+                BaseGuildEmojiManager: 0,
                 ReactionManager: 0,
                 ReactionUserManager: 0,
                 StageInstanceManager: 0,
