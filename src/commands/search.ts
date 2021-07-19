@@ -35,7 +35,7 @@ export default class Search extends Command {
             } catch (err) {
                 console.error(err)
             }
-
+        // TODO: Handle dropdown clicks and send user embed for that
         }
     }
 }
