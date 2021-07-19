@@ -1,5 +1,4 @@
-import { CommandInteraction, MessageActionRow, MessageComponentInteraction, Message } from "discord.js";
-import { inspect } from "util";
+import { CommandInteraction, MessageActionRow, MessageComponentInteraction } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -105,7 +104,7 @@ export default class Trend extends Command {
             })
         }
 
-        interaction.editReply({ content: `https://twitter.com/${data[0].user.screen_name}/status/${data[0].id_str}`, components: [firstRow] })
+        interaction.editReply({ content: `**(1/10)** https://twitter.com/${data[0].user.screen_name}/status/${data[0].id_str}`, components: [firstRow] })
         const filter = (i: MessageComponentInteraction) => i.user.id === interaction?.user.id
         const collector = interaction.channel?.createMessageComponentCollector({ filter, time: 30e3 })
         let page = 0
@@ -134,6 +133,40 @@ export default class Trend extends Command {
                     console.log(page);
                     break;
             }
+        })
+        collector?.on("end", collected => {
+            collected.first()?.editReply({
+                components: [
+                    new MessageActionRow().addComponents(
+                        {
+                            customId: "first",
+                            emoji: "860524771832496138",
+                            style: "PRIMARY",
+                            type: "BUTTON",
+                            disabled: true
+                        },
+                        {
+                            customId: "previous",
+                            emoji: "860524798181900308",
+                            style: "PRIMARY",
+                            type: "BUTTON",
+                            disabled: true
+                        },
+                        {
+                            customId: "next",
+                            emoji: "860524837675073556",
+                            style: "PRIMARY",
+                            type: "BUTTON",
+                            disabled: true
+                        },
+                        {
+                            customId: "last",
+                            emoji: "860524885230223370",
+                            style: "PRIMARY",
+                            type: "BUTTON",
+                            disabled: true
+                        })
+            ] })
         })
     }
 }
