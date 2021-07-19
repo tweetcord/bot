@@ -64,6 +64,7 @@ export default class Search extends Command {
                 console.error(err)
             }
         }
+        // TODO: Add tweet search support
     }
     private async user(i: SelectMenuInteraction, username: string) {
         let data = await this.bot.twitter.get("users/lookup", {

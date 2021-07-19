@@ -9,6 +9,7 @@ export default class Trend extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<void> {
+        // TODO: Add button support and woeid api
         interaction.defer()
         const data = await this.bot.twitter.get("trends/place", {
             id: interaction.options.get("country")?.value?.toString()
