@@ -166,7 +166,8 @@ export default class Trend extends Command {
                             type: "BUTTON",
                             disabled: true
                         })
-            ] })
+                ]
+            })
         })
     }
 }
