@@ -1,4 +1,5 @@
 import { CommandInteraction, MessageActionRow, MessageComponentInteraction, Message } from "discord.js";
+import { inspect } from "util";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -100,35 +101,39 @@ export default class Trend extends Command {
             const url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
             answers.push({
                 content: `**(${tweets.indexOf(tweet) + 1}/${tweets.length})** ${url}`,
-                components: answers.length === 0 ? [firstRow] : (answers.length === 8 ? [lastRow] : [row])
+                components: answers.length === 0 ? [firstRow] : (answers.length === 9 ? [lastRow] : [row])
             })
         }
 
         interaction.editReply({ content: `https://twitter.com/${data[0].user.screen_name}/status/${data[0].id_str}`, components: [firstRow] })
         const filter = (i: MessageComponentInteraction) => i.user.id === interaction?.user.id
         const collector = interaction.channel?.createMessageComponentCollector({ filter, time: 30e3 })
-        //TODO: Fix number increment
+        let page = 0
         collector?.on("collect", async (i: MessageComponentInteraction) => {
             await i.deferUpdate();
-            let page = 0
+            console.log(i.customId);
             switch (i.customId) {
                 case "first":
                     page = 0
                     await i.editReply(answers[0])
+                    console.log(page);
                     break;
                 case "previous":
-                    --page
+                    page--
                     await i.editReply(answers[page])
+                    console.log(page);
                     break;
                 case "next":
-                    ++page
+                    page++
                     await i.editReply(answers[page])
+                    console.log(page);
                     break;
                 case "last":
+                    page = 9
                     await i.editReply(answers[9])
+                    console.log(page);
                     break;
             }
-
         })
     }
 }
