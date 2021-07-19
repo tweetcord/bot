@@ -17,7 +17,8 @@ export default class Tweetcord extends Client {
     public constructor() {
         super({
             allowedMentions: {
-                parse: ["users"]
+                parse: ["users"],
+                repliedUser: true
             },
             userAgentSuffix: [
                 "Tweetcord/1.0.0"

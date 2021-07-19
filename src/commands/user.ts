@@ -1,4 +1,4 @@
-import { CommandInteraction, Util } from "discord.js";
+import { CommandInteraction, SelectMenuInteraction, Util } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 import { FullUser } from "twitter-d"
@@ -9,10 +9,10 @@ export default class User extends Command {
             commandName: "user"
         })
     }
-    public async reply(interaction: CommandInteraction, username: string): Promise<void> {
+    public async reply(interaction: CommandInteraction): Promise<void> {
         await interaction.defer()
         let data = await this.bot.twitter.get("users/lookup", {
-            screen_name: username ?? interaction.options.get("username")?.value
+            screen_name: interaction.options.get("username")?.value
         })
         const user: FullUser = data[0];
         const embed = {
