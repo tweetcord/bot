@@ -110,27 +110,22 @@ export default class Trend extends Command {
         let page = 0
         collector?.on("collect", async (i: MessageComponentInteraction) => {
             await i.deferUpdate();
-            console.log(i.customId);
             switch (i.customId) {
                 case "first":
                     page = 0
                     await i.editReply(answers[0])
-                    console.log(page);
                     break;
                 case "previous":
                     page--
                     await i.editReply(answers[page])
-                    console.log(page);
                     break;
                 case "next":
                     page++
                     await i.editReply(answers[page])
-                    console.log(page);
                     break;
                 case "last":
                     page = 9
                     await i.editReply(answers[9])
-                    console.log(page);
                     break;
             }
         })
