@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bufferutil": "^4.0.3",
-    "discord.js": "^13.0.0-dev.02f55f0.1626742085",
+    "discord.js": "^13.0.0-dev.02f55f0.1626782659",
     "dotenv": "^10.0.0",
     "erlpack": "discord/erlpack",
     "moment": "^2.29.1",
