@@ -34,7 +34,9 @@ export default class Tweetcord extends Client {
                 StageInstanceManager: 0,
                 ThreadManager: 0,
                 ThreadMemberManager: 0,
-                VoiceStateManager: 0
+                VoiceStateManager: 0,
+                UserManager: 0,
+                RoleManager: 0
             }),
             restRequestTimeout: 60e3,
             presence: {
