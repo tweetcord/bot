@@ -10,17 +10,18 @@ export default class Trend extends Command {
     }
     public async reply(interaction: CommandInteraction): Promise<void> {
         // TODO: Add button support and woeid api
-        interaction.defer()
+        await interaction.defer()
         const data = await this.bot.twitter.get("trends/place", {
             id: interaction.options.get("country")?.value?.toString()
         })
         const trend = data[0];
+        console.log(trend.locations, trend.trends)
         const embed = {
             title: `Trends in ${trend.locations[0].name}`,
             description: trend.trends.slice(0, 10).map((t: { name: string; url: URL; }) => `[${t.name}](${t.url})`).join("\n"),
             timestamp: Date.now()
         }
-        
-        interaction.editReply({ embeds: [embed] })
+
+        await interaction.editReply({ embeds: [embed] })
     }
 }

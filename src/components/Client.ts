@@ -1,8 +1,10 @@
-import { Client, Collection, Interaction, Message, Options } from "discord.js";
+import { Client, Collection, Interaction, Options } from "discord.js";
 import { join, resolve } from "path";
 import { readdirSync } from "fs";
 import Twitter from "twitter-lite";
 import Command from "./Command";
+import sentry from "@sentry/node";
+import tracing from "@sentry/tracing";
 
 declare module "discord.js" {
     export interface Client {
@@ -41,7 +43,7 @@ export default class Tweetcord extends Client {
             restRequestTimeout: 60e3,
             presence: {
                 activities: [{
-                    name: "new things",
+                    name: "you",
                     type: "WATCHING"
                 }]
             },
@@ -50,6 +52,7 @@ export default class Tweetcord extends Client {
         this.on("ready", () => {
             return console.log("Bot is ready");
         })
+        this.on("debug", console.log)
         this.on("interactionCreate", this.handleInteraction)
         this.commands = new Collection();
         this.twitter = new Twitter({
@@ -62,6 +65,10 @@ export default class Tweetcord extends Client {
     public init(): void {
         this.loadCommands(resolve('dist/commands'))
         this.login(process.env.DISCORD_TOKEN)
+        sentry.init({
+            dsn: process.env.SENTRY,
+            tracesSampleRate: 1.0
+        })
     }
     private handleInteraction(i: Interaction) {
         try {

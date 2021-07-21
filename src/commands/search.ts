@@ -1,5 +1,5 @@
 import { CommandInteraction, Message, MessageActionRow, MessageComponentInteraction, MessageSelectOptionData, SelectMenuInteraction, Util } from "discord.js";
-import { FullUser, Status, User } from "twitter-d";
+import { FullUser, Status } from "twitter-d";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -70,6 +70,7 @@ export default class Search extends Command {
             const options: MessageSelectOptionData[] = tweets.map((u, i) => {
                 return Object.assign({}, {
                     label: (u.user as FullUser).screen_name,
+                    //@ts-ignore
                     description: u.text?.length === 0 ? "No description" : (u.text?.length! > 50 ? u.text?.substring(0, 49) + "\u2026" : u.text)!,
                     value: (++i).toString()
                 })

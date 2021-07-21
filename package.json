@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sentry/node": "^6.9.0",
+    "@sentry/tracing": "^6.9.0",
     "bufferutil": "^4.0.3",
     "discord.js": "^13.0.0-dev.02f55f0.1626782659",
     "dotenv": "^10.0.0",

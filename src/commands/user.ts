@@ -1,4 +1,4 @@
-import { CommandInteraction, SelectMenuInteraction, Util } from "discord.js";
+import { CommandInteraction, Util } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 import { FullUser } from "twitter-d"
