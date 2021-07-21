@@ -20,7 +20,7 @@
     "zlib-sync": "^0.1.7"
   },
   "devDependencies": {
-    "@types/node": "^16.3.2",
+    "@types/node": "^16.4.0",
     "twitter-d": "^0.4.0",
     "twitter-woeid": "^1.0.2"
   }
