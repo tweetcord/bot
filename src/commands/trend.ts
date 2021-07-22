@@ -10,7 +10,7 @@ export default class Trend extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<any> {
-        // TODO: Add button support with search tweet command
+        // TODO: Integrate with search tweet command
         await interaction.defer()
         const country = interaction.options.get("country")?.value
         try {
@@ -49,6 +49,7 @@ export default class Trend extends Command {
         }
     }
     private async woeid(input: any): Promise<woeidObject | undefined> {
+        // TODO: Fix search bugs
         input = input.toLowerCase()
         const data: woeidObject[] = await this.bot.twitter.get("trends/available")
         return data.find(t =>
