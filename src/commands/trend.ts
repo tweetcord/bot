@@ -41,7 +41,6 @@ export default class Trend extends Command {
                         inline: true
                     }
                 ]
-
             }
             await interaction.editReply({ embeds: [embed] })
         } catch (e) {
