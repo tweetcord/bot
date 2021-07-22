@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@sentry/node": "^6.9.0",
-    "@sentry/tracing": "^6.9.0",
+    "@sentry/tracing": "^6.10.0",
     "bufferutil": "^4.0.3",
     "discord.js": "^13.0.0-dev.07017a9.1626869177",
     "dotenv": "^10.0.0",
