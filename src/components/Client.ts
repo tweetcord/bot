@@ -3,7 +3,7 @@ import { join, resolve } from "path";
 import { readdirSync } from "fs";
 import Twitter from "twitter-lite";
 import Command from "./Command";
-import sentry from "@sentry/node";
+import { init } from "@sentry/node";
 import tracing from "@sentry/tracing";
 
 declare module "discord.js" {
@@ -65,7 +65,7 @@ export default class Tweetcord extends Client {
     public init(): void {
         this.loadCommands(resolve('dist/commands'))
         this.login(process.env.DISCORD_TOKEN)
-        sentry.init({
+        init({
             dsn: process.env.SENTRY,
             tracesSampleRate: 1.0
         })

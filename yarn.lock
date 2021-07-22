@@ -298,11 +298,6 @@ twitter-lite@^1.1.0:
     cross-fetch "^3.0.0"
     oauth-1.0a "^2.2.4"
 
-twitter-woeid@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/twitter-woeid/-/twitter-woeid-1.0.2.tgz#b9684afb296ae4a4c51682c2a70e82b70500dd55"
-  integrity sha512-NzKvzOl9urSn5mGxSq1/UjUTBascJ+WXBL4+TJ8Ll/wAuja9lK/8slrVZxoiIzqRSCSFbXN16ItI1QFXTvCJ8g==
-
 utf-8-validate@^5.0.5:
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/utf-8-validate/-/utf-8-validate-5.0.5.tgz#dd32c2e82c72002dc9f02eb67ba6761f43456ca1"

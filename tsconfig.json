@@ -5,6 +5,7 @@
     "strict": true, 
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "removeComments": true,
     "moduleResolution": "node",
     "outDir": "dist"
   },
