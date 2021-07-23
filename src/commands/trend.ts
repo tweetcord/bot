@@ -31,6 +31,7 @@ export default class Trend extends Command {
                 thumbnail: {
                     url: `https://www.countryflags.io/${woeid?.countryCode.toLowerCase()}/flat/64.png`
                 },
+                // TODO: Remove duplicated trends
                 description: trend.trends.slice(0, 10).map((t: TrendObject) => `[${t.name}](${t.url}) ${t.tweet_volume ?? ""}`).join("\n"),
                 timestamp: Date.now(),
                 footer: {
