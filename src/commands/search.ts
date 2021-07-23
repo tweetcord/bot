@@ -1,4 +1,4 @@
-import { CommandInteraction, Message, MessageActionRow, MessageComponentInteraction, MessageSelectOptionData, SelectMenuInteraction, Util } from "discord.js";
+import { CommandInteraction, Message, MessageActionRow, MessageSelectOptionData, SelectMenuInteraction, Util } from "discord.js";
 import { FullUser, Status } from "twitter-d";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
