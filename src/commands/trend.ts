@@ -21,15 +21,13 @@ export default class Trend extends Command {
             console.log(woeid)
             const trend = data[0];
             const trends: TrendObject[] = trend.trends.filter((v: TrendObject, i: number, a: TrendObject[]) => a.findIndex(t => (t.name === v.name)) === i)
+            console.log(trends)
             const embed: MessageEmbedOptions = {
                 color: "BLURPLE",
                 author: {
-                    name: `Trends in ${woeid?.placeType.code === 12 ? woeid?.name : `${woeid?.name}, ${woeid?.country}`}`,
+                    name: `Trends in ${woeid?.placeType.code === 12 ? woeid?.name : `${woeid?.name}${woeid?.country ? "," : ""} ${woeid?.country}`}`,
                     iconURL: "https://abs.twimg.com/favicons/twitter.ico",
                     url: "https://twitter.com/i/trends"
-                },
-                thumbnail: {
-                    url: `https://www.countryflags.io/${woeid?.countryCode.toLowerCase()}/flat/64.png`
                 },
                 description: trends.slice(0, 10).map(t => `[${t.name}](${t.url})`).join("\n"),
                 timestamp: Date.now(),
@@ -49,12 +47,23 @@ export default class Trend extends Command {
                     }
                 ]
             }
+            if (woeid?.countryCode) Object.assign(embed, {
+                thumbnail: {
+                    url: `https://www.countryflags.io/${woeid?.countryCode.toLowerCase()}/flat/64.png`
+                }
+            })
             const buttons = new MessageActionRow().addComponents(
                 {
                     style: "LINK",
                     type: "BUTTON",
                     url: "https://twitter.com/i/trends",
                     label: "See your trends"
+                },
+                {
+                    style: "LINK",
+                    type: "BUTTON",
+                    url: "https://twitter.com/settings/trends/location",
+                    label: "Change your trends location"
                 }
             )
             await interaction.editReply({ embeds: [embed], components: [buttons] })
@@ -68,7 +77,7 @@ export default class Trend extends Command {
             if (e?.errors?.[0].code === 34) {
                 return interaction.editReply({ content: `No trends found for ${inlineCode(country as string)}` })
             } else {
-                console.error(e)
+                console.error(e.stack)
                 return interaction.editReply({
                     content: `An error occurred. Please join support server and report this error: ${codeBlock("js", e.message)}`,
                     components: [support]
