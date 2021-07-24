@@ -20,7 +20,7 @@ export default class Trend extends Command {
             })
             console.log(woeid)
             const trend = data[0];
-            console.log(trend.trends)
+            const trends: TrendObject[] = trend.trends.filter((v: TrendObject, i: number, a: TrendObject[]) => a.findIndex(t => (t.name === v.name)) === i)
             const embed: MessageEmbedOptions = {
                 color: "BLURPLE",
                 author: {
@@ -31,8 +31,7 @@ export default class Trend extends Command {
                 thumbnail: {
                     url: `https://www.countryflags.io/${woeid?.countryCode.toLowerCase()}/flat/64.png`
                 },
-                // TODO: Remove duplicated trends
-                description: trend.trends.slice(0, 10).map((t: TrendObject) => `[${t.name}](${t.url}) ${t.tweet_volume ?? ""}`).join("\n"),
+                description: trends.slice(0, 10).map(t => `[${t.name}](${t.url})`).join("\n"),
                 timestamp: Date.now(),
                 footer: {
                     text: `${woeid?.placeType.name} - WOEID is ${woeid?.woeid}`
