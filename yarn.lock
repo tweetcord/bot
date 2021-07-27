@@ -183,10 +183,10 @@ discord-api-types@^0.19.0:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.19.0.tgz#86ba8021b29190cf860e90a2bc3e29b1d7aab3ba"
   integrity sha512-t2HKLd43Lbe+rf+ffYfKVv9Kk5f6p7sFqvO6CMV55ZB0PgZv8WigCkt9FoJciYo5S3Q6CGYK+WnE/ZG+6vkBDQ==
 
-discord.js@^13.0.0-dev.4886ae2.1627171445:
-  version "13.0.0-dev.4886ae2.1627171445"
-  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-13.0.0-dev.4886ae2.1627171445.tgz#3e4c72bb8a3601516921826eff2ae54845fc1cdf"
-  integrity sha512-GAgJUinUpeMPfb182sPSShyZVQHVcCDBM6ME9RljdyDeBK/UjNeod/wmk2tsHS9cFydScTxHhsBqmHvJRpAaKQ==
+discord.js@^13.0.0-dev.4886ae2.1627300977:
+  version "13.0.0-dev.4886ae2.1627300977"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-13.0.0-dev.4886ae2.1627300977.tgz#4d428de97d2a1962c53a4846b2658abc9788a1a8"
+  integrity sha512-RW0LUhTcLvieGGMFC8WxPYNABvd/iMZodtHjEl9Rw5VytFehVQK1/rghyy36iWkC5RRgoI4wkV0w1NuWY9SkhQ==
   dependencies:
     "@discordjs/builders" "^0.2.0"
     "@discordjs/collection" "^0.1.6"
