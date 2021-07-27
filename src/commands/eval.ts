@@ -1,3 +1,4 @@
+import { codeBlock } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { inspect } from "util";
 import Tweetcord from "../components/Client";
@@ -18,7 +19,7 @@ export default class Eval extends Command {
             let output = await eval(asynchr ? `(async()=>{${code}})();` : code)
             if (typeof output !== "string") output = inspect(output, { depth: 0 })
             return interaction.editReply({
-                content: `\`\`\`js\n${output.replace(new RegExp(this.bot.token!, 'gi'), "[TOKEN]")}\`\`\``
+                content: codeBlock("js", output.replace(new RegExp(this.bot.token!, 'gi'), "[TOKEN]"))
             });
 
         } catch (err) {

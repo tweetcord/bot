@@ -1,4 +1,4 @@
-import { codeBlock, inlineCode, time } from "@discordjs/builders";
+import { blockQuote, codeBlock, inlineCode, time } from "@discordjs/builders";
 import { CommandInteraction, MessageActionRow, MessageEmbedOptions } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
@@ -10,7 +10,6 @@ export default class Trend extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<any> {
-        // TODO: Integrate with search tweet command
         await interaction.defer()
         const country = interaction.options.get("country")?.value
         try {
@@ -18,10 +17,8 @@ export default class Trend extends Command {
             const data = await this.bot.twitter.get("trends/place", {
                 id: woeid?.woeid
             })
-            console.log(woeid)
             const trend = data[0];
             const trends: TrendObject[] = trend.trends.filter((v: TrendObject, i: number, a: TrendObject[]) => a.findIndex(t => (t.name === v.name)) === i)
-            console.log(trends)
             const embed: MessageEmbedOptions = {
                 color: "BLURPLE",
                 author: {
@@ -29,10 +26,10 @@ export default class Trend extends Command {
                     iconURL: "https://abs.twimg.com/favicons/twitter.ico",
                     url: "https://twitter.com/i/trends"
                 },
-                description: trends.slice(0, 10).map(t => `[${t.name}](${t.url})`).join("\n"),
+                description: blockQuote(trends.slice(0, 10).map(t => `[${t.name}](${t.url})`).join("\n")),
                 timestamp: Date.now(),
                 footer: {
-                    text: `${woeid?.placeType.name} - WOEID is ${woeid?.woeid}`
+                    text: `${woeid?.placeType.name ?? "Unknown place type"} • WOEID is ${woeid?.woeid}`
                 },
                 fields: [
                     {
