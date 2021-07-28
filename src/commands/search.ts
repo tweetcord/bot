@@ -160,6 +160,11 @@ export default class Search extends Command {
                     inline: true
                 },
                 {
+                    name: "Lists",
+                    value: user.listed_count.toLocaleString(),
+                    inline: true
+                },
+                {
                     name: "Protected",
                     value: user.protected ? "Yes" : "No",
                     inline: true
