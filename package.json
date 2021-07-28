@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@discordjs/builders": "^0.2.0",
-    "@types/node": "^16.4.3",
+    "@types/node": "^16.4.5",
     "twitter-d": "^0.4.0"
   }
 }
