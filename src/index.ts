@@ -1,4 +1,5 @@
 import Tweetcord from "./components/Client";
+import { config } from "dotenv";
 /*
 import { BaseCluster } from "kurasuta";
 export default class extends BaseCluster {
@@ -8,7 +9,6 @@ export default class extends BaseCluster {
     }
 };
 */
-import { config } from "dotenv";
 
 config()
 const client = new Tweetcord()

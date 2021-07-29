@@ -69,8 +69,9 @@ export default class Search extends Command {
             const tweets = statuses.slice(0, 10)
             const options: MessageSelectOptionData[] = tweets.map((u, i) => {
                 return Object.assign({}, {
-                    label: (u.user as FullUser).screen_name,
-                    //@ts-ignore
+                    // @ts-ignore
+                    label: `${u.text.startsWith("RT") ? "🔁" : ""} ${(u.user as FullUser).screen_name}`,
+                    // @ts-ignore
                     description: u.text?.length === 0 ? "No description" : (u.text?.length! > 50 ? u.text?.substring(0, 49) + "\u2026" : u.text)!,
                     value: (++i).toString()
                 })
