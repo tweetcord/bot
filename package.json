@@ -14,7 +14,7 @@
     "@sentry/node": "^6.10.0",
     "@sentry/tracing": "^6.9.0",
     "bufferutil": "^4.0.3",
-    "discord.js": "^13.0.0-dev.d310e4f.1627560163",
+    "discord.js": "^13.0.0-dev.2675b08.1627646567",
     "dotenv": "^10.0.0",
     "erlpack": "discord/erlpack",
     "moment": "^2.29.1",
