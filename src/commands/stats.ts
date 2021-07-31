@@ -1,5 +1,4 @@
-import { time } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction, Formatters } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -26,7 +25,7 @@ export default class Stats extends Command {
                     },
                     {
                         name: "Uptime",
-                        value: time(Date.parse(this.bot?.readyAt?.toUTCString()!) / 1000, "R"),
+                        value: Formatters.time(Date.parse(this.bot?.readyAt?.toUTCString()!) / 1000, "R"),
                         inline: true
                     }
                 ],

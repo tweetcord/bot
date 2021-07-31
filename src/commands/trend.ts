@@ -1,5 +1,4 @@
-import { blockQuote, codeBlock, inlineCode, time } from "@discordjs/builders";
-import { CommandInteraction, MessageActionRow, MessageEmbedOptions } from "discord.js";
+import { CommandInteraction, Formatters, MessageActionRow, MessageEmbedOptions } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 import { TrendObject, woeidObject } from "../components/Types";
@@ -26,7 +25,7 @@ export default class Trend extends Command {
                     iconURL: "https://abs.twimg.com/favicons/twitter.ico",
                     url: "https://twitter.com/i/trends"
                 },
-                description: blockQuote(trends.slice(0, 10).map(t => `[${t.name}](${t.url})`).join("\n")),
+                description: Formatters.blockQuote(trends.slice(0, 10).map(t => `[${t.name}](${t.url})`).join("\n")),
                 timestamp: Date.now(),
                 footer: {
                     text: `${woeid?.placeType.name ?? "Unknown place type"} • WOEID is ${woeid?.woeid}`
@@ -34,12 +33,12 @@ export default class Trend extends Command {
                 fields: [
                     {
                         name: "Oldest trend created at",
-                        value: time(Date.parse(trend.created_at) / 1000, "F"),
+                        value: Formatters.time(Date.parse(trend.created_at) / 1000, "F"),
                         inline: true
                     },
                     {
                         name: "List created at",
-                        value: time(Date.parse(trend.as_of) / 1000, "F"),
+                        value: Formatters.time(Date.parse(trend.as_of) / 1000, "F"),
                         inline: true
                     }
                 ]
@@ -72,11 +71,11 @@ export default class Trend extends Command {
                 label: "Join support server"
             })
             if (e?.errors?.[0].code === 34) {
-                return interaction.editReply({ content: `No trends found for ${inlineCode(country as string)}` })
+                return interaction.editReply({ content: `No trends found for ${Formatters.inlineCode(country as string)}` })
             } else {
                 console.error(e.stack)
                 return interaction.editReply({
-                    content: `An error occurred. Please join support server and report this error: ${codeBlock("js", e.message)}`,
+                    content: `An error occurred. Please join support server and report this error: ${Formatters.codeBlock("js", e.message)}`,
                     components: [support]
                 })
             }

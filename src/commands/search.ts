@@ -1,4 +1,4 @@
-import { CommandInteraction, Message, MessageActionRow, MessageSelectOptionData, SelectMenuInteraction, Util } from "discord.js";
+import { CommandInteraction, Formatters, Message, MessageActionRow, MessageSelectOptionData, SelectMenuInteraction, Util } from "discord.js";
 import { FullUser, Status } from "twitter-d";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
@@ -177,7 +177,7 @@ export default class Search extends Command {
                 },
                 {
                     name: "Account creation date",
-                    value: `<t:${Date.parse(user.created_at) / 1000}:R>`,
+                    value: Formatters.time(Date.parse(user.created_at) / 1000, "R"),
                     inline: true
                 }
             ]
