@@ -9,9 +9,39 @@ generator client {
 }
 
 model User {
-  id String @id @map("_id")
-  donator Boolean @default(false)
-  premium Boolean @default(false)
-  premium_servers String[] 
+  id              String   @id @map("_id")
+  donator         Boolean  @default(false)
+  premium         Boolean  @default(false)
+  premium_servers String[]
+
+  @@map(name: "users")
 }
 
+model Guild {
+  id      String  @id @map("_id")
+  feeds   Feed[]
+  premium Boolean @default(false)
+}
+
+model Feed {
+  message       String      @default("{link}")
+  channel       String      @id @map("_id")
+  webhook       Webhook     @relation(fields: [webhookId], references: [id])
+  user          TwitterUser @relation(fields: [twitterUserId], references: [id])
+  Guild         Guild?      @relation(fields: [guildId], references: [id])
+  guildId       String?
+  webhookId     String
+  twitterUserId String
+}
+
+model Webhook {
+  token String
+  id    String @id @map("_id")
+  Feed  Feed[]
+}
+
+model TwitterUser {
+  screen_name String
+  id          String @id @map("_id")
+  Feed        Feed[]
+}
