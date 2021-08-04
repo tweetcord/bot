@@ -31,7 +31,10 @@ export default class Tweetcord extends Client {
                 MessageManager: 0,
                 PresenceManager: 0,
                 GuildBanManager: 0,
-                GuildMemberManager: 0,
+                GuildMemberManager: {
+                    maxSize: 0,
+                    keepOverLimit: (v) => v.id === v.client.user!.id
+                },
                 BaseGuildEmojiManager: 0,
                 ReactionManager: 0,
                 ReactionUserManager: 0,
@@ -39,11 +42,10 @@ export default class Tweetcord extends Client {
                 ThreadManager: 0,
                 ThreadMemberManager: 0,
                 VoiceStateManager: 0,
-                UserManager: 0,
-                RoleManager: 0,
-                GuildChannelManager: 0,
-                ChannelManager: 0,
-                PermissionOverwriteManager: 0
+                UserManager: {
+                    maxSize: 0,
+                    keepOverLimit: (v) => v.id === v.client.user!.id
+                }
             }),
             restRequestTimeout: 60e3,
             presence: {
@@ -57,7 +59,7 @@ export default class Tweetcord extends Client {
         this.on("ready", () => {
             return console.log("Bot is ready");
         })
-       // this.on("debug", console.log)
+        // this.on("debug", console.log)
         this.on("interactionCreate", this.handleInteraction)
         this.on("error", console.log)
         this.commands = new Collection();
