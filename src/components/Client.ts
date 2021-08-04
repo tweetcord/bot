@@ -59,7 +59,6 @@ export default class Tweetcord extends Client {
         this.on("ready", () => {
             return console.log("Bot is ready");
         })
-        // this.on("debug", console.log)
         this.on("interactionCreate", this.handleInteraction)
         this.on("error", console.log)
         this.commands = new Collection();
