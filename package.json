@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node dist/index.js",
-    "dev": "rm -rf dist && devScript"
+    "dev": "rm -rf dist && devScript",
+    "db": "npx prisma format && npx prisma generate"
   },
   "author": "",
   "license": "ISC",
