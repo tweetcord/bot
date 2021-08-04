@@ -4,5 +4,14 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["mongoDb"]
 }
+
+model User {
+  id String @id @map("_id")
+  donator Boolean @default(false)
+  premium Boolean @default(false)
+  premium_servers String[] 
+}
+

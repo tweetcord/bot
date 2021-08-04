@@ -11,7 +11,6 @@ export default class Eval extends Command {
     }
     public async reply(interaction: CommandInteraction): Promise<any> {
         await interaction.defer()
-        if (!["548547460276944906", "534099893979971584"].includes(interaction.user.id)) return interaction.reply({content: "You can't use this."})
         try {
             const code = interaction.options.get("code")?.value as string
             const asynchr = code.includes('return') || code.includes('await');
@@ -22,8 +21,9 @@ export default class Eval extends Command {
             });
 
         } catch (err) {
+            console.log(err)
             return interaction.editReply({
-                content: err.message.replace(new RegExp(this.bot.token!, 'gi'), "[TOKEN]")
+                content: Formatters.codeBlock("js", err.message.replace(new RegExp(this.bot.token!, 'gi'), "[TOKEN]"))
             })
         }
     }

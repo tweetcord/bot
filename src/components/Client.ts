@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { init } from "@sentry/node";
 import { Client, Collection, Interaction, Options } from "discord.js";
 import { readdirSync } from "fs";
@@ -9,12 +10,14 @@ declare module "discord.js" {
     export interface Client {
         readonly commands: Collection<string, Command>
         twitter: Twitter
+        prisma: PrismaClient
     }
 }
 
 export default class Tweetcord extends Client {
     readonly commands: Collection<string, Command>;
     public twitter: Twitter
+    public prisma: PrismaClient
     public constructor() {
         super({
             allowedMentions: {
@@ -37,7 +40,10 @@ export default class Tweetcord extends Client {
                 ThreadMemberManager: 0,
                 VoiceStateManager: 0,
                 UserManager: 0,
-                RoleManager: 0
+                RoleManager: 0,
+                GuildChannelManager: 0,
+                ChannelManager: 0,
+                PermissionOverwriteManager: 0
             }),
             restRequestTimeout: 60e3,
             presence: {
@@ -51,14 +57,18 @@ export default class Tweetcord extends Client {
         this.on("ready", () => {
             return console.log("Bot is ready");
         })
-        this.on("debug", console.log)
+       // this.on("debug", console.log)
         this.on("interactionCreate", this.handleInteraction)
+        this.on("error", console.log)
         this.commands = new Collection();
         this.twitter = new Twitter({
             consumer_key: process.env.TWITTER_CONSUMER_KEY!,
             consumer_secret: process.env.TWITTER_CONSUMER_SECRET!,
             access_token_key: process.env.TWITTER_ACCESS_TOKEN,
             access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+        })
+        this.prisma = new PrismaClient({
+            errorFormat: "colorless"
         })
     }
     public init(): void {
@@ -68,6 +78,7 @@ export default class Tweetcord extends Client {
             dsn: process.env.SENTRY,
             tracesSampleRate: 1.0
         })
+        this.prisma.$connect()
     }
     private handleInteraction(i: Interaction) {
         try {

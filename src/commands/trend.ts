@@ -2,6 +2,7 @@ import { CommandInteraction, Formatters, MessageActionRow, MessageEmbedOptions }
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 import { TrendObject, woeidObject } from "../components/Types";
+
 export default class Trend extends Command {
     public constructor(client: Tweetcord) {
         super(client, {
@@ -28,7 +29,7 @@ export default class Trend extends Command {
                 description: Formatters.blockQuote(trends.slice(0, 10).map(t => `[${t.name}](${t.url})`).join("\n")),
                 timestamp: Date.now(),
                 footer: {
-                    text: `${woeid?.placeType.name ?? "Unknown place type"} • WOEID is ${woeid?.woeid}`
+                    text: `${woeid?.placeType.name ?? "Unknown place type"} \u2022 WOEID is ${woeid?.woeid}`
                 },
                 fields: [
                     {
@@ -85,13 +86,17 @@ export default class Trend extends Command {
         // TODO: Fix search bugs
         input = input.toLowerCase()
         const data: woeidObject[] = await this.bot.twitter.get("trends/available")
-        return data.find(t =>
-            t.woeid == Number(input) ||
-            t.countryCode === input.toUpperCase() ||
-            t.name?.toLowerCase() === input.toLowerCase() ||
-            t.country?.toLowerCase() === input.toLowerCase() ||
-            t.country?.toLowerCase().includes(input.toLowerCase()) ||
-            t.name?.toLowerCase().includes(input.toLowerCase())
-        )
+        return data.find(t => {
+            if (input.length == 2 || input.length === 3) {
+                return t.countryCode === input.toUpperCase()
+            } else if (!Number.isNaN(input)) {
+                return t.woeid === Number(input)
+            } else {
+                return t.name?.toLowerCase() === input.toLowerCase() ||
+                    t.country?.toLowerCase() === input.toLowerCase() ||
+                    t.country?.toLowerCase().includes(input.toLowerCase()) ||
+                    t.name?.toLowerCase().includes(input.toLowerCase())
+            }
+        })
     }
 }
