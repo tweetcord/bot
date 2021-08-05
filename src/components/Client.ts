@@ -72,7 +72,7 @@ export default class Tweetcord extends Client {
             access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
         })
         this.prisma = new PrismaClient({
-            errorFormat: "colorless"            
+            errorFormat: "colorless"
         })
     }
     public init(): void {

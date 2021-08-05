@@ -2,7 +2,7 @@ export interface woeidObject {
     name: string,
     placeType: PlaceType,
     url: URL,
-    parentid: number, 
+    parentid: number,
     country: string,
     woeid: number,
     countryCode: string
@@ -14,7 +14,7 @@ interface PlaceType {
 }
 
 export interface TrendObject {
-    name: string, 
+    name: string,
     url: URL,
     promoted_content: boolean | null,
     query: string,
