@@ -10,7 +10,7 @@ export default class Eval extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<any> {
-        await interaction.defer()
+        await interaction?.defer()
         try {
             const code = interaction.options.get("code")?.value as string
             const asynchr = code.includes('return') || code.includes('await');

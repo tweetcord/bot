@@ -10,7 +10,7 @@ export default class Search extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<Message | any> {
-        await interaction.defer()
+        await interaction?.defer()
         if (interaction.options.get("username")) {
             const data: FullUser[] = await this.bot.twitter.get("users/search", {
                 q: interaction.options.get("username")?.value
@@ -83,10 +83,10 @@ export default class Search extends Command {
                 options
             })
             await interaction.editReply({ content: "Select user below", components: [row] })
-            
+
               const filter = (i: SelectMenuInteraction) => i.user.id === interaction?.user.id
               const collector = interaction.channel?.createMessageComponentCollector({ filter, time: 60e3 })
-              
+
               collector?.on("collect", (i: SelectMenuInteraction) => {
                   if (i.customId === "tweets") {
                       i.deferUpdate()
@@ -114,7 +114,7 @@ export default class Search extends Command {
                       ]
                   })
               })
-  
+
         }
     }
     private async user(i: SelectMenuInteraction, username: string) {

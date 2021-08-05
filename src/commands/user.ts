@@ -10,7 +10,7 @@ export default class User extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<void> {
-        await interaction.defer()
+        await interaction?.defer()
         let data = await this.bot.twitter.get("users/lookup", {
             screen_name: interaction.options.get("username")?.value
         })
