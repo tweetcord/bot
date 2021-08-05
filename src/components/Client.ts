@@ -45,7 +45,9 @@ export default class Tweetcord extends Client {
                 UserManager: {
                     maxSize: 0,
                     keepOverLimit: (v) => v.id === v.client.user!.id
-                }
+                },
+                GuildInviteManager: 0,
+                GuildStickerManager: 0
             }),
             restRequestTimeout: 60e3,
             presence: {
@@ -60,7 +62,8 @@ export default class Tweetcord extends Client {
             return console.log("Bot is ready");
         })
         this.on("interactionCreate", this.handleInteraction)
-        this.on("error", console.log)
+        this.on("error", console.error)
+        this.on("warn", console.warn)
         this.commands = new Collection();
         this.twitter = new Twitter({
             consumer_key: process.env.TWITTER_CONSUMER_KEY!,
@@ -69,7 +72,7 @@ export default class Tweetcord extends Client {
             access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
         })
         this.prisma = new PrismaClient({
-            errorFormat: "colorless"
+            errorFormat: "colorless"            
         })
     }
     public init(): void {

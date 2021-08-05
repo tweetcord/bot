@@ -8,6 +8,14 @@ generator client {
   previewFeatures = ["mongoDb"]
 }
 
+model Guild {
+  id      String  @id @map("_id")
+  feeds   Feed[]
+  premium Boolean @default(false)
+
+  @@map(name: "guilds")
+}
+
 model User {
   id              String   @id @map("_id")
   donator         Boolean  @default(false)
@@ -17,15 +25,10 @@ model User {
   @@map(name: "users")
 }
 
-model Guild {
-  id      String  @id @map("_id")
-  feeds   Feed[]
-  premium Boolean @default(false)
-}
-
 model Feed {
+  id            String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
   message       String      @default("{link}")
-  channel       String      @id @map("_id")
+  channel       String
   webhook       Webhook     @relation(fields: [webhookId], references: [id])
   user          TwitterUser @relation(fields: [twitterUserId], references: [id])
   Guild         Guild?      @relation(fields: [guildId], references: [id])
