@@ -10,6 +10,14 @@
   },
   "author": "",
   "license": "ISC",
+  "devScript": {
+    "depCheck": true,
+    "autoInstallDep": false,
+    "autoInstallTypes": true,
+    "ignore": [
+      "node_modules"
+    ]
+  },
   "dependencies": {
     "@prisma/client": "^2.28.0",
     "@sentry/node": "^6.10.0",
