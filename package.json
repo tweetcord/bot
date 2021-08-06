@@ -13,7 +13,7 @@
   "dependencies": {
     "@prisma/client": "^2.28.0",
     "@sentry/node": "^6.10.0",
-    "@sentry/tracing": "^6.9.0",
+    "@sentry/tracing": "^6.11.0",
     "bufferutil": "^4.0.3",
     "discord.js": "^13.0.0-dev.t1628165339.3eb4140",
     "dotenv": "^10.0.0",
