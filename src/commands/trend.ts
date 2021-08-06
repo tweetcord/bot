@@ -10,7 +10,7 @@ export default class Trend extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<any> {
-        await interaction?.defer()
+        await interaction?.deferReply()
         const country = interaction.options.get("country")?.value
         try {
             const woeid = await this.woeid(country as string)

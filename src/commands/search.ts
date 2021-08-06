@@ -10,7 +10,7 @@ export default class Search extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<Message | any> {
-        await interaction?.defer()
+        await interaction?.deferReply()
         if (interaction.options.get("username")) {
             const data: FullUser[] = await this.bot.twitter.get("users/search", {
                 q: interaction.options.get("username")?.value
