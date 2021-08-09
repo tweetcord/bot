@@ -20,7 +20,7 @@ export default class Search extends Command {
             const options: MessageSelectOptionData[] = users.map((u, i) => {
                 return Object.assign({}, {
                     label: u.screen_name,
-                    description: u.description?.length === 0 ? "No description" : (u.description?.length! > 50 ? u.description?.substring(0, 49) + "\u2026" : u.description)!,
+                    description: u.description?.length === 0 ? "No description" : (u.description?.length! > 100 ? u.description?.substring(0, 99) + "\u2026" : u.description)!,
                     value: (++i).toString()
                 })
             })
@@ -84,36 +84,36 @@ export default class Search extends Command {
             })
             await interaction.editReply({ content: "Select user below", components: [row] })
 
-              const filter = (i: SelectMenuInteraction) => i.user.id === interaction?.user.id
-              const collector = interaction.channel?.createMessageComponentCollector({ filter, time: 60e3 })
+            const filter = (i: SelectMenuInteraction) => i.user.id === interaction?.user.id
+            const collector = interaction.channel?.createMessageComponentCollector({ filter, time: 60e3 })
 
-              collector?.on("collect", (i: SelectMenuInteraction) => {
-                  if (i.customId === "tweets") {
-                      i.deferUpdate()
-                      const tweet = tweets[Number(i.values[0]) - 1]
-                      i.followUp({ content: `https://twitter.com/i/web/status/${tweet.id_str}`})
-                  }
-              })
-              collector?.on("end", (collected) => {
-                  collected.first()?.editReply({
-                      content: "⏰ Time's up", components: [
-                          new MessageActionRow().addComponents(
-                              {
-                                  type: "BUTTON",
-                                  style: "LINK",
-                                  url: "https://tweetcord.xyz",
-                                  label: "Visit our website!"
-                              },
-                              {
-                                  type: "BUTTON",
-                                  style: "LINK",
-                                  url: "https://discord.gg/ZWfpZuw4mn",
-                                  label: "Join support server!"
-                              }
-                          )
-                      ]
-                  })
-              })
+            collector?.on("collect", (i: SelectMenuInteraction) => {
+                if (i.customId === "tweets") {
+                    i.deferUpdate()
+                    const tweet = tweets[Number(i.values[0]) - 1]
+                    i.followUp({ content: `https://twitter.com/i/web/status/${tweet.id_str}` })
+                }
+            })
+            collector?.on("end", (collected) => {
+                collected.first()?.editReply({
+                    content: "⏰ Time's up", components: [
+                        new MessageActionRow().addComponents(
+                            {
+                                type: "BUTTON",
+                                style: "LINK",
+                                url: "https://tweetcord.xyz",
+                                label: "Visit our website!"
+                            },
+                            {
+                                type: "BUTTON",
+                                style: "LINK",
+                                url: "https://discord.gg/ZWfpZuw4mn",
+                                label: "Join support server!"
+                            }
+                        )
+                    ]
+                })
+            })
 
         }
     }
