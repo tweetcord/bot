@@ -1,9 +1,0 @@
-name: GitHub Actions Demo
-on: push
-jobs:
-  clear:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: git diff --check
-        uses: joel-coffman/action-git-diff-check@0.1.1
