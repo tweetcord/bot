@@ -1,4 +1,4 @@
-import { Collection, CommandInteraction, InteractionReplyOptions, MessageActionRow, MessageComponentInteraction } from "discord.js";
+import { Collection, CommandInteraction, InteractionReplyOptions, Message, MessageActionRow, MessageComponentInteraction } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -8,7 +8,7 @@ export default class Trend extends Command {
             commandName: "tweets"
         })
     }
-    public async reply(interaction: CommandInteraction): Promise<void> {
+    public async reply(interaction: CommandInteraction): Promise<Message | void> {
         const data = await this.bot.twitter.get("statuses/user_timeline", {
             screen_name: interaction.options.get("username")?.value,
             exclude_replies: interaction.options.get("show_replies") ? !interaction.options.get("show_replies")?.value : false
@@ -107,7 +107,7 @@ export default class Trend extends Command {
         interaction.editReply({ content: `**(1/${tweets.length})** https://twitter.com/${data[0].user.screen_name}/status/${data[0].id_str}`, components: [firstRow] })
         const filter = (i: MessageComponentInteraction) => i.user.id === interaction?.user.id
         const collector = interaction.channel?.createMessageComponentCollector({ filter, time: 60e3 })
-        let page = 0
+        let page: number = 0
         collector?.on("collect", async (i: MessageComponentInteraction) => {
             await i.deferUpdate();
             switch (i.customId) {
