@@ -1,4 +1,4 @@
-import { CommandInteraction, Formatters, Message, MessageActionRow, MessageSelectOptionData, SelectMenuInteraction, Util } from "discord.js";
+import { Collection, CommandInteraction, Formatters, Message, MessageActionRow, MessageSelectOptionData, SelectMenuInteraction, Util } from "discord.js";
 import { FullUser, Status } from "twitter-d";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
@@ -11,12 +11,12 @@ export default class Search extends Command {
     }
     public async reply(interaction: CommandInteraction): Promise<Message | any> {
         await interaction?.deferReply()
-        if (interaction.options.get("username")) {
+        if (interaction.options.getSubcommand() === "user") {
             const data: FullUser[] = await this.bot.twitter.get("users/search", {
-                q: interaction.options.get("username")?.value
+                q: interaction.options.getString("username")
             })
             if (data.length === 0) return interaction.reply({ content: "No results found", ephemeral: true })
-            const users = data.slice(0, 10)
+            const users = data.slice(0, data.length > 25 ? 25 : data.length)
             const options: MessageSelectOptionData[] = users.map((u, i) => {
                 return Object.assign({}, {
                     label: u.screen_name,
@@ -26,7 +26,7 @@ export default class Search extends Command {
             })
             const row = new MessageActionRow().addComponents({
                 "type": "SELECT_MENU",
-                "placeholder": "Click me!",
+                "placeholder": `Click me! (${users.length} results)`,
                 "customId": "users",
                 options
             })
@@ -60,25 +60,27 @@ export default class Search extends Command {
                 })
             })
 
-        } else if (interaction.options.get("text")) {
+        } else if (interaction.options.getSubcommand() === "tweet") {
             const data = await this.bot.twitter.get("search/tweets", {
-                q: interaction.options.get("text")?.value
+                q: interaction.options.getString("text"),
+                result_type: interaction.options.getString("result_type") ?? "mixed",
+                lang: interaction.options.getString("language") ?? "en"
             })
             if (data.statuses.length === 0) return interaction.reply({ content: "No results found", ephemeral: true })
             const statuses: Status[] = data.statuses
-            const tweets = statuses.slice(0, 10)
+            const tweets = statuses.slice(0, statuses.length > 25 ? 25 : statuses.length)
             const options: MessageSelectOptionData[] = tweets.map((u, i) => {
                 return Object.assign({}, {
                     // @ts-ignore
                     label: `${u.text.startsWith("RT") ? "🔁" : ""} ${(u.user as FullUser).screen_name}`,
                     // @ts-ignore
-                    description: u.text?.length === 0 ? "No description" : (u.text?.length! > 50 ? u.text?.substring(0, 49) + "\u2026" : u.text)!,
+                    description: u.text?.length === 0 ? "No description" : (u.text?.length! > 100 ? u.text?.substring(0, 99) + "\u2026" : u.text)!,
                     value: (++i).toString()
                 })
             })
             const row = new MessageActionRow().addComponents({
                 "type": "SELECT_MENU",
-                "placeholder": "Click me!",
+                "placeholder": `Click me! (${tweets.length} results)`,
                 "customId": "tweets",
                 options
             })
@@ -91,10 +93,10 @@ export default class Search extends Command {
                 if (i.customId === "tweets") {
                     i.deferUpdate()
                     const tweet = tweets[Number(i.values[0]) - 1]
-                    i.followUp({ content: `https://twitter.com/i/web/status/${tweet.id_str}` })
+                    i.followUp({ content: `https://twitter.com/i/web/status/${tweet.id_str}`, ephemeral: true })
                 }
             })
-            collector?.on("end", (collected) => {
+            collector?.on("end", (collected: Collection<string, SelectMenuInteraction>) => {
                 collected.first()?.editReply({
                     content: "⏰ Time's up", components: [
                         new MessageActionRow().addComponents(
