@@ -1,12 +1,20 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "commonjs", 
-    "strict": true, 
+    "module": "commonjs",
+    "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "removeComments": true,
     "moduleResolution": "node",
-    "outDir": "dist"
+    "outDir": "dist",
+    "forceConsistentCasingInFileNames": true,
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "importHelpers": true
   },
 }
