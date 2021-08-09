@@ -28,26 +28,26 @@ export default class Tweetcord extends Client {
                 "Tweetcord/1.0.0"
             ],
             makeCache: Options.cacheWithLimits({
-                MessageManager: 0,
-                PresenceManager: 0,
-                GuildBanManager: 0,
+                BaseGuildEmojiManager: 0,
                 GuildMemberManager: {
                     maxSize: 0,
                     keepOverLimit: (v) => v.id === v.client.user!.id
                 },
-                BaseGuildEmojiManager: 0,
+                GuildBanManager: 0,
+                GuildInviteManager: 0,
+                GuildStickerManager: 0,
+                MessageManager: 0,
+                PresenceManager: 0,
                 ReactionManager: 0,
                 ReactionUserManager: 0,
                 StageInstanceManager: 0,
                 ThreadManager: 0,
                 ThreadMemberManager: 0,
-                VoiceStateManager: 0,
                 UserManager: {
                     maxSize: 0,
                     keepOverLimit: (v) => v.id === v.client.user!.id
                 },
-                GuildInviteManager: 0,
-                GuildStickerManager: 0
+                VoiceStateManager: 0
             }),
             restRequestTimeout: 60e3,
             presence: {
