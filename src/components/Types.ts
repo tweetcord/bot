@@ -1,5 +1,3 @@
-import { ChannelResolvable } from "discord.js";
-
 export interface woeidObject {
     name: string,
     placeType: PlaceType,
