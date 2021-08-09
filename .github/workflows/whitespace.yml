@@ -1,11 +1,15 @@
 name: GitHub Actions Demo
-on: [push]
+on: push
 jobs:
-  Check-whitespaces:
+  clear:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: whitespace-linter
-        uses: nosborn/github-action-whitespace-linter@v1
+      - uses: actions/checkout@v2
+      - uses: nosborn/github-action-whitespace-linter@v1
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
+          force: true
