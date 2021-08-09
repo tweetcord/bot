@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageActionRow, MessageComponentInteraction } from "discord.js";
+import { Collection, CommandInteraction, InteractionReplyOptions, MessageActionRow, MessageComponentInteraction } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -9,12 +9,12 @@ export default class Trend extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<void> {
-        await interaction?.deferReply()
         const data = await this.bot.twitter.get("statuses/user_timeline", {
-            screen_name: interaction.options.get("username")?.value
+            screen_name: interaction.options.get("username")?.value,
+            exclude_replies: interaction.options.get("show_replies") ? !interaction.options.get("show_replies")?.value : false
         })
         if (data.length === 0) return interaction.reply({ content: "No tweets found" })
-
+        await interaction?.deferReply()
         const row = new MessageActionRow().addComponents(
             {
                 customId: "first",
@@ -94,19 +94,19 @@ export default class Trend extends Command {
                 type: "BUTTON",
                 disabled: true
             })
-        const answers: any[] = []
-        const tweets = data.slice(0, 10)
-        for (const tweet of tweets) {
-            const url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
+        const answers: InteractionReplyOptions[] = []
+        const tweets = data.slice(0, data.length > 10 ? 10 : data.length)
+
+        for (let i = 0; i < tweets.length; i++) {
+            const url = `https://twitter.com/${tweets[i].user.screen_name}/status/${tweets[i].id_str}`
             answers.push({
-                content: `**(${tweets.indexOf(tweet) + 1}/${tweets.length})** ${url}`,
-                components: answers.length === 0 ? [firstRow] : (answers.length === 9 ? [lastRow] : [row])
+                content: `**(${i + 1}/${tweets.length})** ${url}`,
+                components: answers.length === 0 ? [firstRow] : (tweets.length === i + 1 ? [lastRow] : [row])
             })
         }
-
-        interaction.editReply({ content: `**(1/10)** https://twitter.com/${data[0].user.screen_name}/status/${data[0].id_str}`, components: [firstRow] })
+        interaction.editReply({ content: `**(1/${tweets.length})** https://twitter.com/${data[0].user.screen_name}/status/${data[0].id_str}`, components: [firstRow] })
         const filter = (i: MessageComponentInteraction) => i.user.id === interaction?.user.id
-        const collector = interaction.channel?.createMessageComponentCollector({ filter, time: 30e3 })
+        const collector = interaction.channel?.createMessageComponentCollector({ filter, time: 60e3 })
         let page = 0
         collector?.on("collect", async (i: MessageComponentInteraction) => {
             await i.deferUpdate();
@@ -124,12 +124,12 @@ export default class Trend extends Command {
                     await i.editReply(answers[page])
                     break;
                 case "last":
-                    page = 9
-                    await i.editReply(answers[9])
+                    page = answers.length
+                    await i.editReply(answers[page])
                     break;
             }
         })
-        collector?.on("end", collected => {
+        collector?.on("end", (collected: Collection<string, MessageComponentInteraction>) => {
             collected.first()?.editReply({
                 components: [
                     new MessageActionRow().addComponents(
