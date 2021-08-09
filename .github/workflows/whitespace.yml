@@ -5,8 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: nosborn/github-action-whitespace-linter@v1
-      
+      - uses: hexrabbit/whitespace-lint@v0.0.1
+        with:
+           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
