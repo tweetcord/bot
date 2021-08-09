@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import sentry from "@sentry/node";
+import { init } from "@sentry/node";
 import { Client, Collection, Interaction, Options } from "discord.js";
 import { readdirSync } from "fs";
 import { join, resolve } from "path";
@@ -78,7 +78,8 @@ export default class Tweetcord extends Client {
     public init(): void {
         this.loadCommands(resolve('dist/commands'))
         this.login(process.env.DISCORD_TOKEN)
-        sentry.init({
+        // sentry
+        init({
             dsn: process.env.SENTRY,
             tracesSampleRate: 1.0
         })
