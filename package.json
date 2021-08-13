@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@types/node": "^16.6.1",
-    "prisma": "^2.29.0",
+    "prisma": "^2.29.1",
     "twitter-types": "^0.9.3"
   }
 }
