@@ -1,6 +1,7 @@
+import Tweetcord from "@components/Client";
+import Command from "@components/Command";
 import { Collection, CommandInteraction, Message, MessageActionRow, MessageSelectOptionData, SelectMenuInteraction } from "discord.js";
-import Tweetcord from "../components/Client";
-import Command from "../components/Command";
+
 export default class Search extends Command {
     public constructor(client: Tweetcord) {
         super(client, {

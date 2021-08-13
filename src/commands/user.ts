@@ -1,6 +1,6 @@
+import Tweetcord from "@components/Client";
+import Command from "@components/Command";
 import { CommandInteraction, Formatters, MessageEmbedOptions, Util } from "discord.js";
-import Tweetcord from "../components/Client";
-import Command from "../components/Command";
 
 export default class User extends Command {
     public constructor(client: Tweetcord) {

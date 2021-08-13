@@ -1,5 +1,6 @@
-import Tweetcord from "./components/Client";
-import { config } from "dotenv";
-config()
-const client = new Tweetcord()
-client.init()
+import "dotenv/config";
+
+import Tweetcord from "@components/Client";
+
+const client = new Tweetcord();
+client.init();
