@@ -9,7 +9,7 @@ export default class Trend extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<Message | void> {
-        const data = await this.bot.twitter.get("statuses/user_timeline", {
+        const data = await this.bot.twitter.v1.get("statuses/user_timeline", {
             screen_name: interaction.options.get("username")?.value,
             exclude_replies: interaction.options.get("show_replies") ? !interaction.options.get("show_replies")?.value : false,
             include_rts: interaction.options.get("show_retweets")?.value
