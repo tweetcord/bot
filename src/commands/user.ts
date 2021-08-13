@@ -1,7 +1,7 @@
 import { CommandInteraction, Formatters, Util } from "discord.js";
 import { FullUser } from "twitter-d";
-import Tweetcord from "../components/Client";
-import Command from "../components/Command";
+import Tweetcord from "@components/Client";
+import Command from "@components/Command";
 
 export default class User extends Command {
     public constructor(client: Tweetcord) {
