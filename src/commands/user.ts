@@ -1,5 +1,4 @@
-import { CommandInteraction, Formatters, Util } from "discord.js";
-import { FullUser } from "twitter-d";
+import { CommandInteraction, Formatters, MessageEmbedOptions, Util } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -11,22 +10,16 @@ export default class User extends Command {
     }
     public async reply(interaction: CommandInteraction): Promise<void> {
         await interaction?.deferReply()
-        let data = await this.bot.twitter.get("users/lookup", {
-            screen_name: interaction.options.get("username")?.value
-        })
-        const user: FullUser = data[0];
-        const embed = {
+        let { data: user } = await this.bot.twitter.v2.userByUsername(interaction.options.getString("username", true))
+        const embed: MessageEmbedOptions = {
             title: `${Util.escapeMarkdown(user.name)} ${user.verified ? "<:verified:743873088185172108>" : ""}`,
             author: {
-                name: user.screen_name,
-                url: `https://twitter.com/${user.screen_name}`,
-                iconURL: user.profile_image_url_https.replace("_normal", "")
+                name: user.username,
+                url: `https://twitter.com/${user.username}`,
+                iconURL: user.profile_image_url?.replace("_normal", "")
             },
             thumbnail: {
-                url: user.profile_image_url_https?.replace("_normal", "")
-            },
-            image: {
-                url: user.profile_banner_url?.replace("_normal", "")
+                url: user.profile_image_url?.replace("_normal", "")
             },
             footer: {
                 text: `Twitter ID is ${user.id}`,
@@ -35,27 +28,22 @@ export default class User extends Command {
             fields: [
                 {
                     name: "Followers",
-                    value: user.followers_count.toLocaleString(),
+                    value: user.public_metrics?.followers_count?.toLocaleString()!,
                     inline: true
                 },
                 {
                     name: "Following",
-                    value: user.friends_count.toLocaleString(),
+                    value: user.public_metrics?.following_count?.toLocaleString()!,
                     inline: true
                 },
                 {
                     name: "Tweets",
-                    value: user.statuses_count.toLocaleString(),
-                    inline: true
-                },
-                {
-                    name: "Favourites",
-                    value: user.favourites_count.toLocaleString(),
+                    value: user.public_metrics?.tweet_count?.toLocaleString()!,
                     inline: true
                 },
                 {
                     name: "Lists",
-                    value: user.listed_count.toLocaleString(),
+                    value: user.public_metrics?.listed_count?.toLocaleString()!,
                     inline: true
                 },
                 {
@@ -70,7 +58,7 @@ export default class User extends Command {
                 },
                 {
                     name: "Account creation date",
-                    value: Formatters.time(Date.parse(user.created_at) / 1000, "R"),
+                    value: Formatters.time(Date.parse(user.created_at as string) / 1000, "R"),
                     inline: true
                 }
             ]
@@ -78,7 +66,7 @@ export default class User extends Command {
         if (user.description) Object.assign(embed, {
             description: `>>> ${user.description}`,
         })
-        if (user.location) embed.fields.push({
+        if (user.location) embed.fields?.push({
             name: "Location",
             value: user.location,
             inline: true
