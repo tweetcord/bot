@@ -3,20 +3,20 @@ import { init } from "@sentry/node";
 import { Client, Collection, Interaction, Options } from "discord.js";
 import { readdirSync } from "fs";
 import { join, resolve } from "path";
-import Twitter from "twitter-lite";
+import Twitter, { TwitterApiReadOnly } from "twitter-api-v2";
 import Command from "./Command";
 
 declare module "discord.js" {
     export interface Client {
         readonly commands: Collection<string, Command>
-        twitter: Twitter
+        twitter: TwitterApiReadOnly
         prisma: PrismaClient
     }
 }
 
 export default class Tweetcord extends Client {
     readonly commands: Collection<string, Command>;
-    public twitter: Twitter
+    public twitter: TwitterApiReadOnly
     public prisma: PrismaClient
     public constructor() {
         super({
@@ -65,15 +65,8 @@ export default class Tweetcord extends Client {
         this.on("error", console.error)
         this.on("warn", console.warn)
         this.commands = new Collection();
-        this.twitter = new Twitter({
-            consumer_key: process.env.TWITTER_CONSUMER_KEY!,
-            consumer_secret: process.env.TWITTER_CONSUMER_SECRET!,
-            access_token_key: process.env.TWITTER_ACCESS_TOKEN,
-            access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-        })
-        this.prisma = new PrismaClient({
-            errorFormat: "colorless"
-        })
+        this.twitter = new Twitter(process.env.TWITTER_BEARER as string).readOnly
+        this.prisma = new PrismaClient({ errorFormat: "colorless" })
     }
     public init(): void {
         this.loadCommands(resolve('dist/commands'))
