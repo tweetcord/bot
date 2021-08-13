@@ -14,7 +14,7 @@ export default class Trend extends Command {
         const country = interaction.options.get("country")?.value
         try {
             const woeid = await this.woeid(country as string)
-            const data = await this.bot.twitter.get("trends/place", {
+            const data = await this.bot.twitter.v1.get("trends/place", {
                 id: woeid?.woeid
             })
             const trend = data[0];

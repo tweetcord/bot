@@ -1,20 +1,20 @@
+import { clientOptions } from "@/constants";
+import Command from "@components/Command";
 import { PrismaClient } from "@prisma/client";
 import { init } from "@sentry/node";
 import { Client, Collection, Interaction } from "discord.js";
 import { readdirSync } from "fs";
 import { join, resolve } from "path";
-import Twitter from "twitter-lite";
-import Command from "@components/Command";
-import { clientOptions } from "@/constants";
+import Twitter, { TwitterApiReadOnly } from "twitter-api-v2";
 
 export default class Tweetcord extends Client {
   readonly commands: Collection<string, Command>;
-  public twitter: Twitter;
+  public twitter: TwitterApiReadOnly;
   public prisma: PrismaClient;
 
   public constructor() {
     super(clientOptions);
-    
+
     this.on("ready", () => {
       return console.log("Bot is ready");
     });
@@ -27,13 +27,8 @@ export default class Tweetcord extends Client {
 
     this.commands = new Collection();
 
-    this.twitter = new Twitter({
-      consumer_key: process.env.TWITTER_CONSUMER_KEY!,
-      consumer_secret: process.env.TWITTER_CONSUMER_SECRET!,
-      access_token_key: process.env.TWITTER_ACCESS_TOKEN,
-      access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-    });
-    
+    this.twitter = new Twitter(process.env.TWITTER_BEARER as string).readOnly
+
     this.prisma = new PrismaClient({
       errorFormat: "colorless",
     });
