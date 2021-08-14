@@ -19,7 +19,7 @@
     ]
   },
   "dependencies": {
-    "@prisma/client": "^2.29.0",
+    "@prisma/client": "^2.29.1",
     "@sentry/node": "^6.11.0",
     "@sentry/tracing": "^6.9.0",
     "bufferutil": "^4.0.3",
