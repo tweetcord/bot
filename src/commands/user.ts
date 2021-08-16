@@ -1,6 +1,6 @@
-import Tweetcord from "@components/Client";
-import Command from "@components/Command";
-import { CommandInteraction, Formatters, MessageEmbedOptions, Util } from "discord.js";
+import { CommandInteraction, Formatters, Message, MessageEmbedOptions, Util } from "discord.js";
+import Tweetcord from "../components/Client";
+import Command from "../components/Command";
 
 export default class User extends Command {
     public constructor(client: Tweetcord) {
@@ -8,7 +8,7 @@ export default class User extends Command {
             commandName: "user"
         })
     }
-    public async reply(interaction: CommandInteraction): Promise<void> {
+    public async reply(interaction: CommandInteraction): Promise<Message | void> {
         await interaction?.deferReply()
         let { data: user } = await this.bot.twitter.v2.userByUsername(interaction.options.getString("username", true))
         const embed: MessageEmbedOptions = {

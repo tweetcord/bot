@@ -1,6 +1,6 @@
 import { Collection, CommandInteraction, InteractionReplyOptions, Message, MessageActionRow, MessageComponentInteraction } from "discord.js";
-import Tweetcord from "@components/Client";
-import Command from "@components/Command";
+import Tweetcord from "../components/Client";
+import Command from "../components/Command";
 
 export default class Trend extends Command {
     public constructor(client: Tweetcord) {

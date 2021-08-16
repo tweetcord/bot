@@ -1,5 +1,5 @@
 import { Client, Collection } from "discord.js";
-import Command from "@components/Command";
+import Command from "../components/Command";
 import Twitter from "twitter-lite";
 import { PrismaClient } from "@prisma/client";
 

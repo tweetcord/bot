@@ -1,7 +1,7 @@
 import { CommandInteraction, Formatters, MessageActionRow, MessageEmbedOptions } from "discord.js";
-import Tweetcord from "@components/Client";
-import Command from "@components/Command";
-import { TrendObject, woeidObject } from "@components/Types";
+import Tweetcord from "../components/Client";
+import Command from "../components/Command";
+import { TrendObject, woeidObject } from "../components/Types";
 
 export default class Trend extends Command {
     public constructor(client: Tweetcord) {

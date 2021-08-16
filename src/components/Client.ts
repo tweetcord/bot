@@ -1,5 +1,5 @@
-import { clientOptions } from "@/constants";
-import Command from "@components/Command";
+import { clientOptions } from "../constants";
+import Command from "./Command";
 import { PrismaClient } from "@prisma/client";
 import { init } from "@sentry/node";
 import { Client, Collection, Interaction } from "discord.js";
@@ -14,21 +14,14 @@ export default class Tweetcord extends Client {
 
   public constructor() {
     super(clientOptions);
-
     this.on("ready", () => {
       return console.log("Bot is ready");
     });
-
     this.on("interactionCreate", this.handleInteraction);
-
     this.on("error", console.error);
-
     this.on("warn", console.warn);
-
     this.commands = new Collection();
-
-    this.twitter = new Twitter(process.env.TWITTER_BEARER as string).readOnly
-
+    this.twitter = new Twitter(process.env.TWITTER_BEARER).readOnly
     this.prisma = new PrismaClient({
       errorFormat: "colorless",
     });

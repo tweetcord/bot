@@ -2,10 +2,10 @@ import {
   CommandInteraction,
   Message,
   MessageActionRow,
-  MessageSelectOptionData,
+  MessageSelectOptionData
 } from "discord.js";
-import Tweetcord from "@components/Client";
-import Command from "@components/Command";
+import Tweetcord from "../components/Client";
+import Command from "../components/Command";
 
 export default class Feeds extends Command {
   public constructor(client: Tweetcord) {

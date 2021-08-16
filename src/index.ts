@@ -1,6 +1,6 @@
 import "dotenv/config";
-
-import Tweetcord from "@components/Client";
+import "tsconfig-paths/register"
+import Tweetcord from "./components/Client";
 
 const client = new Tweetcord();
 client.init();

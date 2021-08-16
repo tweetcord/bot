@@ -1,6 +1,6 @@
-import Tweetcord from "@components/Client";
-import Command from "@components/Command";
 import { Collection, CommandInteraction, Message, MessageActionRow, MessageSelectOptionData, SelectMenuInteraction } from "discord.js";
+import Tweetcord from "../components/Client";
+import Command from "../components/Command";
 
 export default class Search extends Command {
     public constructor(client: Tweetcord) {
@@ -8,7 +8,7 @@ export default class Search extends Command {
             commandName: "search"
         })
     }
-    public async reply(interaction: CommandInteraction): Promise<Message | any> {
+    public async reply(interaction: CommandInteraction): Promise<Message | void> {
         await interaction?.deferReply()
         if (interaction.options.getSubcommand() === "tweet") {
             const data = await this.bot.twitter.v2.search(interaction.options.getString("text", true))

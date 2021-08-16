@@ -1,5 +1,5 @@
 import { Message, CommandInteraction } from "discord.js";
-import Tweetcord from "@components/Client";
+import Tweetcord from "./Client";
 
 
 interface CommandOptions {
