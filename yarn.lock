@@ -227,7 +227,8 @@ dotenv@^10.0.0:
 
 erlpack@GingkathFox/erlpack:
   version "0.1.3"
-  resolved "https://codeload.github.com/GingkathFox/erlpack/tar.gz/3d1cfe1b18251ab5735660f601d88712d6f11a9f"
+  uid e27db8f82892bdb9b28a0547cc394d68b5d2242d
+  resolved "https://codeload.github.com/GingkathFox/erlpack/tar.gz/e27db8f82892bdb9b28a0547cc394d68b5d2242d"
   dependencies:
     bindings "^1.5.0"
     nan "^2.14.0"
