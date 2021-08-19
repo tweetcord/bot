@@ -32,7 +32,7 @@ export const clientOptions: ClientOptions = {
   presence: {
     activities: [
       {
-        name: "you",
+        name: "tweets",
         type: "WATCHING",
       },
     ],

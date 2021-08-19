@@ -1,12 +1,12 @@
-import { clientOptions } from "../constants";
-import Command from "./Command";
 import { PrismaClient } from "@prisma/client";
 import { init } from "@sentry/node";
 import { Client, Collection, Interaction } from "discord.js";
 import { readdirSync } from "fs";
 import { join, resolve } from "path";
-import Twitter, { TwitterApiReadOnly } from "twitter-api-v2";
-
+import { TwitterApiReadOnly } from "twitter-api-v2";
+import { clientOptions } from "../constants";
+import Command from "./Command";
+import { logger } from "./Logger"
 export default class Tweetcord extends Client {
   readonly commands: Collection<string, Command>;
   public twitter: TwitterApiReadOnly;
@@ -14,42 +14,36 @@ export default class Tweetcord extends Client {
 
   public constructor() {
     super(clientOptions);
-    this.on("ready", () => {
-      return console.log("Bot is ready");
-    });
+    this.on("ready", this.handleReady);
     this.on("interactionCreate", this.handleInteraction);
     this.on("error", console.error);
     this.on("warn", console.warn);
     this.commands = new Collection();
-    this.twitter = new Twitter(process.env.TWITTER_BEARER).readOnly
-    this.prisma = new PrismaClient({
-      errorFormat: "colorless",
-    });
+    this.twitter = new TwitterApiReadOnly(process.env.TWITTER_BEARER)
+    this.prisma = new PrismaClient({ errorFormat: "colorless" });
   }
 
   public init(): void {
     this.loadCommands(resolve("dist/commands"));
     this.login(process.env.DISCORD_TOKEN);
+  }
+  private handleReady(client: Client): void {
+    logger.info("\u25CF", `${client.user?.tag} is online`)
     // sentry
     init({
       dsn: process.env.SENTRY,
       tracesSampleRate: 1.0,
     });
-    this.prisma.$connect();
+    this.prisma.$connect()
   }
-
-  private handleInteraction(i: Interaction) {
-    if (!i.isCommand()) return;
-    const command = this.findCommand(i.commandName);
-    command?.reply(i);
-  }
-
-  private findCommand(name: string): Command | undefined {
-    return this.commands.get(name);
+  private handleInteraction(interaction: Interaction) {
+    if (!interaction.isCommand()) return;
+    const command = this.commands.get(interaction.commandName);
+    command?.reply(interaction);
   }
 
   private async loadCommands(folder: string) {
-    const commands = readdirSync(folder);
+    const commands = readdirSync(folder).filter(a => a.endsWith(".js"))
 
     for (const command of commands) {
       const mod = await import(join(folder, command));
