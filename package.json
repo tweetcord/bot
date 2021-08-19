@@ -32,7 +32,7 @@
     "zlib-sync": "^0.1.7"
   },
   "devDependencies": {
-    "@types/node": "^16.6.1",
+    "@types/node": "^16.6.2",
     "prisma": "^2.29.1",
     "twitter-types": "^0.9.3"
   }
