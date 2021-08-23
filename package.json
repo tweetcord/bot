@@ -35,6 +35,6 @@
     "@types/node": "^16.7.1",
     "prisma": "^2.29.1",
     "tslog": "^3.2.1",
-    "twitter-types": "^0.9.3"
+    "twitter-types": "^0.10.0"
   }
 }

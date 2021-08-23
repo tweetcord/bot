@@ -356,10 +356,10 @@ twitter-api-v2@^1.3.0:
   resolved "https://registry.yarnpkg.com/twitter-api-v2/-/twitter-api-v2-1.3.0.tgz#4fd16aaabf96662b80fe50d79a1363b2ebeb4681"
   integrity sha512-BQFGNdHfegV3sNDxeFpS8ch3+BDdreoXSv2s5obe/owEv6Qlekva6zU0kteDoBoFGcxpO1rCM7x3AaD9U5huqQ==
 
-twitter-types@^0.9.3:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/twitter-types/-/twitter-types-0.9.3.tgz#bbf431d3c3de1580de003f9594099f4bd321e2c4"
-  integrity sha512-189nilpOUQiB9x12YwOqZDigw0sft/zIt3T+zaEQGMmHSdM4tRdPiKN6K5SHRx/nt0UA1RZuc20PKaTipXfUag==
+twitter-types@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/twitter-types/-/twitter-types-0.10.0.tgz#7ccbdca0c4401fab4f90ea51c924168f4abb4902"
+  integrity sha512-rcSeaFzFzdX0/2XSxYN+MVJndvuNnSiq+1n5ywe+F5VJiwoeGbo3hu+BdYEtqp8T14eGC5gxFrK+P7GKu+KYFw==
 
 type-fest@^1.2.1:
   version "1.4.0"
