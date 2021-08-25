@@ -19,7 +19,7 @@
     ]
   },
   "dependencies": {
-    "@prisma/client": "^2.29.1",
+    "@prisma/client": "^2.30.0",
     "@sentry/node": "^6.11.0",
     "@sentry/tracing": "^6.9.0",
     "bufferutil": "^4.0.3",
@@ -33,8 +33,8 @@
   },
   "devDependencies": {
     "@types/node": "^16.7.1",
-    "chalk": "^4.1.2",
-    "prisma": "^2.29.1",
+    "prisma": "^2.30.0",
+    "tslog": "^3.2.1",
     "twitter-types": "^0.10.0"
   }
 }
