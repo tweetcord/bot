@@ -6,7 +6,7 @@ import { join, resolve } from "path";
 import { TwitterApiReadOnly } from "twitter-api-v2";
 import { clientOptions } from "../constants";
 import Command from "./Command";
-import { logger } from "./Logger"
+import * as logger from "./Logger"
 export default class Tweetcord extends Client {
   readonly commands: Collection<string, Command>;
   public twitter: TwitterApiReadOnly;
@@ -14,10 +14,11 @@ export default class Tweetcord extends Client {
 
   public constructor() {
     super(clientOptions);
-    this.on("ready", this.handleReady);
-    this.on("interactionCreate", this.handleInteraction);
-    this.on("error", console.error);
-    this.on("warn", console.warn);
+    this
+      .on("ready", this.handleReady)
+      .on("interactionCreate", this.handleInteraction)
+      .on("error", console.error)
+      .on("warn", console.warn)
     this.commands = new Collection();
     this.twitter = new TwitterApiReadOnly(process.env.TWITTER_BEARER)
     this.prisma = new PrismaClient({ errorFormat: "colorless" });
@@ -28,13 +29,14 @@ export default class Tweetcord extends Client {
     this.login(process.env.DISCORD_TOKEN);
   }
   private handleReady(client: Client): void {
-    logger.info("\u25CF", `${client.user?.tag} is online`)
+    logger.info("[BOT]", `Logged in as ${client.user?.tag} (${client.guilds.cache.size} guilds)`)
     // sentry
     init({
       dsn: process.env.SENTRY,
       tracesSampleRate: 1.0,
-    });
-    this.prisma.$connect()
+    })
+    logger.info("[SENTRY]", "Initialized Sentry")
+    this.prisma.$connect().then(() => logger.info("[PRISMA]", "Connected to MongoDB"))
   }
   private handleInteraction(interaction: Interaction) {
     if (!interaction.isCommand()) return;
