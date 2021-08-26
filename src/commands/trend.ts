@@ -1,7 +1,7 @@
 import { CommandInteraction, Formatters, MessageActionRow, MessageEmbedOptions } from "discord.js";
+import { TrendV1 } from "twitter-api-v2";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
-import { TrendObject, woeidObject } from "../components/Types";
 
 export default class Trend extends Command {
     public constructor(client: Tweetcord) {
@@ -11,25 +11,23 @@ export default class Trend extends Command {
     }
     public async reply(interaction: CommandInteraction): Promise<any> {
         await interaction?.deferReply()
-        const country = interaction.options.get("country")?.value
+        const country = interaction.options.getString("country", true)
         try {
-            const woeid = await this.woeid(country as string)
-            const data = await this.bot.twitter.v1.get("trends/place", {
-                id: woeid?.woeid
-            })
+            const woeid = await this.woeid(country)
+            const data = await this.bot.twitter.v1.trendsByPlace(woeid?.woeid!)
             const trend = data[0];
-            const trends: TrendObject[] = trend.trends.filter((v: TrendObject, i: number, a: TrendObject[]) => a.findIndex(t => (t.name === v.name)) === i)
+            const trends: TrendV1[] = trend.trends.filter((v: TrendV1, i: number, a: TrendV1[]) => a.findIndex(t => (t.name === v.name)) === i)
             const embed: MessageEmbedOptions = {
                 color: "BLURPLE",
                 author: {
-                    name: `Trends in ${woeid?.placeType.code === 12 ? woeid?.name : `${woeid?.name}${woeid?.country ? "," : ""} ${woeid?.country}`}`,
+                    name: `Trends in ${woeid?.placeType?.code === 12 ? woeid?.name : `${woeid?.name}${woeid?.country ? "," : ""} ${woeid?.country}`}`,
                     iconURL: "https://abs.twimg.com/favicons/twitter.ico",
                     url: "https://twitter.com/i/trends"
                 },
                 description: Formatters.blockQuote(trends.slice(0, 10).map(t => `[${t.name}](${t.url})`).join("\n")),
                 timestamp: Date.now(),
                 footer: {
-                    text: `${woeid?.placeType.name ?? "Unknown place type"} \u2022 WOEID is ${woeid?.woeid}`
+                    text: `${woeid?.placeType?.name ?? "Unknown place type"} \u2022 WOEID is ${woeid?.woeid}`
                 },
                 fields: [
                     {
@@ -82,21 +80,13 @@ export default class Trend extends Command {
             }
         }
     }
-    private async woeid(input: string): Promise<woeidObject | undefined> {
-        // TODO: Fix search bugs
-        input = input.toLowerCase()
-        const data: woeidObject[] = await this.bot.twitter.get("trends/available")
-        return data.find(t => {
-            if (input.length == 2 || input.length === 3) {
-                return t.countryCode === input.toUpperCase()
-            } else if (!Number.isNaN(input)) {
-                return t.woeid === Number(input)
-            } else {
-                return t.name?.toLowerCase() === input.toLowerCase() ||
-                    t.country?.toLowerCase() === input.toLowerCase() ||
-                    t.country?.toLowerCase().includes(input.toLowerCase()) ||
-                    t.name?.toLowerCase().includes(input.toLowerCase())
-            }
-        })
+    private async woeid(input: string): Promise<any> {
+        const data = await this.bot.twitter.v1.trendsAvailable()
+        for (const d of data) {
+            if (d.name.toLowerCase() === input.toLowerCase()) return d;
+            if (d.country?.toLowerCase() === input.toLowerCase()) return d;
+            if (d.countryCode?.toLowerCase() === input.toLowerCase()) return d;
+            if (!Number.isNaN(input) && Number(input) === d.woeid) return d;
+        }
     }
 }
