@@ -1,4 +1,4 @@
-import { CommandInteraction, Formatters } from "discord.js";
+import { CommandInteraction, Formatters, version } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -11,7 +11,8 @@ export default class Stats extends Command {
     public reply(interaction: CommandInteraction): Promise<void> {
         return interaction.reply({
             embeds: [{
-                title: "Tweetcord's statistics",
+                title: "Tweetcord",
+                description: Formatters.blockQuote("Imagine a bot... that allows you to interact with Twitter without leaving Discord"),
                 fields: [
                     {
                         name: "Servers",
@@ -25,7 +26,12 @@ export default class Stats extends Command {
                     },
                     {
                         name: "Uptime",
-                        value: Formatters.time(Date.parse(this.bot?.readyAt?.toUTCString()!) / 1000, "R"),
+                        value: Formatters.time(Date.parse(this.bot?.readyAt?.toString()!) / 1000, "R"),
+                        inline: true
+                    },
+                    {
+                        name: `${Formatters.formatEmoji("880242179879096320")} Discord.js version`,
+                        value: version,
                         inline: true
                     }
                 ],
@@ -47,8 +53,14 @@ export default class Stats extends Command {
                     {
                         style: "LINK",
                         type: "BUTTON",
+                        url: this.bot.generateInvite({ scopes: ["applications.commands", "bot"], permissions: 537259072n }),
+                        label: "Invite me"
+                    },
+                    {
+                        style: "LINK",
+                        type: "BUTTON",
                         url: "https://top.gg/bot/677951102913740801/vote",
-                        label: "Upvote Tweetcord"
+                        label: "Upvote"
                     }
                 ]
             }]
