@@ -33,7 +33,7 @@
     "zlib-sync": "^0.1.7"
   },
   "devDependencies": {
-    "@types/node": "^16.7.1",
+    "@types/node": "^16.7.2",
     "prisma": "^2.30.0"
   }
 }
