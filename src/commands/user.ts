@@ -10,7 +10,9 @@ export default class User extends Command {
     }
     public async reply(interaction: CommandInteraction): Promise<Message | void> {
         await interaction?.deferReply()
-        let { data: user } = await this.bot.twitter.v2.userByUsername(interaction.options.getString("username", true))
+        let { data: user } = await this.bot.twitter.v2.userByUsername(interaction.options.getString("username", true), {
+            "user.fields": ["created_at", "description", "location", "profile_image_url", "protected", "verified", "url", "public_metrics"]
+        })
         const embed: MessageEmbedOptions = {
             title: `${Util.escapeMarkdown(user.name)} ${user.verified ? "<:verified:743873088185172108>" : ""}`,
             author: {
@@ -25,6 +27,7 @@ export default class User extends Command {
                 text: `Twitter ID is ${user.id}`,
                 iconURL: interaction.user.displayAvatarURL()
             },
+            timestamp: Date.now(),
             fields: [
                 {
                     name: "Followers",
