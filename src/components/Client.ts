@@ -34,6 +34,7 @@ export default class Tweetcord extends Client {
     init({
       dsn: process.env.SENTRY,
       tracesSampleRate: 1.0,
+      environment: "production"
     })
     logger.info("[SENTRY]", "Initialized Sentry")
     this.prisma.$connect().then(() => logger.info("[PRISMA]", "Connected to MongoDB"))

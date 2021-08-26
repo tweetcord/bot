@@ -1,7 +1,6 @@
 import { Message, CommandInteraction } from "discord.js";
 import Tweetcord from "./Client";
 
-
 interface CommandOptions {
     commandName: string
 }
