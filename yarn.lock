@@ -252,7 +252,7 @@ erlpack@hzmifork/erlpack:
   resolved "https://codeload.github.com/hzmifork/erlpack/tar.gz/f206b9469ee7538b0a9d0ac68db4f3a7266f27c7"
   dependencies:
     bindings "^1.5.0"
-    nan "^2.14.0"
+    nan "^2.15.0"
 
 file-uri-to-path@1.0.0:
   version "1.0.0"
@@ -309,7 +309,7 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-nan@^2.14.0:
+nan@^2.14.0, nan@^2.15.0:
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.15.0.tgz#3f34a473ff18e15c1b5626b62903b5ad6e665fee"
   integrity sha512-8ZtvEnA2c5aYCZYd1cvgdnU6cqwixRoYg70xPLWUws5ORTa/lnw+u4amixRS/Ac5U5mQVgp9pnlSUnbNWFaWZQ==
@@ -361,19 +361,14 @@ tslib@^1.9.3:
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
 tslib@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
-  integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
 twitter-api-v2@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/twitter-api-v2/-/twitter-api-v2-1.3.0.tgz#4fd16aaabf96662b80fe50d79a1363b2ebeb4681"
   integrity sha512-BQFGNdHfegV3sNDxeFpS8ch3+BDdreoXSv2s5obe/owEv6Qlekva6zU0kteDoBoFGcxpO1rCM7x3AaD9U5huqQ==
-
-twitter-types@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/twitter-types/-/twitter-types-0.10.0.tgz#7ccbdca0c4401fab4f90ea51c924168f4abb4902"
-  integrity sha512-rcSeaFzFzdX0/2XSxYN+MVJndvuNnSiq+1n5ywe+F5VJiwoeGbo3hu+BdYEtqp8T14eGC5gxFrK+P7GKu+KYFw==
 
 type-fest@^1.2.1:
   version "1.4.0"
