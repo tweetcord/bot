@@ -19,7 +19,7 @@ export default class Eval extends Command {
             return interaction.editReply({
                 content: Formatters.codeBlock("js", output.replace(new RegExp(this.bot.token!, 'gi'), "[TOKEN]"))
             })
-        } catch (err) {
+        } catch (err: any) {
             console.error("Eval command error:", err)
             return interaction.editReply({
                 content: Formatters.codeBlock("js", err.message.replace(new RegExp(this.bot.token!, 'gi'), "[TOKEN]"))

@@ -62,19 +62,19 @@ export default class Trend extends Command {
                 }
             )
             await interaction.editReply({ embeds: [embed], components: [buttons] })
-        } catch (e) {
+        } catch (err: any) {
             const support = new MessageActionRow().addComponents({
                 style: "LINK",
                 type: "BUTTON",
                 url: "https://discord.gg/2n4qCXTuc7",
                 label: "Join support server"
             })
-            if (e?.errors?.[0].code === 34) {
+            if (err?.errors?.[0].code === 34) {
                 return interaction.editReply({ content: `No trends found for ${Formatters.inlineCode(country as string)}` })
             } else {
-                console.error(e.stack)
+                console.error(err.stack)
                 return interaction.editReply({
-                    content: `An error occurred. Please join support server and report this error: ${Formatters.codeBlock("js", e.message)}`,
+                    content: `An error occurred. Please join support server and report this error: ${Formatters.codeBlock("js", err.message)}`,
                     components: [support]
                 })
             }
