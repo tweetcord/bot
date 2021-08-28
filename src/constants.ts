@@ -1,4 +1,4 @@
-import { ClientOptions, Options } from "discord.js";
+import { ClientOptions, Intents, MessageActionRow, Options } from "discord.js";
 
 export const clientOptions: ClientOptions = {
   allowedMentions: {
@@ -37,5 +37,118 @@ export const clientOptions: ClientOptions = {
       },
     ],
   },
-  intents: 1585,
+  intents: [Intents.FLAGS.GUILDS],
 };
+
+export const TweetsCollectorEndButtons = new MessageActionRow().addComponents(
+  {
+    customId: "first",
+    emoji: "860524771832496138",
+    style: "PRIMARY",
+    type: "BUTTON",
+    disabled: true
+  },
+  {
+    customId: "previous",
+    emoji: "860524798181900308",
+    style: "PRIMARY",
+    type: "BUTTON",
+    disabled: true
+  },
+  {
+    customId: "next",
+    emoji: "860524837675073556",
+    style: "PRIMARY",
+    type: "BUTTON",
+    disabled: true
+  },
+  {
+    customId: "last",
+    emoji: "860524885230223370",
+    style: "PRIMARY",
+    type: "BUTTON",
+    disabled: true
+  })
+
+
+export const TweetsRow = new MessageActionRow().addComponents(
+  {
+    customId: "first",
+    emoji: "860524771832496138",
+    style: "PRIMARY",
+    type: "BUTTON",
+  },
+  {
+    customId: "previous",
+    emoji: "860524798181900308",
+    style: "PRIMARY",
+    type: "BUTTON",
+  },
+  {
+    customId: "next",
+    emoji: "860524837675073556",
+    style: "PRIMARY",
+    type: "BUTTON"
+  },
+  {
+    customId: "last",
+    emoji: "860524885230223370",
+    style: "PRIMARY",
+    type: "BUTTON"
+  })
+
+export const TweetsFirstRow = new MessageActionRow().addComponents(
+  {
+    customId: "first",
+    emoji: "860524771832496138",
+    style: "PRIMARY",
+    type: "BUTTON",
+    disabled: true
+  },
+  {
+    customId: "previous",
+    emoji: "860524798181900308",
+    style: "PRIMARY",
+    type: "BUTTON",
+    disabled: true
+  },
+  {
+    customId: "next",
+    emoji: "860524837675073556",
+    style: "PRIMARY",
+    type: "BUTTON"
+  },
+  {
+    customId: "last",
+    emoji: "860524885230223370",
+    style: "PRIMARY",
+    type: "BUTTON"
+  })
+
+export const TweetsLastRow = new MessageActionRow().addComponents(
+  {
+    customId: "first",
+    emoji: "860524771832496138",
+    style: "PRIMARY",
+    type: "BUTTON",
+  },
+  {
+    customId: "previous",
+    emoji: "860524798181900308",
+    style: "PRIMARY",
+    type: "BUTTON",
+  },
+  {
+    customId: "next",
+    emoji: "860524837675073556",
+    style: "PRIMARY",
+    type: "BUTTON",
+    disabled: true
+  },
+  {
+    customId: "last",
+    emoji: "860524885230223370",
+    style: "PRIMARY",
+    type: "BUTTON",
+    disabled: true
+  })

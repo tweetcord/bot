@@ -1,6 +1,7 @@
-import { Collection, CommandInteraction, InteractionReplyOptions, Message, MessageActionRow, MessageComponentInteraction } from "discord.js";
+import { Collection, CommandInteraction, InteractionReplyOptions, Message, MessageComponentInteraction } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
+import { TweetsCollectorEndButtons, TweetsFirstRow, TweetsLastRow, TweetsRow } from "../constants";
 
 export default class Trend extends Command {
     public constructor(client: Tweetcord) {
@@ -9,103 +10,21 @@ export default class Trend extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<Message | void> {
-        const data = await this.bot.twitter.v1.get("statuses/user_timeline", {
-            screen_name: interaction.options.get("username")?.value,
-            exclude_replies: interaction.options.get("show_replies") ? !interaction.options.get("show_replies")?.value : false,
-            include_rts: interaction.options.get("show_retweets")?.value
-        })
-        if (data.length === 0) return interaction.reply({ content: "No tweets found" })
+        let { data: user } = await this.bot.twitter.v2.userByUsername(interaction.options.getString("username", true))
+        const data = await this.bot.twitter.v2.userTimeline(user.id)
+        if (data?.tweets?.length === 0) return interaction.reply({ content: "No tweets found" })
         await interaction?.deferReply()
-        const row = new MessageActionRow().addComponents(
-            {
-                customId: "first",
-                emoji: "860524771832496138",
-                style: "PRIMARY",
-                type: "BUTTON",
-            },
-            {
-                customId: "previous",
-                emoji: "860524798181900308",
-                style: "PRIMARY",
-                type: "BUTTON",
-            },
-            {
-                customId: "next",
-                emoji: "860524837675073556",
-                style: "PRIMARY",
-                type: "BUTTON"
-            },
-            {
-                customId: "last",
-                emoji: "860524885230223370",
-                style: "PRIMARY",
-                type: "BUTTON"
-            })
-        const firstRow = new MessageActionRow().addComponents(
-            {
-                customId: "first",
-                emoji: "860524771832496138",
-                style: "PRIMARY",
-                type: "BUTTON",
-                disabled: true
-            },
-            {
-                customId: "previous",
-                emoji: "860524798181900308",
-                style: "PRIMARY",
-                type: "BUTTON",
-                disabled: true
-            },
-            {
-                customId: "next",
-                emoji: "860524837675073556",
-                style: "PRIMARY",
-                type: "BUTTON"
-            },
-            {
-                customId: "last",
-                emoji: "860524885230223370",
-                style: "PRIMARY",
-                type: "BUTTON"
-            })
-        const lastRow = new MessageActionRow().addComponents(
-            {
-                customId: "first",
-                emoji: "860524771832496138",
-                style: "PRIMARY",
-                type: "BUTTON",
-            },
-            {
-                customId: "previous",
-                emoji: "860524798181900308",
-                style: "PRIMARY",
-                type: "BUTTON",
-            },
-            {
-                customId: "next",
-                emoji: "860524837675073556",
-                style: "PRIMARY",
-                type: "BUTTON",
-                disabled: true
-            },
-            {
-                customId: "last",
-                emoji: "860524885230223370",
-                style: "PRIMARY",
-                type: "BUTTON",
-                disabled: true
-            })
         const answers: InteractionReplyOptions[] = []
-        const tweets = data.slice(0, data.length > 10 ? 10 : data.length)
+        const tweets = data?.tweets.slice(0, data?.tweets.length > 10 ? 10 : data.tweets.length)
 
-        for (let i = 0; i < tweets.length; i++) {
-            const url = `https://twitter.com/${tweets[i].user.screen_name}/status/${tweets[i].id_str}`
-            answers.push({
+        for (let i = 0; i < tweets?.length; i++) {
+            const url = `https://twitter.com/i/web/status/${tweets.at(i)?.id}`
+            answers?.push({
                 content: `**(${i + 1}/${tweets.length})** ${url}`,
-                components: answers.length === 0 ? [firstRow] : (tweets.length === i + 1 ? [lastRow] : [row])
+                components: answers.length === 0 ? [TweetsFirstRow] : (tweets.length === i + 1 ? [TweetsLastRow] : [TweetsRow])
             })
         }
-        interaction.editReply({ content: `**(1/${tweets.length})** https://twitter.com/${data[0].user.screen_name}/status/${data[0].id_str}`, components: [firstRow] })
+        interaction.editReply({ content: `**(1/${tweets.length})** https://twitter.com/i/web/status/${tweets.at(0)?.id}`, components: [TweetsFirstRow] })
         const filter = (i: MessageComponentInteraction) => i.user.id === interaction?.user.id
         const collector = interaction.channel?.createMessageComponentCollector({ filter, time: 60e3 })
         let page: number = 0
@@ -132,37 +51,7 @@ export default class Trend extends Command {
         })
         collector?.on("end", (collected: Collection<string, MessageComponentInteraction>) => {
             collected.first()?.editReply({
-                components: [
-                    new MessageActionRow().addComponents(
-                        {
-                            customId: "first",
-                            emoji: "860524771832496138",
-                            style: "PRIMARY",
-                            type: "BUTTON",
-                            disabled: true
-                        },
-                        {
-                            customId: "previous",
-                            emoji: "860524798181900308",
-                            style: "PRIMARY",
-                            type: "BUTTON",
-                            disabled: true
-                        },
-                        {
-                            customId: "next",
-                            emoji: "860524837675073556",
-                            style: "PRIMARY",
-                            type: "BUTTON",
-                            disabled: true
-                        },
-                        {
-                            customId: "last",
-                            emoji: "860524885230223370",
-                            style: "PRIMARY",
-                            type: "BUTTON",
-                            disabled: true
-                        })
-                ]
+                components: [TweetsCollectorEndButtons]
             })
         })
     }
