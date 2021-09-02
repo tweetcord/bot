@@ -365,10 +365,10 @@ tslib@^2.3.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
-twitter-api-v2@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/twitter-api-v2/-/twitter-api-v2-1.4.0.tgz#659c060abda65cb6cebe5248bb3bfbed18bdfaf4"
-  integrity sha512-ikxt5+hFr4Tk6ln2+RqPZW7a4NfH9S9kZFsmRAVcREA5ZcSxFDtP6C4KucmMdbzeUzFQcGNmEKCNBbrvV4jubw==
+twitter-api-v2@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/twitter-api-v2/-/twitter-api-v2-1.4.1.tgz#9489cad64db8272ecbae3567d6051f1cb4011afa"
+  integrity sha512-jaUPQ2dpdog1iCoS7ExZbOZt+A7duHVt2I/zuaEkStyHpkppJ1Z9AJ5pY0Nxe6FjNOFqtIk4sCvYaKt0qTQHIA==
 
 type-fest@^1.2.1:
   version "1.4.0"
