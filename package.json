@@ -28,7 +28,7 @@
     "dotenv": "^10.0.0",
     "erlpack": "hzmifork/erlpack",
     "moment": "^2.29.1",
-    "twitter-api-v2": "^1.4.0",
+    "twitter-api-v2": "^1.4.1",
     "utf-8-validate": "^5.0.5",
     "zlib-sync": "^0.1.7"
   },
