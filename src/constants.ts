@@ -3,14 +3,15 @@ import { ClientOptions, Intents, MessageActionRow, Options } from "discord.js";
 export const clientOptions: ClientOptions = {
   allowedMentions: {
     parse: ["users"],
-    repliedUser: true,
+    repliedUser: true
   },
   userAgentSuffix: ["Tweetcord/1.0.0"],
   makeCache: Options.cacheWithLimits({
     BaseGuildEmojiManager: 0,
     GuildMemberManager: {
       maxSize: 0,
-      keepOverLimit: (v) => v.id === v.client.user!.id,
+      sweepInterval: 3600,
+      keepOverLimit: (v) => v.id === v.client.user!.id
     },
     GuildBanManager: 0,
     GuildInviteManager: 0,
@@ -24,7 +25,8 @@ export const clientOptions: ClientOptions = {
     ThreadMemberManager: 0,
     UserManager: {
       maxSize: 0,
-      keepOverLimit: (v) => v.id === v.client.user!.id,
+      sweepInterval: 3600,
+      keepOverLimit: (v) => v.id === v.client.user!.id
     },
     VoiceStateManager: 0,
   }),
@@ -33,11 +35,13 @@ export const clientOptions: ClientOptions = {
     activities: [
       {
         name: "tweets",
-        type: "WATCHING",
-      },
-    ],
+        type: "WATCHING"
+      }
+    ]
   },
-  intents: [Intents.FLAGS.GUILDS],
+  intents: [
+    Intents.FLAGS.GUILDS
+  ]
 };
 
 export const TweetsCollectorEndButtons = new MessageActionRow().addComponents(
