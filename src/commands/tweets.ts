@@ -11,6 +11,7 @@ export default class Trend extends Command {
         })
     }
     public async reply(interaction: CommandInteraction): Promise<Message | void> {
+        //TODO: Implement `exclude` option
         await interaction?.deferReply()
         let { data: user } = await this.bot.twitter.v2.userByUsername(interaction.options.getString("username", true))
         const data = await this.bot.twitter.v2.userTimeline(user.id)
@@ -27,6 +28,6 @@ export default class Trend extends Command {
         }
         interaction.editReply({ content: `**(1/${tweets.length})** https://twitter.com/i/web/status/${tweets.at(0)?.id}`, components: [TweetsFirstRow] })
         const menu = new ButtonMenu(answers);
-        menu.start({ interaction })
+        return menu.start({ interaction })
     }
 }
