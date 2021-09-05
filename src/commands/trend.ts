@@ -20,7 +20,7 @@ export default class Trend extends Command {
             const embed: MessageEmbedOptions = {
                 color: "BLURPLE",
                 author: {
-                    name: `Trends in ${woeid?.placeType?.code === 12 ? woeid?.name : `${woeid?.name}${woeid?.country ? "," : ""} ${woeid?.country}`}`,
+                    name: `Trends in ${woeid?.placeType?.code === 12 ? woeid?.name : `${woeid?.name}${woeid?.country ? `, ${woeid?.country}` : ""}`}`,
                     iconURL: "https://abs.twimg.com/favicons/twitter.ico",
                     url: "https://twitter.com/i/trends"
                 },
