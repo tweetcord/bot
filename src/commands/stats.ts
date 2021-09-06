@@ -8,7 +8,7 @@ export default class Stats extends Command {
             commandName: "stats"
         })
     }
-    public reply(interaction: CommandInteraction): Promise<void> {
+    public run(interaction: CommandInteraction): Promise<void> {
         return interaction.reply({
             embeds: [{
                 title: "Tweetcord",
@@ -85,6 +85,6 @@ export default class Stats extends Command {
             bytes /= 1024;
             ++u;
         } while (Math.abs(bytes) >= 1024 && u < units.length - 1);
-        return bytes.toFixed(1) + ' ' + units[u];
+        return `${bytes.toFixed(2)} ${units[u]}`
     }
 }

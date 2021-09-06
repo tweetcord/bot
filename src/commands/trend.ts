@@ -1,5 +1,4 @@
 import { CommandInteraction, Formatters, MessageActionRow, MessageEmbedOptions } from "discord.js";
-import { TrendV1 } from "twitter-api-v2";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -9,14 +8,14 @@ export default class Trend extends Command {
             commandName: "trend"
         })
     }
-    public async reply(interaction: CommandInteraction): Promise<any> {
+    public async run(interaction: CommandInteraction): Promise<any> {
         await interaction?.deferReply()
         const country = interaction.options.getString("country", true)
         try {
             const woeid = await this.woeid(country)
             const data = await this.bot.twitter.v1.trendsByPlace(woeid?.woeid!)
             const trend = data[0];
-            const trends: TrendV1[] = trend.trends.filter((v: TrendV1, i: number, a: TrendV1[]) => a.findIndex(t => (t.name === v.name)) === i)
+            const trends = trend.trends.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i)
             const embed: MessageEmbedOptions = {
                 color: "BLURPLE",
                 author: {
@@ -24,7 +23,7 @@ export default class Trend extends Command {
                     iconURL: "https://abs.twimg.com/favicons/twitter.ico",
                     url: "https://twitter.com/i/trends"
                 },
-                description: Formatters.blockQuote(trends.slice(0, 10).map(t => `[${t.name}](${t.url})`).join("\n")),
+                description: Formatters.blockQuote(trends.slice(0, 10).map(t => Formatters.hyperlink(t.name, t.url)).join("\n")),
                 timestamp: Date.now(),
                 footer: {
                     text: `${woeid?.placeType?.name ?? "Unknown place type"} \u2022 WOEID is ${woeid?.woeid}`

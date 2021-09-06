@@ -13,7 +13,7 @@ export default class Feeds extends Command {
       commandName: "feeds",
     });
   }
-  public async reply(interaction: CommandInteraction): Promise<Message | void> {
+  public async run(interaction: CommandInteraction): Promise<Message | void> {
     let guild = await this.bot.prisma.guild.findFirst({
       where: {
         id: interaction.guild?.id,
@@ -31,29 +31,26 @@ export default class Feeds extends Command {
       type: "SELECT_MENU",
       disabled: true,
       placeholder: "No feeds",
-      options: [
-        {
-          label: "Add feed first",
-          value: "Add feed first",
-        },
-      ],
+      options: [{
+        label: "Add feed first",
+        value: "Add feed first",
+      }],
       customId: "menu",
     });
     if (!guild?.feeds || guild?.feeds?.length === 0) {
       return interaction.reply({
-        embeds: [
-          {
-            author: {
-              name: interaction.guild?.name,
-              iconURL: interaction.guild?.iconURL({ dynamic: true })!,
-              url: "https://tweetcord.xyz",
-            },
-            description: "Select feed below",
-            footer: {
-              text: interaction.user.tag,
-              iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
-            },
+        embeds: [{
+          author: {
+            name: interaction.guild?.name,
+            iconURL: interaction.guild?.iconURL({ dynamic: true })!,
+            url: "https://tweetcord.xyz",
           },
+          description: "Select feed below",
+          footer: {
+            text: interaction.user.tag,
+            iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+          }
+        },
         ],
         components: [menu],
       });

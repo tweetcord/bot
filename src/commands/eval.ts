@@ -9,7 +9,7 @@ export default class Eval extends Command {
             commandName: "eval"
         })
     }
-    public async reply(interaction: CommandInteraction): Promise<any> {
+    public async run(interaction: CommandInteraction): Promise<any> {
         await interaction?.deferReply()
         try {
             const code = interaction.options.get("code")?.value as string

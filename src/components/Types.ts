@@ -7,4 +7,5 @@ export interface LoggerOptions {
 
 export interface MenuOptions {
     interaction: CommandInteraction;
+    data?: any[]
 }

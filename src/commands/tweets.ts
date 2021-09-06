@@ -10,12 +10,12 @@ export default class Trend extends Command {
             commandName: "tweets"
         })
     }
-    public async reply(interaction: CommandInteraction): Promise<Message | void> {
+    public async run(interaction: CommandInteraction): Promise<Message | void> {
         //TODO: Implement `exclude` option
         await interaction?.deferReply()
         let { data: user } = await this.bot.twitter.v2.userByUsername(interaction.options.getString("username", true))
         const data = await this.bot.twitter.v2.userTimeline(user.id)
-        if (data?.tweets?.length === 0) return interaction.reply({ content: "No tweets found" })
+        if (data?.tweets?.length === 0) return interaction.reply({ content: "No tweets found", ephemeral: true })
         const answers: InteractionReplyOptions[] = []
         const tweets = data?.tweets.slice(0, data?.tweets.length > 10 ? 10 : data.tweets.length)
 

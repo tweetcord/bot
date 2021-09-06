@@ -20,7 +20,7 @@ export default class Search extends Command {
             commandName: "shards"
         })
     }
-    public async reply(interaction: CommandInteraction): Promise<any> {
+    public async run(interaction: CommandInteraction): Promise<any> {
         await interaction?.deferReply()
         const embed: MessageEmbedOptions = {
             title: "Shards",
