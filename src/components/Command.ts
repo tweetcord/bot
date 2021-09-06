@@ -14,5 +14,5 @@ export default abstract class Command {
         this.name = i.commandName
     }
 
-    public abstract reply(interaction: CommandInteraction, ...args: any): Promise<void | Message> | Message
+    public abstract run(interaction: CommandInteraction, ...args: any): Promise<void | Message> | Message
 }
