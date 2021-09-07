@@ -10,7 +10,6 @@ export const clientOptions: ClientOptions = {
     BaseGuildEmojiManager: 0,
     GuildMemberManager: {
       maxSize: 0,
-      sweepInterval: 3600,
       keepOverLimit: (v) => v.id === v.client.user!.id
     },
     GuildBanManager: 0,
@@ -24,11 +23,10 @@ export const clientOptions: ClientOptions = {
     ThreadManager: 0,
     ThreadMemberManager: 0,
     UserManager: {
-      maxSize: 0,
       sweepInterval: 3600,
       keepOverLimit: (v) => v.id === v.client.user!.id
     },
-    VoiceStateManager: 0,
+    VoiceStateManager: 0
   }),
   restRequestTimeout: 60e3,
   presence: {
