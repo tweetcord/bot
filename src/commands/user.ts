@@ -1,4 +1,4 @@
-import { CommandInteraction, Formatters, Message, MessageEmbedOptions, Util } from "discord.js";
+import { CommandInteraction, Formatters, Message, MessageActionRow, MessageEmbedOptions, Util } from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -16,7 +16,7 @@ export default class User extends Command {
         const embed: MessageEmbedOptions = {
             title: `${Util.escapeMarkdown(user.name)} ${user.verified ? Formatters.formatEmoji("743873088185172108") : ""}`,
             author: {
-                name: Util.escapeMarkdown(user.username),
+                name: user.username,
                 url: `https://twitter.com/i/user/${user.id}`,
                 iconURL: user.profile_image_url?.replace("_normal", "")
             },
@@ -72,8 +72,14 @@ export default class User extends Command {
             ]
         }
         if (user.description) Object.assign(embed, {
-            description: `>>> ${user.description}`,
+            description: Formatters.blockQuote(user.description)
         })
-        interaction.editReply({ embeds: [embed] });
+        const buttons = new MessageActionRow().addComponents({
+            label: "View profile",
+            type: "BUTTON",
+            style: "LINK",
+            url: `https://twitter.com/i/user/${user.id}`
+        })
+        interaction.editReply({ embeds: [embed], components: [buttons] });
     }
 }
