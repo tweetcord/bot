@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@discordjs/rest": "^0.1.0-canary.0",
-    "@prisma/client": "^2.30.3",
+    "@prisma/client": "^3.0.1",
     "@sentry/node": "^6.12.0",
     "@sentry/tracing": "^6.12.0",
     "bufferutil": "^4.0.3",
@@ -35,7 +35,7 @@
     "zlib-sync": "^0.1.7"
   },
   "devDependencies": {
-    "@types/node": "^16.7.10",
-    "prisma": "^2.30.3"
+    "@types/node": "^16.7.13",
+    "prisma": "^3.0.1"
   }
 }
