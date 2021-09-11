@@ -20,6 +20,7 @@ export default class User extends Command {
                 url: `https://twitter.com/i/user/${user.id}`,
                 iconURL: user.profile_image_url?.replace("_normal", "")
             },
+            description: Formatters.blockQuote(user.description!) ?? "No description",
             thumbnail: {
                 url: user.profile_image_url?.replace("_normal", "")
             },
@@ -71,9 +72,6 @@ export default class User extends Command {
                 }
             ]
         }
-        if (user.description) Object.assign(embed, {
-            description: Formatters.blockQuote(user.description)
-        })
         const buttons = new MessageActionRow().addComponents({
             label: "View profile",
             type: "BUTTON",

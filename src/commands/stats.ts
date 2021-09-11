@@ -38,14 +38,15 @@ export default class Stats extends Command {
                         name: `${Formatters.formatEmoji("880498321012187167")} Node.js version`,
                         value: process.version.replace("v", ""),
                         inline: true
-                    }, {
+                    },
+                    {
                         name: `${Formatters.formatEmoji("869705214452719696")} Ubuntu version`,
                         value: "20.04",
                         inline: true
                     }
                 ],
                 footer: {
-                    iconURL: interaction.user.displayAvatarURL({ dynamic: true, size: 4096 }),
+                    iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
                     text: interaction.user.tag
                 },
                 timestamp: Date.now()

@@ -1,4 +1,4 @@
-import { bgBlue } from "chalk";
+import { bgBlue, bgRed } from "chalk";
 import { LoggerOptions } from "./Types";
 
 const now = new Date().toLocaleDateString("en-US", {
@@ -16,4 +16,8 @@ function log(options: LoggerOptions) {
 
 export function info(title: string, text: string): void {
     return log({ title: bgBlue(title), text })
+}
+
+export function error(title: string, text: string): void {
+    return log({ title: bgRed(title), text })
 }

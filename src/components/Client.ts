@@ -1,12 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { init } from "@sentry/node";
+// import { init } from "@sentry/node";
 import { Client, Collection, Interaction } from "discord.js";
 import { readdirSync } from "fs";
 import { join, resolve } from "path";
 import { TwitterApiReadOnly } from "twitter-api-v2";
 import { clientOptions } from "../constants";
 import Command from "./Command";
-import * as logger from "./Logger"
+import * as logger from "./Logger";
 export default class Tweetcord extends Client {
   readonly commands: Collection<string, Command>;
   public twitter: TwitterApiReadOnly;
@@ -18,9 +18,9 @@ export default class Tweetcord extends Client {
       .on("ready", this.handleReady)
       .on("interactionCreate", this.handleInteraction)
       .on("error", console.error)
-      .on("warn", console.warn)
+      .on("warn", console.warn);
     this.commands = new Collection();
-    this.twitter = new TwitterApiReadOnly(process.env.TWITTER_BEARER)
+    this.twitter = new TwitterApiReadOnly(process.env.TWITTER_BEARER);
     this.prisma = new PrismaClient({ errorFormat: "colorless" });
   }
 
@@ -30,19 +30,25 @@ export default class Tweetcord extends Client {
   }
   private handleReady(client: Client): void {
     logger.info("[BOT]", `Logged in as ${client.user?.tag} (${client.guilds.cache.size} guilds)`)
-    // sentry
-    init({
-      dsn: process.env.SENTRY,
-      tracesSampleRate: 1.0,
-      environment: "production"
-    })
-    logger.info("[SENTRY]", "Initialized Sentry")
-    this.prisma.$connect().then(() => logger.info("[PRISMA]", "Connected to MongoDB"))
+    /*
+   sentry
+   init({
+     dsn: process.env.SENTRY,
+     tracesSampleRate: 1.0,
+     environment: "production"
+   })
+   logger.info("[SENTRY]", "Initialized Sentry")
+   this.prisma.$connect().then(() => logger.info("[PRISMA]", "Connected to MongoDB"))
+ */
   }
   private handleInteraction(interaction: Interaction) {
     if (!interaction.isCommand()) return;
-    const command = this.commands.get(interaction.commandName);
-    command?.reply(interaction);
+    try {
+      const command = this.commands.get(interaction.commandName);
+      command?.run(interaction);
+    } catch (err: any) {
+      return logger.error("[ERROR]", err.name)
+    }
   }
 
   private async loadCommands(folder: string) {

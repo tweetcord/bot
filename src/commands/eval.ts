@@ -12,7 +12,7 @@ export default class Eval extends Command {
     public async run(interaction: CommandInteraction): Promise<any> {
         await interaction?.deferReply()
         try {
-            const code = interaction.options.get("code")?.value as string
+            const code = interaction.options.getString("code", true)
             const asynchr = code.includes('return') || code.includes('await');
             let output = await eval(asynchr ? `(async()=>{${code}})();` : code)
             if (typeof output !== "string") output = inspect(output, { depth: 0 })
