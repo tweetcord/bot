@@ -27,7 +27,11 @@ export default class Search extends Command {
                     components: answers.length === 0 ? [TweetsFirstRow] : (tweets?.length === i + 1 ? [TweetsLastRow] : [TweetsRow])
                 })
             }
-            interaction.editReply({ content: `**(1/${tweets.length})** https://twitter.com/i/web/status/${tweets.at(0)?.id}`, components: [TweetsFirstRow] })
+            if (!tweets) {
+                await interaction.editReply("Can't find any tweets")
+                return;
+            }
+            await interaction.editReply({ content: `**(1/${tweets.length})** https://twitter.com/i/web/status/${tweets.at(0)?.id}`, components: [TweetsFirstRow] })
             const menu = new ButtonMenu(answers);
             return menu.start({ interaction })
         } else if (subcommand === "user") {

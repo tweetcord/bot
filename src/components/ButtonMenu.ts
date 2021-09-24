@@ -28,7 +28,7 @@ export default class ButtonMenu {
                     await i.editReply(this.pages[page]);
                     break;
                 case "last":
-                    page = this.pages.length;
+                    page = this.pages.length - 1;
                     await i.editReply(this.pages[page]);
                     break;
             }

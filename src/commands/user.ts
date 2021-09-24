@@ -1,4 +1,4 @@
-import { CommandInteraction, Formatters, Message, MessageActionRow, MessageEmbedOptions, Util } from "discord.js";
+import {CommandInteraction, Formatters, Message, MessageActionRow, MessageEmbedOptions, Util} from "discord.js";
 import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
@@ -8,45 +8,48 @@ export default class User extends Command {
             commandName: "user"
         })
     }
-    public async run(interaction: CommandInteraction): Promise<Message | void> {
-        await interaction?.deferReply()
-        let { data: user } = await this.bot.twitter.v2.userByUsername(interaction.options.getString("username", true), {
-            "user.fields": ["created_at", "description", "location", "profile_image_url", "protected", "public_metrics", "url", "verified"]
-        })
+
+    public async run(interaction: CommandInteraction, id_str: string): Promise<Message | void> {
+        !interaction.deferred && await interaction?.deferReply()
+        console.log(interaction.options)
+        let user = await this.bot.twitter.v1.user({user_id: id_str});
         const embed: MessageEmbedOptions = {
             title: `${Util.escapeMarkdown(user.name)} ${user.verified ? Formatters.formatEmoji("743873088185172108") : ""}`,
             author: {
-                name: user.username,
+                name: user.name,
                 url: `https://twitter.com/i/user/${user.id}`,
-                iconURL: user.profile_image_url?.replace("_normal", "")
+                iconURL: user.profile_image_url_https?.replace("_normal", "")
             },
             thumbnail: {
-                url: user.profile_image_url?.replace("_normal", "")
+                url: user.profile_image_url_https?.replace("_normal", "")
+            },
+            image: {
+                url: user.profile_banner_url?.replace("_normal", "")
             },
             footer: {
                 text: `Twitter ID is ${user.id}`,
-                iconURL: interaction.user.displayAvatarURL({ dynamic: true })
+                iconURL: interaction.user.displayAvatarURL({dynamic: true})
             },
             timestamp: Date.now(),
             fields: [
                 {
                     name: "Followers",
-                    value: user.public_metrics?.followers_count?.toLocaleString() ?? "Unknown",
+                    value: user.followers_count?.toLocaleString() ?? "Unknown",
                     inline: true
                 },
                 {
                     name: "Following",
-                    value: user.public_metrics?.following_count?.toLocaleString() ?? "Unknown",
+                    value: user.friends_count.toLocaleString() ?? "Unknown",
                     inline: true
                 },
                 {
                     name: "Tweets",
-                    value: user.public_metrics?.tweet_count?.toLocaleString() ?? "Unknown",
+                    value: user.statuses_count.toLocaleString() ?? "Unknown",
                     inline: true
                 },
                 {
                     name: "Lists",
-                    value: user.public_metrics?.listed_count?.toLocaleString() ?? "Unknown",
+                    value: user.listed_count?.toLocaleString() ?? "Unknown",
                     inline: true
                 },
                 {
@@ -80,6 +83,6 @@ export default class User extends Command {
             style: "LINK",
             url: `https://twitter.com/i/user/${user.id}`
         })
-        interaction.editReply({ embeds: [embed], components: [buttons] });
+        await interaction.editReply({content: "_ _", embeds: [embed], components: [buttons]});
     }
 }

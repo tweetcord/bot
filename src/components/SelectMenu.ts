@@ -19,7 +19,7 @@ export default class SelectMenu {
         collector?.on("collect", (i: SelectMenuInteraction) => {
             if (i.customId === "users") {
                 i.deferUpdate()
-                options.interaction.client.commands.get("user")?.reply(options.interaction, options.data?.[Number(i.values[0]) - 1].screen_name)
+                options.interaction.client.commands.get("user")?.run(options.interaction, options.data?.[Number(i.values[0]) - 1].id_str)
             }
         })
     }
