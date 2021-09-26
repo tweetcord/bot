@@ -9,18 +9,17 @@ export default class User extends Command {
         })
     }
 
-    public async run(interaction: CommandInteraction, id_str: string): Promise<Message | void> {
+    public async run(interaction: CommandInteraction, screen_name: string): Promise<Message | void> {
         !interaction.deferred && await interaction?.deferReply()
-        console.log(interaction.options)
-        let user = await this.bot.twitter.v1.user({ user_id: id_str });
+        let user = await this.bot.twitter.v1.user({ screen_name: screen_name ?? interaction.options.getString("username", true) })
         const embed: MessageEmbedOptions = {
             title: `${Util.escapeMarkdown(user.name)} ${user.verified ? Formatters.formatEmoji("743873088185172108") : ""}`,
             author: {
-                name: user.name,
+                name: user.screen_name,
                 url: `https://twitter.com/i/user/${user.id}`,
                 iconURL: user.profile_image_url_https?.replace("_normal", "")
             },
-            description: Formatters.blockQuote(user.description!) ?? "No description",
+            description: Formatters.blockQuote(user.description || "No description"),
             thumbnail: {
                 url: user.profile_image_url_https?.replace("_normal", "")
             },
@@ -35,22 +34,22 @@ export default class User extends Command {
             fields: [
                 {
                     name: "Followers",
-                    value: user.followers_count?.toLocaleString() ?? "Unknown",
+                    value: user.followers_count?.toLocaleString(),
                     inline: true
                 },
                 {
                     name: "Following",
-                    value: user.friends_count.toLocaleString() ?? "Unknown",
+                    value: user.friends_count.toLocaleString(),
                     inline: true
                 },
                 {
                     name: "Tweets",
-                    value: user.statuses_count.toLocaleString() ?? "Unknown",
+                    value: user.statuses_count.toLocaleString(),
                     inline: true
                 },
                 {
                     name: "Lists",
-                    value: user.listed_count?.toLocaleString() ?? "Unknown",
+                    value: user.listed_count?.toLocaleString(),
                     inline: true
                 },
                 {
@@ -70,7 +69,7 @@ export default class User extends Command {
                 },
                 {
                     name: "Location",
-                    value: user.location ?? "Unknown",
+                    value: user.location || "Unknown",
                     inline: true
                 }
             ]
@@ -81,6 +80,6 @@ export default class User extends Command {
             style: "LINK",
             url: `https://twitter.com/i/user/${user.id}`
         })
-        await interaction.editReply({ embeds: [embed], components: [buttons] });
+        await interaction.followUp({ embeds: [embed], components: [buttons] });
     }
 }
