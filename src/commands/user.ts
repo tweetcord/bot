@@ -1,17 +1,22 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Formatters, Message, MessageActionRow, MessageEmbedOptions, Util } from "discord.js";
-import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
 export default class User extends Command {
-    public constructor(client: Tweetcord) {
-        super(client, {
-            commandName: "user"
-        })
+    public data() {
+        return new SlashCommandBuilder()
+            .setName("user")
+            .setDescription("Shows information about a Twitter user")
+            .addStringOption(option =>
+                option
+                    .setName("username")
+                    .setDescription("Username to find")
+                    .setRequired(true)
+            )
     }
-
     public async run(interaction: CommandInteraction, screen_name: string): Promise<Message | void> {
         !interaction.deferred && await interaction?.deferReply()
-        let user = await this.bot.twitter.v1.user({ screen_name: screen_name ?? interaction.options.getString("username", true) })
+        let user = await interaction.client.twitter.v1.user({ screen_name: screen_name ?? interaction.options.getString("username", true) })
         const embed: MessageEmbedOptions = {
             title: `${Util.escapeMarkdown(user.name)} ${user.verified ? Formatters.formatEmoji("743873088185172108") : ""}`,
             author: {

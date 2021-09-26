@@ -1,12 +1,12 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Formatters, version } from "discord.js";
-import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
-export default class Stats extends Command {
-    public constructor(client: Tweetcord) {
-        super(client, {
-            commandName: "stats"
-        })
+export default class Info extends Command {
+    public data() {
+        return new SlashCommandBuilder()
+            .setName("info")
+            .setDescription("Information about bot")
     }
     public run(interaction: CommandInteraction): Promise<void> {
         return interaction.reply({
@@ -16,7 +16,7 @@ export default class Stats extends Command {
                 fields: [
                     {
                         name: "Servers",
-                        value: this.bot.guilds.cache.size.toLocaleString(),
+                        value: interaction.client.guilds.cache.size.toLocaleString(),
                         inline: true
                     },
                     {
@@ -26,7 +26,7 @@ export default class Stats extends Command {
                     },
                     {
                         name: "Uptime",
-                        value: Formatters.time(Date.parse(this.bot?.readyAt?.toString()!) / 1000, "R"),
+                        value: Formatters.time(Date.parse(interaction.client?.readyAt?.toString()!) / 1000, "R"),
                         inline: true
                     },
                     {
@@ -63,7 +63,7 @@ export default class Stats extends Command {
                     {
                         style: "LINK",
                         type: "BUTTON",
-                        url: this.bot.generateInvite({ scopes: ["applications.commands", "bot"], permissions: 537259072n }),
+                        url: interaction.client.generateInvite({ scopes: ["applications.commands", "bot"], permissions: 537259072n }),
                         label: "Invite me"
                     },
                     {

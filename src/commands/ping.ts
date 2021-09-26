@@ -1,16 +1,16 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
-import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
 export default class Ping extends Command {
-    public constructor(client: Tweetcord) {
-        super(client, {
-            commandName: "ping"
-        })
+    public data() {
+        return new SlashCommandBuilder()
+            .setName("ping")
+            .setDescription("Pong")
     }
     public run(interaction: CommandInteraction): Promise<void> {
         return interaction.reply({
-            content: `🏓 Pong! ${this.bot.ws.ping.toString()}`
+            content: `🏓 Pong! ${interaction.client.ws.ping.toString()}`
         });
     }
 }

@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 // import { init } from "@sentry/node";
 import { Client, Collection, Interaction } from "discord.js";
-import { readdirSync } from "fs";
+import { readdir } from "fs/promises";
 import { join, resolve } from "path";
 import { TwitterApiReadOnly } from "twitter-api-v2";
 import { clientOptions } from "../constants";
@@ -25,7 +25,7 @@ export default class Tweetcord extends Client {
   }
 
   public init(): void {
-    this.loadCommands(resolve("dist/commands"));
+    this.loadCommands();
     this.login(process.env.DISCORD_TOKEN);
   }
   private handleReady(client: Client): void {
@@ -47,16 +47,13 @@ export default class Tweetcord extends Client {
     command?.run(interaction);
   }
 
-  private async loadCommands(folder: string) {
-    const commands = readdirSync(folder).filter(a => a.endsWith(".js"))
+  private async loadCommands() {
+    const folder = resolve("dist/commands")
+    const commands = await readdir(folder)
 
-    for (const command of commands) {
-      const mod = await import(join(folder, command));
-      const cmdClass = Object.values(mod).find(
-        (d: any) => d.prototype instanceof Command
-      ) as any;
-      const cmd: Command = new cmdClass(this);
-      this.commands.set(cmd.name, cmd);
+    for await (const command of commands.filter(c => c.endsWith(".js"))) {
+      const commandFile = await import(join(folder, command))
+      //not finished
     }
   }
 }

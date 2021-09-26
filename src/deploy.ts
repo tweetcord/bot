@@ -1,26 +1,17 @@
-import { ApplicationCommandData } from "discord.js";
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
+import { readdirSync } from 'fs';
+import { join, resolve } from "path";
+import Command from "./components/Command";
 
-const commands: ApplicationCommandData[] = [
-    {
-        "name": "info",
-        "description": "Show information about bot"
-    },
-    {
-        "name": "eval",
-        "description": "Evaluates code",
-        "options": [
-            {
-                "type": 3,
-                "name": "code",
-                "description": "Code to evaluate",
-                "required": true,
-                "choices": []
-            }
-        ]
-    }
-];
+const commands = readdirSync(resolve("dist/commands")).filter(a => a.endsWith(".js")).forEach(async c => {
+    let m = await import(join(resolve("dist/commands"), c));
+    const cmdClass = Object.values(m).find(
+        (d: any) => d.prototype instanceof Command
+    ) as any;
+    const cmd: Command = new cmdClass()
+    return cmd.data().toJSON()
+})
 
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 

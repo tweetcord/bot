@@ -1,19 +1,25 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Formatters, MessageActionRow, MessageEmbedOptions } from "discord.js";
-import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
 export default class Trend extends Command {
-    public constructor(client: Tweetcord) {
-        super(client, {
-            commandName: "trend"
-        })
+    public data() {
+        return new SlashCommandBuilder()
+            .setName("trend")
+            .setDescription("Shows trend in specified location")
+            .addStringOption(option =>
+                option
+                    .setName("place")
+                    .setDescription("Place to search")
+                    .setRequired(true)
+            )
     }
     public async run(interaction: CommandInteraction): Promise<any> {
         await interaction?.deferReply()
-        const country = interaction.options.getString("country", true)
+        const country = interaction.options.getString("place", true)
         try {
-            const woeid = await this.woeid(country)
-            const data = await this.bot.twitter.v1.trendsByPlace(woeid?.woeid!)
+            const woeid = await this.woeid(country, interaction)
+            const data = await interaction.client.twitter.v1.trendsByPlace(woeid?.woeid!)
             const trend = data[0];
             const trends = trend.trends.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i)
             const embed: MessageEmbedOptions = {
@@ -79,8 +85,8 @@ export default class Trend extends Command {
             }
         }
     }
-    private async woeid(input: string): Promise<any> {
-        const data = await this.bot.twitter.v1.trendsAvailable()
+    private async woeid(input: string, interaction: CommandInteraction): Promise<any> {
+        const data = await interaction.client.twitter.v1.trendsAvailable()
         for (const d of data) {
             if (d.name.toLowerCase() === input.toLowerCase()) return d;
             if (d.country?.toLowerCase() === input.toLowerCase()) return d;
