@@ -27,6 +27,7 @@ const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 (async () => {
     try {
         await rest.put(
+            // @ts-ignore
             Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_SERVER),
             { body: commands },
         );

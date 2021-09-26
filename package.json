@@ -21,8 +21,8 @@
   },
   "dependencies": {
     "@discordjs/rest": "^0.1.0-canary.0",
-    "@prisma/client": "^3.0.2",
-    "@sentry/node": "^6.12.0",
+    "@prisma/client": "^3.1.1",
+    "@sentry/node": "^6.13.2",
     "@sentry/tracing": "^6.12.0",
     "bufferutil": "^4.0.3",
     "chalk": "^4.1.2",
@@ -30,12 +30,12 @@
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "erlpack": "hzmifork/erlpack",
-    "twitter-api-v2": "^1.5.0",
+    "twitter-api-v2": "^1.5.2",
     "utf-8-validate": "^5.0.5",
     "zlib-sync": "^0.1.7"
   },
   "devDependencies": {
-    "@types/node": "^16.9.1",
-    "prisma": "^3.0.2"
+    "@types/node": "^16.9.6",
+    "prisma": "^3.1.1"
   }
 }

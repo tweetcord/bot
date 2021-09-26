@@ -24,21 +24,24 @@ export default class Search extends Command {
         await interaction?.deferReply()
         const embed: MessageEmbedOptions = {
             title: "Shards",
+            fields: [],
             footer: {
                 text: interaction.user.tag,
                 iconURL: interaction.user.displayAvatarURL({ dynamic: true })
             }
         }
-        for (const shard of this.bot.ws.shards) {
-            embed.fields?.push({
-                name: `Shard ${shard[1].id}`,
+        await this.bot.ws.shards.forEach(shard =>{
+          embed.fields?.push({
+                name: `Shard ${shard.id}`,
                 value: `
-                Guilds: ${this.bot.guilds.cache.filter(a => a.shardId === shard[1].id).size.toLocaleString()}
-                Status: ${ShardStatus[shard[1].status]}
+                Guilds: ${this.bot.guilds.cache.filter(a => a.shardId === shard.id).size.toLocaleString()}
+                Status: ${ShardStatus[shard.status]}
                 `,
                 inline: true
             })
-        }
+        })
+        console.log(this.bot.ws.shards)
+
         return interaction.followUp({ embeds: [embed] })
     }
 }

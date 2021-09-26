@@ -43,12 +43,8 @@ export default class Tweetcord extends Client {
   }
   private handleInteraction(interaction: Interaction) {
     if (!interaction.isCommand()) return;
-    try {
-      const command = this.commands.get(interaction.commandName);
-      command?.run(interaction);
-    } catch (err: any) {
-      return logger.error("[ERROR]", err.name)
-    }
+    const command = this.commands.get(interaction.commandName);
+    command?.run(interaction);
   }
 
   private async loadCommands(folder: string) {
