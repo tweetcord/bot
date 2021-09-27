@@ -9,6 +9,7 @@ export default class Search extends Command {
     public data() {
         return new SlashCommandBuilder()
             .setName("search")
+            .setDescription("Allows you to search tweet/user on Twitter")
             .addSubcommand(slash =>
                 slash
                     .setName("tweet")

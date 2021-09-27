@@ -9,12 +9,14 @@ export default class Eval extends Command {
             .setName("eval")
             .setDescription("Evaluates the code")
             .addStringOption(option =>
-                option.setRequired(true)
+                option
+                    .setRequired(true)
                     .setName("code")
                     .setDescription("Code to evaluate")
             )
             .addBooleanOption(option =>
-                option.setName("hide_result")
+                option
+                    .setName("hide_result")
                     .setDescription("Whether or not to hide the result (ephemeral)")
                     .setRequired(false)
             )

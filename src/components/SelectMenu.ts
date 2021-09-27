@@ -1,4 +1,4 @@
-import { MessageActionRow, MessageSelectOptionData, SelectMenuInteraction } from "discord.js";
+import { MessageActionRow, MessageComponentInteraction, MessageSelectOptionData, SelectMenuInteraction } from "discord.js";
 import { MenuOptions } from "./Types";
 
 export default class SelectMenu {
@@ -14,7 +14,7 @@ export default class SelectMenu {
             options: this.options
         })
         await options.interaction.followUp({ content: "Select user below", components: [row], ephemeral: true })
-        const filter = (i: SelectMenuInteraction) => i.user.id === options.interaction?.user.id
+        const filter = (i: MessageComponentInteraction) => i.user.id === options.interaction?.user.id
         const collector = options.interaction.channel?.createMessageComponentCollector({ filter, time: 30e3 })
         collector?.on("collect", (i: SelectMenuInteraction) => {
             if (i.customId === "users") {

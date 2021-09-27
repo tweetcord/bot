@@ -17,14 +17,13 @@ export default class Trend extends Command {
             )
             .addBooleanOption(option =>
                 option
-                    .setName("show replies")
+                    .setName("show_replies")
                     .setDescription("Whether or not show replies")
             ).addBooleanOption(option =>
                 option
-                    .setName("show retweets")
+                    .setName("show_retweets")
                     .setDescription("Whether or not show retweets")
             )
-
     }
 
     public async run(interaction: CommandInteraction): Promise<Message | void> {
