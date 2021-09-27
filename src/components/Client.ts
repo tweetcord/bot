@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 // import { init } from "@sentry/node";
 import { Client, Collection, Interaction } from "discord.js";
-import { readdir } from "fs/promises";
+import { readdirSync } from "fs";
 import { join, resolve } from "path";
 import { TwitterApiReadOnly } from "twitter-api-v2";
 import { clientOptions } from "../constants";
@@ -41,6 +41,7 @@ export default class Tweetcord extends Client {
    this.prisma.$connect().then(() => logger.info("[PRISMA]", "Connected to MongoDB"))
  */
   }
+
   private handleInteraction(interaction: Interaction) {
     if (!interaction.isCommand()) return;
     const command = this.commands.get(interaction.commandName);
@@ -48,12 +49,13 @@ export default class Tweetcord extends Client {
   }
 
   private async loadCommands() {
-    const folder = resolve("dist/commands")
-    const commands = await readdir(folder)
+    const folder = resolve("dist/src/commands")
+    const commands = readdirSync(folder).filter(c => c.endsWith(".js"))
 
-    for await (const command of commands.filter(c => c.endsWith(".js"))) {
+    for (const command of commands) {
       const commandFile = await import(join(folder, command))
-      //not finished
+      const cmd: Command = new commandFile.default()
+      this.commands.set(cmd.data().toJSON().name, cmd)
     }
   }
 }
