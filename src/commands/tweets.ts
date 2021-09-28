@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, InteractionReplyOptions, Message } from "discord.js";
+import { TypeOrArrayOf } from "twitter-api-v2/dist/types/shared.types";
 import ButtonMenu from "../components/ButtonMenu";
 import Command from "../components/Command";
 import { TweetsFirstRow, TweetsLastRow, TweetsRow } from "../constants";
@@ -17,12 +18,12 @@ export default class Trend extends Command {
             )
             .addBooleanOption(option =>
                 option
-                    .setName("show_replies")
-                    .setDescription("Whether or not show replies")
+                    .setName("hide_replies")
+                    .setDescription("Whether or not hide replies")
             ).addBooleanOption(option =>
                 option
-                    .setName("show_retweets")
-                    .setDescription("Whether or not show retweets")
+                    .setName("hide_retweets")
+                    .setDescription("Whether or not hide retweets")
             )
     }
 
@@ -30,7 +31,12 @@ export default class Trend extends Command {
         //TODO: Implement `exclude` option
         await interaction?.deferReply()
         let { data: user } = await interaction.client.twitter.v2.userByUsername(interaction.options.getString("username", true))
-        const data = await interaction.client.twitter.v2.userTimeline(user.id)
+        const exclude: TypeOrArrayOf<"replies" | "retweets"> | undefined = []
+        if (interaction.options.getBoolean("hide_replies")) exclude.push("replies")
+        if (interaction.options.getBoolean("hide_retweets")) exclude.push("retweets")
+        const data = await interaction.client.twitter.v2.userTimeline(user.id, {
+            exclude
+        })
         if (data?.tweets?.length === 0) return interaction.reply({ content: "No tweets found", ephemeral: true })
         const answers: InteractionReplyOptions[] = []
         const tweets = data?.tweets.slice(0, data?.tweets.length > 10 ? 10 : data.tweets.length)
