@@ -2,7 +2,7 @@ import { REST } from '@discordjs/rest';
 import { PrismaClient } from "@prisma/client";
 import { Routes } from 'discord-api-types/v9';
 // import { init } from "@sentry/node";
-import { Client, Collection, Interaction } from "discord.js";
+import { ApplicationCommandPermissionData, Client, Collection, Interaction } from "discord.js";
 import { readdirSync } from "fs";
 import { join, resolve } from "path";
 import { TwitterApiReadOnly } from "twitter-api-v2";
@@ -65,12 +65,41 @@ export default class Tweetcord extends Client {
   //@ts-ignore
   public async updateCommands() {
     const commands = this.commands.map(a => a.data().toJSON())
+    const twdevserver = "686640167897006215"
+    const evalC = await this.guilds.cache.get(twdevserver)?.commands.fetch('859760246012248064');
+
+    const permissions: ApplicationCommandPermissionData[] = [
+      {
+        id: '534099893979971584', // nmw03
+        type: 'USER',
+        permission: true,
+      },
+      {
+        id: "548547460276944906", // can
+        type: "USER",
+        permission: true
+      },
+      {
+        id: "693445343332794408", // kaan
+        type: "USER",
+        permission: true
+      },
+      {
+        id: "300573341591535617", // woxe
+        type: "USER",
+        permission: true
+      }
+    ];
+
     try {
       await rest.put(
-        Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_SERVER),
+        Routes.applicationGuildCommands(this.user?.id as string, twdevserver),
         { body: commands },
       );
-      logger.info('[SLASH]', 'Successfully registered application commands.');
+      // command permissions
+      await evalC?.permissions.set({ permissions });
+
+      logger.info('[SLASH]', `Successfully registered ${this.commands.size} application commands.`);
     } catch (error) {
       logger.error('[SLASH]', error);
     }
