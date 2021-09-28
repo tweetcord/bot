@@ -5,14 +5,18 @@ export const clientOptions: ClientOptions = {
 		parse: ["users"],
 		repliedUser: true
 	},
-	userAgentSuffix: ["Tweetcord/1.0.0"],
+	userAgentSuffix: [
+		"Tweetcord/1.0.0"
+	],
+	shards: "auto",
 	makeCache: Options.cacheWithLimits({
 		BaseGuildEmojiManager: 0,
 		GuildMemberManager: {
-			maxSize: 0,
+			sweepInterval: 3600,
 			keepOverLimit: (v) => v.id === v.client.user!.id
 		},
 		GuildBanManager: 0,
+		GuildEmojiManager: 0,
 		GuildInviteManager: 0,
 		GuildStickerManager: 0,
 		MessageManager: 0,

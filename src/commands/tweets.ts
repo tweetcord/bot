@@ -1,20 +1,36 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, InteractionReplyOptions, Message } from "discord.js";
 import ButtonMenu from "../components/ButtonMenu";
-import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 import { TweetsFirstRow, TweetsLastRow, TweetsRow } from "../constants";
 
 export default class Trend extends Command {
-    public constructor(client: Tweetcord) {
-        super(client, {
-            commandName: "tweets"
-        })
+    public data() {
+        return new SlashCommandBuilder()
+            .setName("tweets")
+            .setDescription("List of tweets of specified user")
+            .addStringOption(option =>
+                option
+                    .setName("username")
+                    .setDescription("Username to find")
+                    .setRequired(true)
+            )
+            .addBooleanOption(option =>
+                option
+                    .setName("show_replies")
+                    .setDescription("Whether or not show replies")
+            ).addBooleanOption(option =>
+                option
+                    .setName("show_retweets")
+                    .setDescription("Whether or not show retweets")
+            )
     }
+
     public async run(interaction: CommandInteraction): Promise<Message | void> {
         //TODO: Implement `exclude` option
         await interaction?.deferReply()
-        let { data: user } = await this.bot.twitter.v2.userByUsername(interaction.options.getString("username", true))
-        const data = await this.bot.twitter.v2.userTimeline(user.id)
+        let { data: user } = await interaction.client.twitter.v2.userByUsername(interaction.options.getString("username", true))
+        const data = await interaction.client.twitter.v2.userTimeline(user.id)
         if (data?.tweets?.length === 0) return interaction.reply({ content: "No tweets found", ephemeral: true })
         const answers: InteractionReplyOptions[] = []
         const tweets = data?.tweets.slice(0, data?.tweets.length > 10 ? 10 : data.tweets.length)

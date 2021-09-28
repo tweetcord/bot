@@ -1,5 +1,5 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbedOptions } from "discord.js";
-import Tweetcord from "../components/Client";
 import Command from "../components/Command";
 
 const ShardStatus = {
@@ -14,33 +14,31 @@ const ShardStatus = {
     8: "Resuming"
 }
 
-export default class Search extends Command {
-    public constructor(client: Tweetcord) {
-        super(client, {
-            commandName: "shards"
-        })
+export default class Shards extends Command {
+    public data() {
+        return new SlashCommandBuilder()
+            .setName("shards")
+            .setDescription("List and status of shards")
     }
     public async run(interaction: CommandInteraction): Promise<any> {
         await interaction?.deferReply()
         const embed: MessageEmbedOptions = {
             title: "Shards",
-            fields: [],
             footer: {
                 text: interaction.user.tag,
                 iconURL: interaction.user.displayAvatarURL({ dynamic: true })
             }
         }
-        await this.bot.ws.shards.forEach(shard =>{
-          embed.fields?.push({
+        interaction.client.ws.shards.forEach(shard => {
+            embed.fields?.push({
                 name: `Shard ${shard.id}`,
                 value: `
-                Guilds: ${this.bot.guilds.cache.filter(a => a.shardId === shard.id).size.toLocaleString()}
+                Guilds: ${interaction.client.guilds.cache.filter(a => a.shardId === shard.id).size.toLocaleString()}
                 Status: ${ShardStatus[shard.status]}
                 `,
                 inline: true
-            })
+            });
         })
-        console.log(this.bot.ws.shards)
 
         return interaction.followUp({ embeds: [embed] })
     }

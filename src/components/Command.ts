@@ -1,18 +1,7 @@
-import { Message, CommandInteraction } from "discord.js";
-import Tweetcord from "./Client";
-
-interface CommandOptions {
-    commandName: string
-}
+import { SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from "@discordjs/builders";
+import { CommandInteraction, Message } from "discord.js";
 
 export default abstract class Command {
-    public bot: Tweetcord;
-    public name: string;
-
-    public constructor(client: Tweetcord, i: CommandOptions) {
-        this.bot = client;
-        this.name = i.commandName
-    }
-
+    public abstract data(): SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
     public abstract run(interaction: CommandInteraction, ...args: any): Promise<void | Message> | Message
 }
