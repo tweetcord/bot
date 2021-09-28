@@ -14,10 +14,10 @@ function log(options: LoggerOptions) {
     return console.log(`[${now}]`, options.title, options.text)
 }
 
-export function info(title: string, text: string): void {
+export function info(title: string, text: any): void {
     return log({ title: bgBlue(title), text })
 }
 
-export function error(title: string, text: string): void {
+export function error(title: string, text: any): void {
     return log({ title: bgRed(title), text })
 }
