@@ -63,7 +63,7 @@ export default class Info extends Command {
                     {
                         style: "LINK",
                         type: "BUTTON",
-                        url: interaction.client.generateInvite({ scopes: ["applications.commands", "bot"], permissions: 537259072n }),
+                        url: interaction.client.generateInvite({ scopes: ["applications.commands", "bot"], permissions: 537218048n }),
                         label: "Invite me"
                     },
                     {
