@@ -28,7 +28,6 @@ export default class Trend extends Command {
     }
 
     public async run(interaction: CommandInteraction): Promise<Message | void> {
-        //TODO: Implement `exclude` option
         await interaction?.deferReply()
         let { data: user } = await interaction.client.twitter.v2.userByUsername(interaction.options.getString("username", true))
         const exclude: TypeOrArrayOf<"replies" | "retweets"> | undefined = []
