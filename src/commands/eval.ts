@@ -13,16 +13,20 @@ export default class Eval extends Command {
                     .setRequired(true)
                     .setName("code")
                     .setDescription("Code to evaluate")
-                    .addChoice("update slash commands", "interaction.client.updateCommands()")
             )
-            // @ts-ignore
             .setDefaultPermission(false)
     }
     public async run(interaction: CommandInteraction): Promise<any> {
+        //@ts-ignore
+        let db = interaction.client.prisma;
+        //@ts-ignore
+        let client = interaction.client;
+        //@ts-ignore
+        let guild = interaction.guild;
         await interaction?.deferReply({
             ephemeral: true
         })
-        if (["534099893979971584", "548547460276944906", "300573341591535617", "693445343332794408"].includes(interaction.user.id)) {
+        if (!["534099893979971584", "548547460276944906", "300573341591535617", "693445343332794408"].includes(interaction.user.id)) {
             return interaction.followUp({
                 content: "No",
                 ephemeral: true
