@@ -21,6 +21,12 @@ export default class Eval extends Command {
         await interaction?.deferReply({
             ephemeral: true
         })
+        if (["534099893979971584", "548547460276944906", "300573341591535617", "693445343332794408"].includes(interaction.user.id)) {
+            return interaction.followUp({
+                content: "No",
+                ephemeral: true
+            })
+        }
         try {
             const code = interaction.options.getString("code", true)
 

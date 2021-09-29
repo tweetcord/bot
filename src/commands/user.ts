@@ -15,7 +15,7 @@ export default class User extends Command {
             )
     }
     public async run(interaction: CommandInteraction, screen_name: string): Promise<Message | void> {
-        !interaction.deferred && await interaction?.deferReply()
+        await interaction?.deferReply({ ephemeral: true })
         let user = await interaction.client.twitter.v1.user({ screen_name: screen_name ?? interaction.options.getString("username", true) })
         const embed: MessageEmbedOptions = {
             title: `${Util.escapeMarkdown(user.name)} ${user.verified ? Formatters.formatEmoji("743873088185172108") : ""}`,
@@ -85,6 +85,6 @@ export default class User extends Command {
             style: "LINK",
             url: `https://twitter.com/i/user/${user.id}`
         })
-        await interaction.followUp({ embeds: [embed], components: [buttons] });
+        await interaction.followUp({ embeds: [embed], components: [buttons], ephemeral: true });
     }
 }

@@ -15,7 +15,10 @@ export default class SelectMenu {
         })
         await options.interaction.followUp({ content: "Select user below", components: [row], ephemeral: true })
         const filter = (i: MessageComponentInteraction) => i.user.id === options.interaction?.user.id
-        const collector = options.interaction.channel?.createMessageComponentCollector({ filter, time: 30e3 })
+        const collector = options.interaction.channel?.createMessageComponentCollector({
+            filter,
+            time: 3e5 // 5 minute
+        })
         collector?.on("collect", (i: SelectMenuInteraction) => {
             if (i.customId === "users") {
                 i.deferUpdate()

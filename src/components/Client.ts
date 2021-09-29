@@ -66,6 +66,9 @@ export default class Tweetcord extends Client {
   public async updateCommands() {
     const commands = this.commands.map(a => a.data().toJSON())
     const twdevserver = "686640167897006215"
+
+    // bunu komutlari global yaptiginiz zaman guncelleyin:
+    // this.application.commands.fetch("yeni komut idsi")
     const evalC = await this.guilds.cache.get(twdevserver)?.commands.fetch('859760246012248064');
 
     const permissions: ApplicationCommandPermissionData[] = [
@@ -93,6 +96,7 @@ export default class Tweetcord extends Client {
 
     try {
       await rest.put(
+        // Global yapacaginiz zaman: Routes.applicationCommands
         Routes.applicationGuildCommands(this.user?.id as string, twdevserver),
         { body: commands },
       );

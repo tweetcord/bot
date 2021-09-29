@@ -10,8 +10,11 @@ export default class ButtonMenu {
 
     public start(options: MenuOptions) {
         const filter = (i: MessageComponentInteraction) => i.user.id === options.interaction?.user.id;
-        const collector = options.interaction.channel?.createMessageComponentCollector({ filter, time: 60e3 });
-        let page: number = 0;
+        const collector = options.interaction.channel?.createMessageComponentCollector({
+            filter,
+            time: 3e5 // 5 minute
+        });
+        let page = 0;
         collector?.on("collect", async (i: MessageComponentInteraction) => {
             await i.deferUpdate();
             switch (i.customId) {

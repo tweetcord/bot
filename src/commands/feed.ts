@@ -46,7 +46,9 @@ export default class Ping extends Command {
                     .setDescription("Lists feeds")
             )
     }
-    public run(interaction: CommandInteraction): any {
+    // Change Promise<any> please
+    public async run(interaction: CommandInteraction): Promise<any> {
+        await interaction.deferReply({ ephemeral: true })
         if ((interaction.member?.permissions as Permissions).has(Permissions.FLAGS.MANAGE_GUILD)) {
             const subcommand = interaction.options.getSubcommand(true)
             if (subcommand === "add") {
@@ -57,7 +59,7 @@ export default class Ping extends Command {
                 // List feeds
             }
         } else {
-            return interaction.reply({
+            return interaction.followUp({
                 content: "You don't have required permission",
                 ephemeral: true
             })

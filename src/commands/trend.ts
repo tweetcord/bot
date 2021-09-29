@@ -21,6 +21,7 @@ export default class Trend extends Command {
             const woeid = await this.woeid(country, interaction)
             const data = await interaction.client.twitter.v1.trendsByPlace(woeid?.woeid!)
             const trend = data[0];
+            // Duplicate olanlari silmek
             const trends = trend.trends.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i)
             const embed: MessageEmbedOptions = {
                 color: "BLURPLE",
@@ -68,12 +69,14 @@ export default class Trend extends Command {
             )
             await interaction.editReply({ embeds: [embed], components: [buttons] })
         } catch (err: any) {
-            const support = new MessageActionRow().addComponents({
-                style: "LINK",
-                type: "BUTTON",
-                url: "https://discord.gg/2n4qCXTuc7",
-                label: "Join support server"
-            })
+            const support = new MessageActionRow().addComponents(
+                {
+                    style: "LINK",
+                    type: "BUTTON",
+                    url: "https://discord.gg/2n4qCXTuc7",
+                    label: "Join support server"
+                }
+            )
             if (err?.errors?.[0].code === 34) {
                 return interaction.editReply({ content: `No trends found for ${country}` })
             } else {
