@@ -75,7 +75,7 @@ export default class Trend extends Command {
                 label: "Join support server"
             })
             if (err?.errors?.[0].code === 34) {
-                return interaction.editReply({ content: `No trends found for ${Formatters.inlineCode(country as string)}` })
+                return interaction.editReply({ content: `No trends found for ${country}` })
             } else {
                 console.error(err.stack)
                 return interaction.editReply({

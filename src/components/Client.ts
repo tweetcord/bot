@@ -100,8 +100,10 @@ export default class Tweetcord extends Client {
       await evalC?.permissions.set({ permissions });
 
       logger.info('[SLASH]', `Successfully registered ${this.commands.size} application commands.`);
-    } catch (error) {
+      return `Successfully registered ${this.commands.size} application commands.`
+    } catch (error: any) {
       logger.error('[SLASH]', error);
+      return error.message
     }
   }
 }
