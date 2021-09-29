@@ -7,7 +7,7 @@
     "skipLibCheck": true,
     "removeComments": true,
     "moduleResolution": "node",
-    "outDir": "dist",
+    "outDir": "dist/src",
     "forceConsistentCasingInFileNames": true,
     "suppressImplicitAnyIndexErrors": true,
     "alwaysStrict": true,

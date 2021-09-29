@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "rm -rf dist && tsc && node dist/src/index.js",
+    "startWin": "rmdir /s /q \"dist\" && tsc && node dist/src/index.js",
     "dev": "rm -rf dist && devScript",
     "db": "npx prisma format && npx prisma generate"
   },

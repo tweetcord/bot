@@ -15,6 +15,7 @@ export default class Eval extends Command {
                     .setDescription("Code to evaluate")
                     .addChoice("update slash commands", "interaction.client.updateCommands()")
             )
+            // @ts-ignore
             .setDefaultPermission(false)
     }
     public async run(interaction: CommandInteraction): Promise<any> {

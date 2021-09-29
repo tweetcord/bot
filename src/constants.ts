@@ -16,6 +16,7 @@ export const clientOptions: ClientOptions = {
 			keepOverLimit: (v) => v.id === v.client.user!.id
 		},
 		GuildBanManager: 0,
+		// @ts-ignore
 		GuildEmojiManager: 0,
 		GuildInviteManager: 0,
 		GuildStickerManager: 0,
