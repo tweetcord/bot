@@ -9,7 +9,7 @@
     "dev": "rm -rf dist && devScript",
     "db": "npx prisma format && npx prisma generate"
   },
-  "author": "",
+  "author": "https://github.com/tweetcord/people",
   "license": "ISC",
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
