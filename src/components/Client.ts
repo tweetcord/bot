@@ -43,8 +43,7 @@ export default class Tweetcord extends Client {
    })
    logger.info("[SENTRY]", "Initialized Sentry")*/
 
-   this.prisma.$connect().then(() => logger.info("[PRISMA]", "Connected to MongoDB"))
- 
+    this.prisma.$connect().then(() => logger.info("[PRISMA]", "Connected to MongoDB"))
   }
 
   private handleInteraction(interaction: Interaction) {

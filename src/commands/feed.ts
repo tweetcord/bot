@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Permissions, TextChannel, MessageEmbedOptions } from "discord.js";
+import { getGuildData, createWebhook, getWebhookData } from "../utils/functions";
 import Command from "../components/Command";
 
 export default class Feeds extends Command {
@@ -50,31 +51,13 @@ export default class Feeds extends Command {
     public async run(interaction: CommandInteraction): Promise<any> {
         await interaction.deferReply({ ephemeral: true })
         if ((interaction.member?.permissions as Permissions).has(Permissions.FLAGS.MANAGE_GUILD)) {
-            let guild = await interaction.client.prisma.guild.findFirst({
-                where: {
-                    id: interaction.guild?.id,
-                },
-                include: {
-                    feeds: true
-                },
-            });
-            //TODO: Check does webhook was created on the channel, not on the guild
+            let guild = await getGuildData(interaction)
+            
             if(!guild){            
-                let channel = interaction.options.getChannel("channel", true) as TextChannel;
-                let webhook = await channel?.createWebhook("Tweetcord Notification")
                 await interaction.client.prisma.guild.create({data: { 
                     id: interaction.guild?.id as string,
-                    webhookId: webhook.id,
-                    webhookToken: webhook.token as string,
                 }})
-                guild = await interaction.client.prisma.guild.findFirst({
-                    where: {
-                        id: interaction.guild?.id,
-                    },
-                    include: {
-                        feeds: true
-                    },
-                });
+                guild = await getGuildData(interaction)
             }
             
             const subcommand = interaction.options.getSubcommand(true)
@@ -90,6 +73,8 @@ export default class Feeds extends Command {
                         twitterUserId: user.id
                     }
                 })
+                !(await getWebhookData(interaction, channel.id)) && await createWebhook(interaction, channel)
+                await interaction.followUp({content: user.name + ' added to feed list'})
             } else if (subcommand === "remove") {
 
             } else if (subcommand === "list") {

@@ -11,8 +11,7 @@ generator client {
 model Guild {
   id            String  @id @map("_id")
   feeds         Feed[]
-  webhookId     String
-  webhookToken  String
+  webhooks      Webhook[]
   premium Boolean @default(false)
 
   @@map(name: "guilds")
@@ -34,4 +33,13 @@ model Feed {
   Guild         Guild?      @relation(fields: [guildId], references: [id])
   guildId       String?
   twitterUserId String
+}
+
+model Webhook {
+  id            String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  webhookId     String
+  webhookToken  String
+  Guild         Guild?      @relation(fields: [guildId], references: [id])
+  guildId       String?
+  channelId     String
 }
