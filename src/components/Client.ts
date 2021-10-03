@@ -7,6 +7,7 @@ import { readdirSync } from "fs";
 import { join, resolve } from "path";
 import { TwitterApiReadOnly } from "twitter-api-v2";
 import { clientOptions } from "../constants";
+import TWStream from "../stream/stream"
 import Command from "./Command";
 import * as logger from "./Logger";
 
@@ -16,6 +17,7 @@ export default class Tweetcord extends Client {
   readonly commands: Collection<string, Command>;
   public twitter: TwitterApiReadOnly;
   public prisma: PrismaClient;
+  public stream: TWStream
   public constructor() {
     super(clientOptions);
     this
@@ -26,6 +28,7 @@ export default class Tweetcord extends Client {
     this.commands = new Collection();
     this.twitter = new TwitterApiReadOnly(process.env.TWITTER_BEARER);
     this.prisma = new PrismaClient({ errorFormat: "colorless" });
+    this.stream = new TWStream(this)
   }
 
   public init(): void {

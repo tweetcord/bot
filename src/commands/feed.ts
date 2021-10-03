@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Permissions, TextChannel, MessageEmbedOptions } from "discord.js";
-import { getGuildData, createWebhook, getWebhookData } from "../utils/functions";
+import { getGuildData, createWebhook, getWebhookData, removeFeed } from "../utils/functions";
 import Command from "../components/Command";
 
 export default class Feeds extends Command {
@@ -64,19 +64,36 @@ export default class Feeds extends Command {
             if (subcommand === "add") {
                 let channel = interaction.options.getChannel("channel", true) as TextChannel;
                 let username = interaction.options.getString("username", true);
+                let message = interaction.options.getString("message")
+                if(!message) message = "{link}"
+                if(!message.includes("{link}")) return interaction.followUp({content: "You need to add {link} parameter to message.", ephemeral: true})
                 let {data: user} = await interaction.client.twitter.v2.userByUsername(username)
                 let guildId = interaction.guild?.id;
                 await interaction.client.prisma.feed.create({
                     data: {
                         channel: channel.id,
                         guildId,
-                        twitterUserId: user.id
+                        twitterUserId: user.id,
+                        message: message
                     }
                 })
-                !(await getWebhookData(interaction, channel.id)) && await createWebhook(interaction, channel)
-                await interaction.followUp({content: user.name + ' added to feed list'})
+                !(await getWebhookData(interaction.client, channel.id)) && await createWebhook(interaction, channel)
+                await interaction.followUp({content: "Added + **" + user.name + '** to feed list'})
             } else if (subcommand === "remove") {
-
+                let username = interaction.options.getString("username", true);
+                let { data } = await interaction.client.twitter.v2.userByUsername(username)
+                let find = guild.feeds.find((user: any) => data.id === user.twitterUserId);
+                if(!find){
+                    return interaction.followUp({
+                        content: "There is no feeds for this username.",
+                        ephemeral: true
+                    })  
+                }
+                await removeFeed(interaction, data.id)
+                return interaction.followUp({
+                    content: "Removed **" + data.username + "** from feed list.",
+                    ephemeral: true
+                })  
             } else if (subcommand === "list") {
                 let {feeds}: any = guild
                 let channels: any = [];
@@ -92,7 +109,7 @@ export default class Feeds extends Command {
                     channels.forEach(async (channel:any, index:number) => {
                         channel.name = interaction.guild?.channels.cache.get(channel.name)?.name
                         const { data } = await interaction.client.twitter.v2.users(channel.value);
-                        channel.value = data.map(a => a.username).join("\n");
+                        channel.value = data.map(a => '`' + a.username + '`').join("\n");
                         if (index === channels.length - 1) resolve("End");
                     })
                 })

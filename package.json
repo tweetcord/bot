@@ -1,33 +1,34 @@
 {
-  "name": "tweetcord",
-  "version": "2.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "rm -rf dist && tsc && node dist/src/index.js",
-    "startWin": "rmdir /s /q \"dist\" && tsc && node dist/src/index.js",
-    "dev": "rm -rf dist && devScript",
-    "db": "npx prisma format && npx prisma generate"
-  },
-  "author": "https://github.com/tweetcord/people",
-  "license": "ISC",
-  "dependencies": {
-    "@discordjs/builders": "^0.6.0",
-    "@discordjs/rest": "^0.1.0-canary.0",
-    "@prisma/client": "^3.1.1",
-    "@sentry/node": "^6.13.2",
-    "@sentry/tracing": "^6.12.0",
-    "bufferutil": "^4.0.4",
-    "chalk": "^4.1.2",
-    "discord.js": "^13.2.0-dev.1632830601.3b14883",
-    "dotenv": "^10.0.0",
-    "erlpack": "hzmifork/erlpack",
-    "twitter-api-v2": "^1.5.2",
-    "utf-8-validate": "^5.0.6",
-    "zlib-sync": "^0.1.7"
-  },
-  "devDependencies": {
-    "@types/node": "^16.10.1",
-    "prisma": "^3.1.1"
-  }
+    "name": "tweetcord",
+    "version": "2.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "rm -rf dist && tsc && node dist/src/index.js",
+        "startWin": "rmdir /s /q \"dist\" && tsc && node dist/src/index.js",
+        "dev": "rm -rf dist && devScript",
+        "db": "npx prisma format && npx prisma generate"
+    },
+    "author": "https://github.com/tweetcord/people",
+    "license": "ISC",
+    "dependencies": {
+        "@discordjs/builders": "^0.6.0",
+        "@discordjs/rest": "^0.1.0-canary.0",
+        "@prisma/client": "^3.1.1",
+        "@sentry/node": "^6.13.2",
+        "@sentry/tracing": "^6.12.0",
+        "axios": "^0.22.0",
+        "bufferutil": "^4.0.4",
+        "chalk": "^4.1.2",
+        "discord.js": "^13.2.0-dev.1632830601.3b14883",
+        "dotenv": "^10.0.0",
+        "twit": "^2.2.11",
+        "twitter-api-v2": "^1.5.2",
+        "utf-8-validate": "^5.0.6"
+    },
+    "devDependencies": {
+        "@types/node": "^16.10.1",
+        "@types/twit": "^2.2.30",
+        "prisma": "^3.1.1"
+    }
 }

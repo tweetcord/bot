@@ -1,4 +1,4 @@
-import {Interaction, Webhook, TextChannel} from "discord.js"
+import { Client, Webhook, TextChannel, Interaction } from "discord.js"
 
 export const createWebhook = async (interaction: Interaction, channel: TextChannel): Promise<Webhook> => {
     let webhook = await channel?.createWebhook("Tweetcord Notification")
@@ -25,10 +25,26 @@ export const getGuildData = async (interaction: Interaction): Promise<any> => {
     });
 }
 
-export const getWebhookData = async (interaction: Interaction, channelId: string): Promise<any> => {    
-    return await interaction.client.prisma.webhook.findFirst({
+export const getWebhookData = async (client: Client, channelId: string): Promise<any> => {    
+    return await client.prisma.webhook.findFirst({
         where: {
             channelId: channelId,
         }
     });
+}
+
+export const removeFeed = async (interaction: Interaction, userID: string): Promise<any> => {
+    return await interaction.client.prisma.feed.deleteMany({
+        where: {
+            twitterUserId: userID,
+        },
+    });
+}
+
+export const formatString = (str: string, obj: Object) : string => {
+    let temp = str.replace(/{\s*(\w+)\s*}/g, (_match, p1) => {
+        return obj[p1];
+    });
+    temp = temp.replace(/{%\s*(\w+)\s*%}/g, '{{ $1 }}');
+    return temp;
 }
