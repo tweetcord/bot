@@ -29,6 +29,6 @@
     "devDependencies": {
         "@types/node": "^16.10.1",
         "@types/twit": "^2.2.30",
-        "prisma": "^3.1.1"
+        "prisma": "^3.2.0"
     }
 }
