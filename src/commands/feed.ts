@@ -73,8 +73,8 @@ export default class Feeds extends Command {
                 
                 let username = interaction.options.getString("username", true);
                 let message = interaction.options.getString("message")
-                if(!message) message = "{link}"
-                if(!message.includes("{link}")) return interaction.followUp({content: "You need to add {link} parameter to message.", ephemeral: true})
+                if(!message) message = ""
+
                 try {
                     let {data: user} = await interaction.client.twitter.v2.userByUsername(username)
                     let guildId = interaction.guild?.id;
@@ -94,9 +94,6 @@ export default class Feeds extends Command {
                 } catch (e) {
                     return interaction.followUp({content: "Can't find any user with named " + username, ephemeral: true })
                 }
-                
-                
-
                 //@ts-ignore
                 interaction.client.streamClient.restart()
             
@@ -104,7 +101,6 @@ export default class Feeds extends Command {
                 let username = interaction.options.getString("username", true);
                 let { data } = await interaction.client.twitter.v2.userByUsername(username)
                 let channel = interaction.options.getChannel("channel", true);
-
                 let find = guild.feeds.find((user: any) => data.id === user.twitterUserId && user.channel === channel.id);
 
                 if(!find){
@@ -114,19 +110,17 @@ export default class Feeds extends Command {
                     })  
                 }
                 await removeFeedById(interaction, data.id, interaction.guild?.id as string, channel.id)
-
                 //@ts-ignore
                 interaction.client.streamClient.restart()
                 
                 return interaction.followUp({
                     content: "Removed **" + data.username + "** from feed list.",
                     ephemeral: true
-                })  
-
-                
+                })
             } else if (subcommand === "list") {
                 let {feeds}: any = guild
-                if(!feeds) return interaction.followUp({content: "There is nothing in the feed list"})
+                if(feeds.length === 0) return interaction.followUp({content: "There is nothing in the feed list"})
+                
                 let channels: any = [];
                 await feeds.forEach((feed: any) => {
                     if(!channels.find((channel: any) => channel.name === feed.channel)){

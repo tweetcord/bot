@@ -62,6 +62,24 @@ export const removeFeedByChannel = async (client: Client, channelID: string, gui
     });
 }
 
+export const removeGuildData = async (client: Client, guildId: string): Promise<any> => {
+    await client.prisma.feed.deleteMany({
+        where: {
+            guildId: guildId
+        },
+    });
+    await client.prisma.webhook.deleteMany({
+        where: {
+            guildId: guildId
+        },
+    });
+    await client.prisma.guild.deleteMany({
+        where: {
+            id: guildId
+        },
+    });
+}
+
 export const formatString = (str: string, obj: Object) : string => {
     let temp = str.replace(/{\s*(\w+)\s*}/g, (_match, p1) => {
         return obj[p1];

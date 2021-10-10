@@ -1,8 +1,7 @@
 import { REST } from '@discordjs/rest';
 import { PrismaClient } from "@prisma/client";
 import { Routes } from 'discord-api-types/v9';
-// import { init } from "@sentry/node";
-import { ApplicationCommandPermissionData, Client, Collection, Interaction, Guild } from "discord.js";
+import { Client, Collection, Interaction, Guild, ApplicationCommandPermissionData} from "discord.js";
 import { readdirSync } from "fs";
 import { join, resolve } from "path";
 import { TwitterApiReadOnly } from "twitter-api-v2";
@@ -10,7 +9,7 @@ import { clientOptions } from "../constants";
 import TWStream from "../stream/stream"
 import Command from "./Command";
 import * as logger from "./Logger";
-
+import { removeGuildData } from "../utils/functions"
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 
 export default class Tweetcord extends Client {
@@ -38,6 +37,7 @@ export default class Tweetcord extends Client {
   }
   private handleReady(client: Client): void {
     logger.info("[BOT]", `Logged in as ${client.user?.tag} (${client.guilds.cache.size} guilds)`)
+    this.addEvalCommand()
     /*
    sentry
    init({
@@ -46,7 +46,6 @@ export default class Tweetcord extends Client {
      environment: "production"
    })
    logger.info("[SENTRY]", "Initialized Sentry")*/
-
     this.prisma.$connect().then(() => logger.info("[PRISMA]", "Connected to MongoDB"))
   }
 
@@ -57,7 +56,7 @@ export default class Tweetcord extends Client {
   }
   private handleLeave(e: Guild) {
     console.log(e.id);
-    
+    removeGuildData(this, e.id)
   }
   private async loadCommands() {
     const folder = resolve("dist/src/commands")
@@ -70,14 +69,13 @@ export default class Tweetcord extends Client {
     }
   }
   //@ts-ignore
-  public async updateCommands() {
-    const commands = this.commands.map(a => a.data().toJSON())
+  private async addEvalCommand(){
+    const commands = [this.commands.map(a => a.data().toJSON()).find(a => a.name === "eval")]
     const twdevserver = "686640167897006215"
-
-    // bunu komutlari global yaptiginiz zaman guncelleyin:
-    // this.application.commands.fetch("yeni komut idsi")
-    const evalC = await this.guilds.cache.get(twdevserver)?.commands.fetch('859760246012248064');
-
+    let evalC = (await this.guilds.cache.get(twdevserver)?.commands.fetch())?.find(a => a.name === "eval")
+    
+    console.log(commands);
+    
     const permissions: ApplicationCommandPermissionData[] = [
       {
         id: '534099893979971584', // nmw03
@@ -103,12 +101,29 @@ export default class Tweetcord extends Client {
 
     try {
       await rest.put(
-        // Global yapacaginiz zaman: Routes.applicationCommands
         Routes.applicationGuildCommands(this.user?.id as string, twdevserver),
         { body: commands },
       );
-      // command permissions
       await evalC?.permissions.set({ permissions });
+
+      logger.info('[SLASH]', `Successfully registered ${this.commands.size} application commands.`);
+      return `Successfully registered ${this.commands.size} application commands.`
+    } catch (error: any) {
+      logger.error('[SLASH]', error);
+      return error.message
+    }
+  }
+
+  public async setGlobalCommands() {
+    const commands = this.commands.map(a => a.data().toJSON()).filter(a => a.name !== "eval")
+    console.log(commands);
+    
+    try {
+      await rest.put(
+        // Global yapacaginiz zaman: Routes.applicationCommands
+        Routes.applicationCommands(this.user?.id as string),
+        { body: commands },
+      );
 
       logger.info('[SLASH]', `Successfully registered ${this.commands.size} application commands.`);
       return `Successfully registered ${this.commands.size} application commands.`

@@ -54,9 +54,10 @@ export default class TWStream {
                 avatar_url: profileImageURL,
                 embeds: embeds,
             }
-            feeds.forEach(async (feed) => {
-                //webhookOptions.content = formatString(feed.message, {link: hyperlink('_ _', url)})
+            for (let feed of feeds) {
                 let webhook = await getWebhookData(that.client, feed.channel)
+                console.log(webhook);
+                
                 Axios.post(`https://discord.com/api/webhooks/${webhook.webhookId}/${webhook.webhookToken}`,
                             webhookOptions, 
                             {headers: {'Content-Type': 'application/json'}}).catch(async e => {
@@ -65,7 +66,7 @@ export default class TWStream {
                                 }
                                 console.log(e.response.data);
                             })
-            })
+            }                
         })
     }
 
