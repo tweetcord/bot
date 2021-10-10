@@ -74,7 +74,6 @@ export default class Tweetcord extends Client {
     const twdevserver = "686640167897006215"
     let evalC = (await this.guilds.cache.get(twdevserver)?.commands.fetch())?.find(a => a.name === "eval")
     
-    console.log(commands);
     
     const permissions: ApplicationCommandPermissionData[] = [
       {

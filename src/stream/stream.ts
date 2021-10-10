@@ -1,4 +1,5 @@
 import { Client, MessageEmbedOptions } from "discord.js"
+import { hyperlink } from "@discordjs/builders"
 import Axios from "axios"
 import { getWebhookData, deleteWebhook } from "../utils/functions"
 import Twit from "twit"
@@ -26,7 +27,6 @@ export default class TWStream {
         let that = this
 
         this.stream = this.streamClient.stream('statuses/filter', { follow: arr })
-        
         this.stream.on('tweet', async function (tweet) {
             if(tweet.retweeted_status) return; 
             let userID = tweet.user.id_str
@@ -37,12 +37,19 @@ export default class TWStream {
                     twitterUserId: userID,
                 }
             })
+            let content = await tweet.text.split(" ").map((word: string) => {
+                if(word.startsWith("@")) return word = hyperlink(word, "https://twitter.com/" + word.substring(1))
+                if(word.startsWith("#")) return word = hyperlink(word, "https://twitter.com/search?q=%23" + word.substring(1))
+                
+                return word
+            }).join(" ")
+
             let url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
             console.log(tweet.user.profile_image_url_https.replace("_normal", ""));
             let embeds: Array<MessageEmbedOptions> = [
                 {
                     url: url,
-                    description: tweet.text,
+                    description: content,
                     author: {name: `${screen_name} (@${tweet.user.name})`, icon_url: tweet.user.profile_image_url_https.replace("_normal", ""), url:url},
                     footer: {text: "Tweetcord Notifications", icon_url: that.client.user?.displayAvatarURL({size: 2048})},
                     timestamp: new Date()
@@ -55,9 +62,7 @@ export default class TWStream {
                 embeds: embeds,
             }
             for (let feed of feeds) {
-                let webhook = await getWebhookData(that.client, feed.channel)
-                console.log(webhook);
-                
+                let webhook = await getWebhookData(that.client, feed.channel)                
                 Axios.post(`https://discord.com/api/webhooks/${webhook.webhookId}/${webhook.webhookToken}`,
                             webhookOptions, 
                             {headers: {'Content-Type': 'application/json'}}).catch(async e => {
