@@ -1,7 +1,6 @@
 import { Client, MessageEmbedOptions } from "discord.js"
 import { hyperlink } from "@discordjs/builders"
-import Axios from "axios"
-import { getWebhookData, deleteWebhook } from "../utils/functions"
+import { getWebhookData, sendWebhookMessage } from "../utils/functions"
 import Twit from "twit"
 
 export default class TWStream {
@@ -28,6 +27,8 @@ export default class TWStream {
 
         this.stream = this.streamClient.stream('statuses/filter', { follow: arr })
         this.stream.on('tweet', async function (tweet) {
+            let imgs = tweet.extended_entities.media
+            
             if(tweet.retweeted_status) return; 
             let userID = tweet.user.id_str
             let screen_name = tweet.user.screen_name
@@ -40,12 +41,11 @@ export default class TWStream {
             let content = await tweet.text.split(" ").map((word: string) => {
                 if(word.startsWith("@")) return word = hyperlink(word, "https://twitter.com/" + word.substring(1))
                 if(word.startsWith("#")) return word = hyperlink(word, "https://twitter.com/search?q=%23" + word.substring(1))
-                
+                if(word.startsWith("https://t.co")) return word = ""
                 return word
             }).join(" ")
 
             let url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
-            console.log(tweet.user.profile_image_url_https.replace("_normal", ""));
             let embeds: Array<MessageEmbedOptions> = [
                 {
                     url: url,
@@ -55,22 +55,26 @@ export default class TWStream {
                     timestamp: new Date()
                 }
             ]
-            
+            if(imgs) {
+                let i = 0;
+                for(let img of imgs) {
+                    i++;
+                    if(embeds[i]){
+                        embeds[i].image = {url: img.media_url_https}
+                    } else {
+                        console.log("a");
+                        embeds[i] = {url: url, image: {url: img.media_url_https}}
+                    }
+                }
+            }
             let webhookOptions = {
                 username: `${screen_name} (@${tweet.user.name})`,
                 avatar_url: profileImageURL,
                 embeds: embeds,
             }
             for (let feed of feeds) {
-                let webhook = await getWebhookData(that.client, feed.channel)                
-                Axios.post(`https://discord.com/api/webhooks/${webhook.webhookId}/${webhook.webhookToken}`,
-                            webhookOptions, 
-                            {headers: {'Content-Type': 'application/json'}}).catch(async e => {
-                                if(e.response.data.message === 'Unknown Webhook'){
-                                    await deleteWebhook(that.client, feed.channel, feed.guildId as string)
-                                }
-                                console.log(e.response.data);
-                            })
+                let webhook = await getWebhookData(that.client, feed.channel)        
+                sendWebhookMessage(that.client, webhookOptions, webhook.webhookId, webhook.webhookToken, feed)
             }                
         })
     }

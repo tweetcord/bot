@@ -37,7 +37,6 @@ export default class Tweetcord extends Client {
   }
   private handleReady(client: Client): void {
     logger.info("[BOT]", `Logged in as ${client.user?.tag} (${client.guilds.cache.size} guilds)`)
-    this.addEvalCommand()
     /*
    sentry
    init({
@@ -55,7 +54,6 @@ export default class Tweetcord extends Client {
     command?.run(interaction);
   }
   private handleLeave(e: Guild) {
-    console.log(e.id);
     removeGuildData(this, e.id)
   }
   private async loadCommands() {

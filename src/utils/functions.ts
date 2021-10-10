@@ -1,4 +1,5 @@
 import { Client, Webhook, TextChannel, Interaction } from "discord.js"
+import Axios from "axios"
 
 export const createWebhook = async (interaction: Interaction, channel: TextChannel): Promise<Webhook> => {
     let webhook = await channel?.createWebhook("Tweetcord Notification")
@@ -86,4 +87,15 @@ export const formatString = (str: string, obj: Object) : string => {
     });
     temp = temp.replace(/{%\s*(\w+)\s*%}/g, '{{ $1 }}');
     return temp;
+}
+
+export const sendWebhookMessage = (client: Client, webhookOptions: Object, webhookId: string, webhookToken: string, feed: any) => {
+    Axios.post(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`,
+                webhookOptions, 
+                {headers: {'Content-Type': 'application/json'}}).catch(async e => {
+                    if(e.response.data.message === 'Unknown Webhook'){
+                        await deleteWebhook(client, feed.channel, feed.guildId as string)
+                    }
+                    console.log(e.response.data);
+                })
 }
