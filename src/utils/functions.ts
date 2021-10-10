@@ -32,11 +32,32 @@ export const getWebhookData = async (client: Client, channelId: string): Promise
         }
     });
 }
+export const deleteWebhook = async (client: Client, channelId: string, guildId: string): Promise<any> => {    
+    let del = await client.prisma.webhook.deleteMany({
+        where: {
+            channelId: channelId,
+            guildId: guildId,
+        }
+    });
+    removeFeedByChannel(client, channelId, guildId)
+    return del
+}
 
-export const removeFeed = async (interaction: Interaction, userID: string): Promise<any> => {
+export const removeFeedById = async (interaction: Interaction, userID: string, guildId: string, channelId: string): Promise<any> => {
     return await interaction.client.prisma.feed.deleteMany({
         where: {
             twitterUserId: userID,
+            guildId: guildId,
+            channel: channelId
+        },
+    });
+}
+
+export const removeFeedByChannel = async (client: Client, channelID: string, guildId: string): Promise<any> => {
+    return await client.prisma.feed.deleteMany({
+        where: {
+            channel: channelID,
+            guildId: guildId
         },
     });
 }
