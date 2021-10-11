@@ -1,4 +1,5 @@
 import { Client, Webhook, TextChannel, Interaction } from "discord.js"
+import { hyperlink } from "@discordjs/builders"
 import Axios from "axios"
 
 export const createWebhook = async (interaction: Interaction, channel: TextChannel): Promise<Webhook> => {
@@ -98,4 +99,13 @@ export const sendWebhookMessage = (client: Client, webhookOptions: Object, webho
                     }
                     console.log(e.response.data);
                 })
+}
+
+export const formatTweets = async (text: string): Promise<string> => {
+    return text.split(" ").map((word: string) => {
+        if(word.startsWith("@")) return word = hyperlink(word, "https://twitter.com/" + word.substring(1))
+        if(word.startsWith("#")) return word = hyperlink(word, "https://twitter.com/search?q=%23" + word.substring(1))
+        if(word.startsWith("https://t.co")) return word = ""
+        return word
+    }).join(" ")
 }

@@ -1,6 +1,6 @@
 import { Client, MessageEmbedOptions } from "discord.js"
-import { hyperlink } from "@discordjs/builders"
-import { getWebhookData, sendWebhookMessage } from "../utils/functions"
+import { blockQuote } from "@discordjs/builders"
+import { getWebhookData, sendWebhookMessage, formatTweets } from "../utils/functions"
 import Twit from "twit"
 
 export default class TWStream {
@@ -27,9 +27,7 @@ export default class TWStream {
 
         this.stream = this.streamClient.stream('statuses/filter', { follow: arr })
         this.stream.on('tweet', async function (tweet) {
-            let imgs = tweet.extended_entities.media
-            
-            if(tweet.retweeted_status) return; 
+            let imgs = tweet.extended_entities?.media
             let userID = tweet.user.id_str
             let screen_name = tweet.user.screen_name
             let profileImageURL = tweet.user.profile_image_url_https.replace("_normal", "")
@@ -38,12 +36,13 @@ export default class TWStream {
                     twitterUserId: userID,
                 }
             })
-            let content = await tweet.text.split(" ").map((word: string) => {
-                if(word.startsWith("@")) return word = hyperlink(word, "https://twitter.com/" + word.substring(1))
-                if(word.startsWith("#")) return word = hyperlink(word, "https://twitter.com/search?q=%23" + word.substring(1))
-                if(word.startsWith("https://t.co")) return word = ""
-                return word
-            }).join(" ")
+            let content = await formatTweets(tweet.text)
+
+            if(tweet.is_quote_status) {
+                let quote = tweet.quoted_status
+                content += "\n\n" + blockQuote(`**${quote.user.screen_name} (@${quote.user.name})**`) + "\n" + quote.text
+                await formatTweets(tweet.text)
+            }
 
             let url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
             let embeds: Array<MessageEmbedOptions> = [
@@ -62,7 +61,6 @@ export default class TWStream {
                     if(embeds[i]){
                         embeds[i].image = {url: img.media_url_https}
                     } else {
-                        console.log("a");
                         embeds[i] = {url: url, image: {url: img.media_url_https}}
                     }
                 }
@@ -72,6 +70,7 @@ export default class TWStream {
                 avatar_url: profileImageURL,
                 embeds: embeds,
             }
+
             for (let feed of feeds) {
                 let webhook = await getWebhookData(that.client, feed.channel)        
                 sendWebhookMessage(that.client, webhookOptions, webhook.webhookId, webhook.webhookToken, feed)
