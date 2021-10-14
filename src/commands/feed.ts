@@ -1,161 +1,162 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, Permissions, TextChannel, MessageEmbedOptions } from "discord.js";
-import { getGuildData, createWebhook, getWebhookData, removeFeedById } from "../utils/functions";
-import Command from "../components/Command";
-
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { CommandInteraction, Permissions, TextChannel, MessageEmbedOptions } from 'discord.js';
+import { getGuildData, createWebhook, getWebhookData, removeFeedById, deleteWebhook } from '../utils/functions';
+import Command from '../components/Command';
+import { emojis } from '../constants';
 export default class Feeds extends Command {
     public data() {
         return new SlashCommandBuilder()
-            .setName("feed")
-            .setDescription("Create, delete and edit feeds")
-            .addSubcommand(command =>
+            .setName('feed')
+            .setDescription('Create, delete and edit feeds')
+            .addSubcommand((command) =>
                 command
-                    .setName("add")
-                    .setDescription("Adds a feed")
-                    .addStringOption(option =>
-                        option
-                            .setName("username")
-                            .setDescription("Username to add")
-                            .setRequired(true)
-                    )
-                    .addChannelOption(option =>
-                        option
-                            .setName("channel")
-                            .setDescription("Channel to add")
-                            .setRequired(true)
-                    )
-                    .addStringOption(option =>
-                        option
-                            .setName("message")
-                            .setDescription("A message that will be sent by bot when there is new tweet")
+                    .setName('add')
+                    .setDescription('Adds a feed')
+                    .addStringOption((option) => option.setName('username').setDescription('Username to add').setRequired(true))
+                    .addChannelOption((option) => option.setName('channel').setDescription('Channel to add').setRequired(true))
+                    .addStringOption((option) =>
+                        option.setName('message').setDescription('A message that will be sent by bot when there is new tweet')
                     )
             )
-            .addSubcommand(command =>
+            .addSubcommand((command) =>
                 command
-                    .setName("remove")
-                    .setDescription("Removes a feed")
-                    .addStringOption(option =>
-                        option
-                            .setName("username")
-                            .setDescription("Username to remove")
-                            .setRequired(true)
-                    )
-                    .addChannelOption(option =>
-                        option
-                            .setName("channel")
-                            .setDescription("Channel to remove")
-                            .setRequired(true)
-                    )
+                    .setName('remove')
+                    .setDescription('Removes a feed')
+                    .addStringOption((option) => option.setName('username').setDescription('Username to remove').setRequired(true))
+                    .addChannelOption((option) => option.setName('channel').setDescription('Channel to remove').setRequired(true))
             )
-            .addSubcommand(command =>
-                command
-                    .setName("list")
-                    .setDescription("Lists feeds")
-            )
+            .addSubcommand((command) => command.setName('list').setDescription('Lists feeds'));
     }
     // Change Promise<any> please
     public async run(interaction: CommandInteraction): Promise<any> {
-        await interaction.deferReply({ ephemeral: true })
+        await interaction.deferReply({ ephemeral: true });
         if ((interaction.member?.permissions as Permissions).has(Permissions.FLAGS.MANAGE_GUILD)) {
-            let guild = await getGuildData(interaction)
-            
-            if(!guild){            
-                await interaction.client.prisma.guild.create({data: { 
-                    id: interaction.guild?.id as string,
-                }})
-                guild = await getGuildData(interaction)
+            let guild = await getGuildData(interaction);
+
+            if (!guild) {
+                await interaction.client.prisma.guild.create({
+                    data: {
+                        id: interaction.guild?.id as string,
+                    },
+                });
+                guild = await getGuildData(interaction);
             }
-            
-            const subcommand = interaction.options.getSubcommand(true)
-            if (subcommand === "add") {
-                let channel = interaction.options.getChannel("channel", true);
-                if(channel.type != "GUILD_TEXT") return interaction.followUp({content: "Channel must be a text channel.", ephemeral: true})
-                
-                let username = interaction.options.getString("username", true);
-                let message = interaction.options.getString("message")
-                if(!message) message = ""
+
+            const subcommand = interaction.options.getSubcommand(true);
+            if (subcommand === 'add') {
+                let username = interaction.options.getString('username', true);
+                let channel = interaction.options.getChannel('channel', true);
+                if (channel.type != 'GUILD_TEXT')
+                    return interaction.followUp({
+                        content: emojis.f + 'Channel must be a text channel.',
+                        ephemeral: true,
+                    });
+                let message = interaction.options.getString('message');
+                if (!message) message = '';
 
                 try {
-                    let {data: user} = await interaction.client.twitter.v2.userByUsername(username)
+                    let { data: user } = await interaction.client.twitter.v2.userByUsername(username);
                     let guildId = interaction.guild?.id;
-                    if(guild.feeds.find((feed: any) => feed.channel === channel.id && feed.twitterUserId === user.id)){
-                    return interaction.followUp({content: `${username}’s feed you are trying to add at <#${channel.id}> is currently at feed list`, ephemeral: true})
+                    if (guild.feeds.find((feed: any) => feed.channel === channel.id && feed.twitterUserId === user.id)) {
+                        return interaction.followUp({
+                            content: emojis.f + `${username}’s feed you are trying to add at <#${channel.id}> is currently at feed list`,
+                            ephemeral: true,
+                        });
                     }
                     await interaction.client.prisma.feed.create({
                         data: {
                             channel: channel.id,
                             guildId,
                             twitterUserId: user.id,
-                            message: message
-                        }
-                    })
-                    !(await getWebhookData(interaction.client, channel.id)) && await createWebhook(interaction, channel as TextChannel)
-                    await interaction.followUp({content: "Added **" + user.name + '** to feed list'})
+                            message: message,
+                        },
+                    });
+                    !(await getWebhookData(interaction.client, channel.id)) && (await createWebhook(interaction, channel as TextChannel));
+                    await interaction.followUp({
+                        content: emojis.t + 'Added **' + user.name + '** to feed list',
+                    });
                 } catch (e) {
-                    return interaction.followUp({content: "Can't find any user with named " + username, ephemeral: true })
-                }
-                //@ts-ignore
-                interaction.client.streamClient.restart()
-            
-            } else if (subcommand === "remove") {
-                let username = interaction.options.getString("username", true);
-                let { data } = await interaction.client.twitter.v2.userByUsername(username)
-                let channel = interaction.options.getChannel("channel", true);
-                let find = guild.feeds.find((user: any) => data.id === user.twitterUserId && user.channel === channel.id);
-
-                if(!find){
                     return interaction.followUp({
-                        content: "There is no feeds for this username.",
-                        ephemeral: true
-                    })  
+                        content: emojis.f + "Can't find any user with named **" + username + '**',
+                        ephemeral: true,
+                    });
                 }
-                await removeFeedById(interaction, data.id, interaction.guild?.id as string, channel.id)
                 //@ts-ignore
-                interaction.client.streamClient.restart()
-                
-                return interaction.followUp({
-                    content: "Removed **" + data.username + "** from feed list.",
-                    ephemeral: true
-                })
-            } else if (subcommand === "list") {
-                let {feeds}: any = guild
-                if(feeds.length === 0) return interaction.followUp({content: "There is nothing in the feed list"})
-                
+                interaction.client.streamClient.restart();
+            } else if (subcommand === 'remove') {
+                let username = interaction.options.getString('username', true);
+                let channel = interaction.options.getChannel('channel', true);
+                if (channel.type != 'GUILD_TEXT')
+                    return interaction.followUp({
+                        content: emojis.f + 'Channel must be a text channel.',
+                        ephemeral: true,
+                    });
+                try {
+                    let { data } = await interaction.client.twitter.v2.userByUsername(username);
+                    let find = guild.feeds.find((user: any) => data.id === user.twitterUserId && user.channel === channel.id);
+                    if (!find) {
+                        return interaction.followUp({
+                            content: emojis.f + 'There is no feeds for this username.',
+                            ephemeral: true,
+                        });
+                    }
+                    await removeFeedById(interaction, data.id, interaction.guild?.id as string, channel.id);
+                    let webhook = guild.webhooks.find((webhook: any) => webhook.channelId === channel.id);
+                    if (guild.feeds.filter((feed: any) => feed.channel === channel.id).length - 1 === 0)
+                        deleteWebhook(interaction.client, guild.id, channel.id, webhook.webhookId, webhook.webhookToken);
+                    //@ts-ignore
+                    interaction.client.streamClient.restart();
+
+                    return interaction.followUp({
+                        content: emojis.t + 'Removed **' + data.username + '** from feed list.',
+                        ephemeral: true,
+                    });
+                } catch (e) {
+                    return interaction.followUp({
+                        content: emojis.f + "Can't find any user with named **" + username + '**',
+                        ephemeral: true,
+                    });
+                }
+            } else if (subcommand === 'list') {
+                let { feeds }: any = guild;
+                if (feeds.length === 0)
+                    return interaction.followUp({
+                        content: emojis.f + 'There is nothing in the feed list',
+                    });
+
                 let channels: any = [];
                 await feeds.forEach((feed: any) => {
-                    if(!channels.find((channel: any) => channel.name === feed.channel)){
-                        channels.push({name: feed.channel, value: [feed.twitterUserId]})
+                    if (!channels.find((channel: any) => channel.name === feed.channel)) {
+                        channels.push({ name: feed.channel, value: [feed.twitterUserId] });
                     } else {
-                        let find = channels.find((channel: any) => channel.name === feed.channel)
-                        find.value.push(feed.twitterUserId)
+                        let find = channels.find((channel: any) => channel.name === feed.channel);
+                        find.value.push(feed.twitterUserId);
                     }
-                })
-                let promise = new Promise<any>((resolve) =>{
-                    channels.forEach(async (channel:any, index:number) => {
-                        channel.name = interaction.guild?.channels.cache.get(channel.name)?.name
+                });
+                let promise = new Promise<any>((resolve) => {
+                    channels.forEach(async (channel: any, index: number) => {
+                        channel.name = interaction.guild?.channels.cache.get(channel.name)?.name;
                         const { data } = await interaction.client.twitter.v2.users(channel.value);
-                        channel.value = data.map(a => '`' + a.username + '`').join("\n");
-                        if (index === channels.length - 1) resolve("End");
-                    })
-                })
+                        channel.value = data.map((a) => '`' + a.username + '`').join('\n');
+                        if (index === channels.length - 1) resolve('End');
+                    });
+                });
                 promise.then(async () => {
                     let embed: MessageEmbedOptions = {
                         author: {
                             name: interaction.client.user?.tag,
-                            iconURL: interaction.client.user?.displayAvatarURL()
+                            iconURL: interaction.client.user?.displayAvatarURL(),
                         },
-                        fields: [
-                            ...channels
-                        ]
-                    } 
-                    await interaction.followUp({embeds: [embed]})
-                })                
+                        fields: [...channels],
+                    };
+                    await interaction.followUp({ embeds: [embed] });
+                });
             }
         } else {
             return interaction.followUp({
-                content: "You don't have required permission",
-                ephemeral: true
-            })
+                content: emojis.f + "You don't have required permission",
+                ephemeral: true,
+            });
         }
     }
 }

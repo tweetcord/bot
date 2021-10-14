@@ -159,3 +159,8 @@ export const TweetsLastRow = new MessageActionRow().addComponents(
 		type: "BUTTON",
 		disabled: true
 	})
+
+export const emojis = {
+	t: "<:ytick:738935932907946044> ",
+	f: "<:xtick:738936304565354497> "
+}
