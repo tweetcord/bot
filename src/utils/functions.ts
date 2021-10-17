@@ -67,7 +67,7 @@ export const removeFeedByChannel = async (client: Client, channelID: string, gui
     });
 };
 
-export const removeGuildData = async (client: Client, guildId: string): Promise<any> => {
+export const removeGuildData = async (client: Client, guildId: string, db?: any): Promise<any> => {
     await client.prisma.feed.deleteMany({
         where: {
             guildId: guildId,
@@ -78,6 +78,11 @@ export const removeGuildData = async (client: Client, guildId: string): Promise<
             guildId: guildId,
         },
     });
+    if (db && db.webhooks.length > 0) {
+        for (let webhook of db.webhooks) {
+            await Axios.delete(`https://discord.com/api/webhooks/${webhook.webhookId}/${webhook.webhookToken}`);
+        }
+    }
     await client.prisma.guild.deleteMany({
         where: {
             id: guildId,

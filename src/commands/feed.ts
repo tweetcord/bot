@@ -44,6 +44,10 @@ export default class Feeds extends Command {
 
             const subcommand = interaction.options.getSubcommand(true);
             if (subcommand === 'add') {
+                if (guild.feeds.length === 30)
+                    return await interaction.followUp({
+                        content: emojis.f + "You've reached the 30 feed limit",
+                    });
                 let username = interaction.options.getString('username', true);
                 let channel = interaction.options.getChannel('channel', true);
                 if (channel.type != 'GUILD_TEXT')
