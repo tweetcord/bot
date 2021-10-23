@@ -1,7 +1,7 @@
-import { Client, MessageEmbedOptions } from 'discord.js';
-import { blockQuote } from '@discordjs/builders';
-import { getWebhookData, sendWebhookMessage, formatTweets } from '../utils/functions';
-import Twit from 'twit';
+import { Client, MessageEmbedOptions } from "discord.js";
+import { blockQuote } from "@discordjs/builders";
+import { getWebhookData, sendWebhookMessage, formatTweets } from "../utils/functions";
+import Twit from "twit";
 
 export default class TWStream {
     public client: Client;
@@ -10,10 +10,10 @@ export default class TWStream {
     public constructor(Tweetcord: Client) {
         this.client = Tweetcord;
         this.streamClient = new Twit({
-            consumer_key: '9h8cxlDBXHIvFEqgAvKd3KUoC',
-            consumer_secret: 'RuNX1E4r4IRDd0k949yabNj0pR8pzjaPM2RtAxi5OfSAkY5vmA',
-            access_token: '1310499494912458755-lWMfCOShmSuDZY46fEvEk0NV4lJRE1',
-            access_token_secret: '2SuTuVlOndLVlGOvjdLnoP380q31Njfi2ArZ0DRIJyNrA',
+            consumer_key: "9h8cxlDBXHIvFEqgAvKd3KUoC",
+            consumer_secret: "RuNX1E4r4IRDd0k949yabNj0pR8pzjaPM2RtAxi5OfSAkY5vmA",
+            access_token: "1310499494912458755-lWMfCOShmSuDZY46fEvEk0NV4lJRE1",
+            access_token_secret: "2SuTuVlOndLVlGOvjdLnoP380q31Njfi2ArZ0DRIJyNrA",
         });
         this.start();
     }
@@ -21,16 +21,16 @@ export default class TWStream {
     public async start() {
         let feeds = await this.client.prisma.feed.findMany();
         if (feeds.length === 0) return;
-        let set = new Set(feeds.map((feed) => feed.twitterUserId));
+        let set = new Set(feeds.map((feed: any) => feed.twitterUserId));
         let arr = Array.from(set);
         let that = this;
 
-        this.stream = this.streamClient.stream('statuses/filter', { follow: arr });
-        this.stream.on('tweet', async function (tweet) {
+        this.stream = this.streamClient.stream("statuses/filter", { follow: arr as Array<string> });
+        this.stream.on("tweet", async function (tweet) {
             let imgs = tweet.extended_entities?.media;
             let userID = tweet.user.id_str;
             let screen_name = tweet.user.screen_name;
-            let profileImageURL = tweet.user.profile_image_url_https.replace('_normal', '');
+            let profileImageURL = tweet.user.profile_image_url_https.replace("_normal", "");
             let feeds = await that.client.prisma.feed.findMany({
                 where: {
                     twitterUserId: userID,
@@ -40,7 +40,7 @@ export default class TWStream {
 
             if (tweet.is_quote_status) {
                 let quote = tweet.quoted_status;
-                content += '\n\n' + blockQuote(`**${quote.user.screen_name} (@${quote.user.name})**`) + '\n' + quote.text;
+                content += "\n\n" + blockQuote(`**${quote.user.screen_name} (@${quote.user.name})**`) + "\n" + quote.text;
                 await formatTweets(tweet.text);
             }
 
@@ -51,10 +51,10 @@ export default class TWStream {
                     description: content,
                     author: {
                         name: `${screen_name} (@${tweet.user.name})`,
-                        icon_url: tweet.user.profile_image_url_https.replace('_normal', ''),
+                        icon_url: tweet.user.profile_image_url_https.replace("_normal", ""),
                         url: url,
                     },
-                    footer: { text: 'Tweetcord Notifications', icon_url: that.client.user?.displayAvatarURL({ size: 2048 }) },
+                    footer: { text: "Tweetcord Notifications", icon_url: that.client.user?.displayAvatarURL({ size: 2048 }) },
                     timestamp: new Date(),
                 },
             ];
@@ -74,11 +74,11 @@ export default class TWStream {
                 username: `${screen_name} (@${tweet.user.name})`,
                 avatar_url: profileImageURL,
                 embeds: embeds,
-                content: '',
+                content: "",
             };
 
             for (let feed of feeds) {
-                webhookOptions.content = feed.message ? feed.message : '';
+                webhookOptions.content = feed.message ? feed.message : "";
                 let webhook = await getWebhookData(that.client, feed.channel);
                 sendWebhookMessage(that.client, webhookOptions, webhook.webhookId, webhook.webhookToken, feed);
             }

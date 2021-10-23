@@ -23,6 +23,11 @@ export default class Help extends Command {
                     name: commandName,
                 },
                 description: `${cmd.description}`,
+                footer: {
+                    iconURL: interaction.user.displayAvatarURL(),
+                    text: "Do not put [] around command arguments."
+                },
+                timestamp: new Date()
             };
             if (options.length > 0) {
                 let map = options.map((opt: any) => `\`${opt.name}\``);
@@ -33,10 +38,15 @@ export default class Help extends Command {
                 author: {
                     name: 'Tweetcord',
                 },
-                description: `If you need detailed help join our ${hyperlink(
-                    'Support Server',
+                description: `If you need help about command, just use \`help [command]\` or join ${hyperlink(
+                    'support server.',
                     'https://discord.com/invite/tV22Kvj'
-                )}. \n\n ${blockQuote(cmds.map((command) => `\`${command.name}\``).join(', '))}`,
+                )}. \n\n **Commands:** ${blockQuote(cmds.map((command) => `\`${command.name}\``).join(', '))} \n `,
+                footer: {
+                    iconURL: interaction.user.displayAvatarURL(),
+                    text: "Do not put [] around command arguments."
+                },
+                timestamp: new Date()
             };
         }
 

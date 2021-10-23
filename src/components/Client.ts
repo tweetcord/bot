@@ -1,16 +1,19 @@
-import { REST } from '@discordjs/rest';
-import { PrismaClient } from '@prisma/client';
-import { Routes } from 'discord-api-types/v9';
-import { Client, Collection, Interaction, Guild, ApplicationCommandPermissionData } from 'discord.js';
-import { readdirSync } from 'fs';
-import { join, resolve } from 'path';
-import { TwitterApiReadOnly } from 'twitter-api-v2';
-import { clientOptions } from '../constants';
-import TWStream from '../stream/stream';
-import Command from './Command';
-import * as logger from './Logger';
-import { removeGuildData } from '../utils/functions';
-const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
+import { REST } from "@discordjs/rest";
+import { PrismaClient } from "@prisma/client";
+import { Routes } from "discord-api-types/v9";
+import { Client, Collection, Interaction, Guild, ApplicationCommandPermissionData } from "discord.js";
+/*import guildJson from "../database/guild.json";
+import webhookJson from "../database/webhooks.json";
+import feedsJson from "../database/feeds.json";*/
+import { readdirSync } from "fs";
+import { join, resolve } from "path";
+import { TwitterApiReadOnly } from "twitter-api-v2";
+import { clientOptions } from "../constants";
+import TWStream from "../stream/stream";
+import Command from "./Command";
+import * as logger from "./Logger";
+import { removeGuildData } from "../utils/functions";
+const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
 
 export default class Tweetcord extends Client {
     readonly commands: Collection<string, Command>;
@@ -19,14 +22,10 @@ export default class Tweetcord extends Client {
     public streamClient: TWStream;
     public constructor() {
         super(clientOptions);
-        this.on('ready', this.handleReady)
-            .on('interactionCreate', this.handleInteraction)
-            .on('guildDelete', this.handleLeave)
-            .on('error', console.error)
-            .on('warn', console.warn);
+        this.on("ready", this.handleReady).on("interactionCreate", this.handleInteraction).on("guildDelete", this.handleLeave).on("error", console.error).on("warn", console.warn);
         this.commands = new Collection();
         this.twitter = new TwitterApiReadOnly(process.env.TWITTER_BEARER);
-        this.prisma = new PrismaClient({ errorFormat: 'colorless' });
+        this.prisma = new PrismaClient({ errorFormat: "colorless" });
         this.streamClient = new TWStream(this);
     }
 
@@ -34,18 +33,13 @@ export default class Tweetcord extends Client {
         this.loadCommands();
         this.login(process.env.DISCORD_TOKEN);
     }
-    private handleReady(client: Client): void {
-        logger.info('[BOT]', `Logged in as ${client.user?.tag} (${client.guilds.cache.size} guilds)`);
-        /*
-   sentry
-   init({
-     dsn: process.env.SENTRY,
-     tracesSampleRate: 1.0,
-     environment: "production"
-   })
-   logger.info("[SENTRY]", "Initialized Sentry")*/
+    private async handleReady(client: Client): Promise<void> {
+        logger.info("[BOT]", `Logged in as ${client.user?.tag} (${client.guilds.cache.size} guilds)`);
+        /*await this.prisma.guild.createMany({ data: guildJson });
+        await this.prisma.webhook.createMany({ data: webhookJson });
+        await this.prisma.feed.createMany({ data: feedsJson });*/
         this.addEvalCommand();
-        this.prisma.$connect().then(() => logger.info('[PRISMA]', 'Connected to MongoDB'));
+        this.prisma.$connect().then(() => logger.info("[PRISMA]", "Connected to MongoDB"));
     }
 
     private handleInteraction(interaction: Interaction) {
@@ -57,8 +51,8 @@ export default class Tweetcord extends Client {
         removeGuildData(this, e.id);
     }
     private async loadCommands() {
-        const folder = resolve('dist/src/commands');
-        const commands = readdirSync(folder).filter((c) => c.endsWith('.js'));
+        const folder = resolve("dist/src/commands");
+        const commands = readdirSync(folder).filter((c) => c.endsWith(".js"));
 
         for (const command of commands) {
             const commandFile = await import(join(folder, command));
@@ -69,28 +63,28 @@ export default class Tweetcord extends Client {
     //@ts-ignore
     private async addEvalCommand() {
         const commands = this.commands.map((a) => a.data().toJSON());
-        const twdevserver = '686640167897006215';
-        let evalC = (await this.guilds.cache.get(twdevserver)?.commands.fetch())?.find((a) => a.name === 'eval');
+        const twdevserver = "686640167897006215";
+        let evalC = (await this.guilds.cache.get(twdevserver)?.commands.fetch())?.find((a) => a.name === "eval");
 
         const permissions: ApplicationCommandPermissionData[] = [
             {
-                id: '534099893979971584', // nmw03
-                type: 'USER',
+                id: "534099893979971584", // nmw03
+                type: "USER",
                 permission: true,
             },
             {
-                id: '548547460276944906', // can
-                type: 'USER',
+                id: "548547460276944906", // can
+                type: "USER",
                 permission: true,
             },
             {
-                id: '693445343332794408', // kaan
-                type: 'USER',
+                id: "693445343332794408", // kaan
+                type: "USER",
                 permission: true,
             },
             {
-                id: '300573341591535617', // woxe
-                type: 'USER',
+                id: "300573341591535617", // woxe
+                type: "USER",
                 permission: true,
             },
         ];
@@ -99,10 +93,10 @@ export default class Tweetcord extends Client {
             await rest.put(Routes.applicationGuildCommands(this.user?.id as string, twdevserver), { body: commands });
             await evalC?.permissions.set({ permissions });
 
-            logger.info('[SLASH]', `Successfully registered ${this.commands.size} application commands.`);
+            logger.info("[SLASH]", `Successfully registered ${this.commands.size} application commands.`);
             return `Successfully registered ${this.commands.size} application commands.`;
         } catch (error: any) {
-            logger.error('[SLASH]', error);
+            logger.error("[SLASH]", error);
             return error.message;
         }
     }

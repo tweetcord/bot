@@ -1,9 +1,9 @@
-import { Client, Webhook, TextChannel, Interaction } from 'discord.js';
-import { hyperlink } from '@discordjs/builders';
-import Axios from 'axios';
+import { Client, Webhook, TextChannel, Interaction, MessageEmbedOptions, CommandInteraction } from "discord.js";
+import { hyperlink } from "@discordjs/builders";
+import Axios from "axios";
 
 export const createWebhook = async (interaction: Interaction, channel: TextChannel): Promise<Webhook> => {
-    let webhook = await channel?.createWebhook('Tweetcord Notification');
+    let webhook = await channel?.createWebhook("Tweetcord Notification");
 
     await interaction.client.prisma.webhook.create({
         data: {
@@ -94,15 +94,15 @@ export const formatString = (str: string, obj: Object): string => {
     let temp = str.replace(/{\s*(\w+)\s*}/g, (_match, p1) => {
         return obj[p1];
     });
-    temp = temp.replace(/{%\s*(\w+)\s*%}/g, '{{ $1 }}');
+    temp = temp.replace(/{%\s*(\w+)\s*%}/g, "{{ $1 }}");
     return temp;
 };
 
 export const sendWebhookMessage = (client: Client, webhookOptions: Object, webhookId: string, webhookToken: string, feed: any) => {
     Axios.post(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`, webhookOptions, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
     }).catch(async (e) => {
-        if (e.response.data.message === 'Unknown Webhook') {
+        if (e.response.data.message === "Unknown Webhook") {
             await deleteWebhook(client, feed.channel, feed.guildId as string, webhookId, webhookToken);
         }
         console.log(e.response.data);
@@ -111,12 +111,25 @@ export const sendWebhookMessage = (client: Client, webhookOptions: Object, webho
 
 export const formatTweets = async (text: string): Promise<string> => {
     return text
-        .split(' ')
+        .split(" ")
         .map((word: string) => {
-            if (word.startsWith('@')) return (word = hyperlink(word, 'https://twitter.com/' + word.substring(1)));
-            if (word.startsWith('#')) return (word = hyperlink(word, 'https://twitter.com/search?q=%23' + word.substring(1)));
-            if (word.startsWith('https://t.co')) return (word = '');
+            if (word.startsWith("@")) return (word = hyperlink(word, "https://twitter.com/" + word.substring(1)));
+            if (word.startsWith("#")) return (word = hyperlink(word, "https://twitter.com/search?q=%23" + word.substring(1)));
+            if (word.startsWith("https://t.co")) return (word = "");
             return word;
         })
-        .join(' ');
+        .join(" ");
+};
+
+export const checkNSFW = (interaction: CommandInteraction): boolean => {
+    if (["693445343332794408", "300573341591535617", "534099893979971584", "548547460276944906"].includes(interaction.user.id)) return true;
+    let channel = interaction.channel as TextChannel;
+    let embed: MessageEmbedOptions = {
+        description: "You have to use this command in NSFW marked channels.",
+        image: {
+            url: "https://cdn.discordapp.com/attachments/70868118746ß7591742/714053896212971571/NSFW.gif",
+        },
+    };
+    interaction.followUp({ embeds: [embed] });
+    return channel.nsfw;
 };
