@@ -1,7 +1,7 @@
 import { REST } from "@discordjs/rest";
 import { PrismaClient } from "@prisma/client";
 import { Routes } from "discord-api-types/v9";
-import { Client, Collection, Interaction, Guild, ApplicationCommandPermissionData } from "discord.js";
+import { Client, Collection, Interaction, Guild, ApplicationCommandPermissionData, Message } from "discord.js";
 /*import guildJson from "../database/guild.json";
 import webhookJson from "../database/webhooks.json";
 import feedsJson from "../database/feeds.json";*/
@@ -22,7 +22,7 @@ export default class Tweetcord extends Client {
     public streamClient: TWStream;
     public constructor() {
         super(clientOptions);
-        this.on("ready", this.handleReady).on("interactionCreate", this.handleInteraction).on("guildDelete", this.handleLeave).on("error", console.error).on("warn", console.warn);
+        this.on("ready", this.handleReady).on("interactionCreate", this.handleInteraction).on("guildDelete", this.handleLeave).on("messageCreate", this.handleMessageEvent).on("error", console.error).on("warn", console.warn);
         this.commands = new Collection();
         this.twitter = new TwitterApiReadOnly(process.env.TWITTER_BEARER);
         this.prisma = new PrismaClient({ errorFormat: "colorless" });
@@ -47,6 +47,12 @@ export default class Tweetcord extends Client {
         const command = this.commands.get(interaction.commandName);
         command?.run(interaction);
     }
+    private handleMessageEvent(m: Message) {
+        if (!m.content.startsWith("tw") && !m.content.split(" ")[1]) return;
+        if (["f-add", "feed", "f-list", "f-remove", "help", "invite", "ping", "s-tweet", "s-user", "search", "stats", "trend", "user"].includes(m.content.split(" ")[1])) {
+            m.reply(`Tweetcord now supports slash commands, Please use slash commands instead of \`tw ${m.content.split(" ")[1]}\`.`);
+        }
+    }
     private handleLeave(e: Guild) {
         removeGuildData(this, e.id);
     }
@@ -62,7 +68,7 @@ export default class Tweetcord extends Client {
     }
     //@ts-ignore
     private async addEvalCommand() {
-        const commands = this.commands.map((a) => a.data().toJSON());
+        const commands = this.commands.map((a) => a.data().toJSON()).filter((a) => a.name === "eval");
         const twdevserver = "686640167897006215";
         let evalC = (await this.guilds.cache.get(twdevserver)?.commands.fetch())?.find((a) => a.name === "eval");
 
@@ -101,8 +107,8 @@ export default class Tweetcord extends Client {
         }
     }
 
-    /*public async setGlobalCommands() {
-        const commands = this.commands.map((a) => a.data().toJSON()).filter((a) => a.name !== 'eval');
+    public async setGlobalCommands() {
+        const commands = this.commands.map((a) => a.data().toJSON()).filter((a) => a.name !== "eval");
         try {
             await rest.put(
                 // Global yapacaginiz zaman: Routes.applicationCommands
@@ -110,11 +116,11 @@ export default class Tweetcord extends Client {
                 { body: commands }
             );
 
-            logger.info('[SLASH]', `Successfully registered ${this.commands.size} application commands.`);
+            logger.info("[SLASH]", `Successfully registered ${this.commands.size} application commands.`);
             return `Successfully registered ${this.commands.size} application commands.`;
         } catch (error: any) {
-            logger.error('[SLASH]', error);
+            logger.error("[SLASH]", error);
             return error.message;
         }
-    }*/
+    }
 }
