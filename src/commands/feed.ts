@@ -55,7 +55,12 @@ export default class Feeds extends Command {
                     });
                 let message = interaction.options.getString("message");
                 if (!message) message = "";
-
+                if (message.length > 100) {
+                    return interaction.followUp({
+                        content: emojis.f + "Message length cannot exceed 100 characters.",
+                        ephemeral: true,
+                    });
+                }
                 try {
                     let { data: user } = await interaction.client.twitter.v2.userByUsername(username);
                     let guildId = interaction.guild?.id;
