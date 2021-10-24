@@ -36,24 +36,20 @@ export const getWebhookData = async (client: Client, channelId: string): Promise
         },
     });
 };
-export const deleteWebhook = async (client: Client, channelId: string, guildId: string, webhookId: string, webhookToken: string): Promise<any> => {
-    let del = await client.prisma.webhook.deleteMany({
+export const deleteWebhook = async (client: Client, id: string, webhookId: string, webhookToken: string): Promise<any> => {
+    let del = await client.prisma.webhook.delete({
         where: {
-            webhookId: webhookId,
-            webhookToken: webhookToken,
+            id,
         },
     });
     await Axios.delete(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`).catch((e) => e);
-    removeFeedByChannel(client, channelId, guildId);
     return del;
 };
 
-export const removeFeedById = async (client: Client, userID: string, guildId: string, channelId: string): Promise<any> => {
+export const removeFeed = async (client: Client, id: string): Promise<any> => {
     return await client.prisma.feed.deleteMany({
         where: {
-            twitterUserId: userID,
-            guildId: guildId,
-            channel: channelId,
+            id,
         },
     });
 };
@@ -98,12 +94,12 @@ export const formatString = (str: string, obj: Object): string => {
     return temp;
 };
 
-export const sendWebhookMessage = (client: Client, webhookOptions: Object, webhookId: string, webhookToken: string, feed: any) => {
+export const sendWebhookMessage = (client: Client, id: string, webhookOptions: Object, webhookId: string, webhookToken: string) => {
     Axios.post(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`, webhookOptions, {
         headers: { "Content-Type": "application/json" },
     }).catch(async (e) => {
         if (e.response.data.message === "Unknown Webhook") {
-            await deleteWebhook(client, feed.channel, feed.guildId as string, webhookId, webhookToken);
+            await deleteWebhook(client, id, webhookId, webhookToken);
         }
     });
 };

@@ -38,7 +38,7 @@ model Feed {
 model Webhook {
   id            String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
   webhookId     String
-  webhookToken  String
+  webhookToken  String      @unique
   Guild         Guild?      @relation(fields: [guildId], references: [id])
   guildId       String?
   channelId     String

@@ -8,13 +8,8 @@ export default class Eval extends Command {
         return new SlashCommandBuilder()
             .setName("eval")
             .setDescription("Evaluates the code")
-            .addStringOption(option =>
-                option
-                    .setRequired(true)
-                    .setName("code")
-                    .setDescription("Code to evaluate")
-            )
-            .setDefaultPermission(false)
+            .addStringOption((option) => option.setRequired(true).setName("code").setDescription("Code to evaluate"))
+            .setDefaultPermission(false);
     }
     public async run(interaction: CommandInteraction): Promise<any> {
         //@ts-ignore
@@ -25,31 +20,27 @@ export default class Eval extends Command {
         let client = interaction.client;
         //@ts-ignore
         let guild = interaction.guild;
-        await interaction?.deferReply({
-            ephemeral: true
-        })
+        await interaction?.deferReply({});
         if (!["534099893979971584", "548547460276944906", "300573341591535617", "693445343332794408"].includes(interaction.user.id)) {
             return interaction.followUp({
                 content: "No",
-                ephemeral: true
-            })
+                ephemeral: true,
+            });
         }
         try {
-            const code = interaction.options.getString("code", true)
+            const code = interaction.options.getString("code", true);
 
-            const asynchr = code.includes('return') || code.includes('await');
-            let output = await eval(asynchr ? `(async()=>{${code}})();` : code)
-            if (typeof output !== "string") output = inspect(output, { depth: 0 })
+            const asynchr = code.includes("return") || code.includes("await");
+            let output = await eval(asynchr ? `(async()=>{${code}})();` : code);
+            if (typeof output !== "string") output = inspect(output, { depth: 0 });
             return interaction.followUp({
-                content: Formatters.blockQuote(Formatters.codeBlock("js", output.replace(new RegExp(interaction.client.token!, 'gi'), "[TOKEN]"))),
-                ephemeral: true
-            })
+                content: Formatters.blockQuote(Formatters.codeBlock("js", output.replace(new RegExp(interaction.client.token!, "gi"), "[TOKEN]"))),
+            });
         } catch (err: any) {
-            console.error("Eval command error:", err)
+            console.error("Eval command error:", err);
             return interaction.followUp({
-                content: Formatters.blockQuote(Formatters.codeBlock("js", err.message.replace(new RegExp(interaction.client.token!, 'gi'), "[TOKEN]"))),
-                ephemeral: true
-            })
+                content: Formatters.blockQuote(Formatters.codeBlock("js", err.message.replace(new RegExp(interaction.client.token!, "gi"), "[TOKEN]"))),
+            });
         }
     }
 }

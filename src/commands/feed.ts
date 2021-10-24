@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Permissions, TextChannel, MessageEmbedOptions } from "discord.js";
-import { getGuildData, createWebhook, getWebhookData, removeFeedById, deleteWebhook } from "../utils/functions";
+import { getGuildData, createWebhook, getWebhookData, removeFeed, deleteWebhook } from "../utils/functions";
 import Command from "../components/Command";
 import { emojis } from "../constants";
 export default class Feeds extends Command {
@@ -118,10 +118,10 @@ export default class Feeds extends Command {
                             ephemeral: true,
                         });
                     }
-                    await removeFeedById(interaction.client, data.id, interaction.guild?.id as string, channel.id);
+                    await removeFeed(interaction.client, find.id);
                     let webhook = guild.webhooks.find((webhook: any) => webhook.channelId === channel.id);
 
-                    if (guild.feeds.filter((feed: any) => feed.channel === channel.id).length - 1 === 0) deleteWebhook(interaction.client, guild.id, channel.id, webhook.webhookId, webhook.webhookToken);
+                    if (guild.feeds.filter((feed: any) => feed.channel === channel.id).length - 1 === 0) deleteWebhook(interaction.client, guild.id, channel.id, webhook.id);
                     //@ts-ignore
                     interaction.client.streamClient.restart();
 
@@ -151,8 +151,12 @@ export default class Feeds extends Command {
                         find.value.push(feed.twitterUserId);
                     }
                 });
+                console.log("0");
+
                 let promise = new Promise<any>(async (resolve) => {
                     let index = 0;
+                    console.log("1");
+
                     for (let channel of channels) {
                         channel.name = interaction.guild?.channels.cache.get(channel.name)?.name;
                         const { data } = await interaction.client.twitter.v2.users(channel.value);
@@ -160,6 +164,7 @@ export default class Feeds extends Command {
                         if (index === channels.length - 1) resolve("End");
                         index++;
                     }
+                    console.log("2");
                 });
                 promise.then(async () => {
                     let embed: MessageEmbedOptions = {
