@@ -48,9 +48,9 @@ export default class Tweetcord extends Client {
         command?.run(interaction);
     }
     private handleMessageEvent(m: Message) {
-        if (!m.content.startsWith("tw") && !m.content.split(" ")[1]) return;
+        if (!m.content.startsWith("tw") || !m.content.split(" ")[1]) return;
         if (["f-add", "feed", "f-list", "f-remove", "help", "invite", "ping", "s-tweet", "s-user", "search", "stats", "trend", "user"].includes(m.content.split(" ")[1])) {
-            m.reply(`Tweetcord now supports slash commands, Please use slash commands instead of \`tw ${m.content.split(" ")[1]}\`.`);
+            m.reply(`We have migrated to slash commands, type \`/help\` for more information.`);
         }
     }
     private handleLeave(e: Guild) {
