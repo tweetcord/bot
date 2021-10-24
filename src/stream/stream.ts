@@ -15,7 +15,6 @@ export default class TWStream {
             access_token: "1310499494912458755-lWMfCOShmSuDZY46fEvEk0NV4lJRE1",
             access_token_secret: "2SuTuVlOndLVlGOvjdLnoP380q31Njfi2ArZ0DRIJyNrA",
         });
-        this.start();
     }
 
     public async start() {
@@ -84,7 +83,7 @@ export default class TWStream {
                 if (!webhook) {
                     await removeFeed(that.client, feed.id);
                 } else {
-                    sendWebhookMessage(that.client, webhook.id, webhookOptions, webhook.webhookId, webhook.webhookToken);
+                    sendWebhookMessage(that.client, webhook.id, webhookOptions, webhook.webhookId, webhook.webhookToken, webhook.channelId, webhook.guildId);
                 }
             }
         });

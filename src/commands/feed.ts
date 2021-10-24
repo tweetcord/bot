@@ -89,7 +89,7 @@ export default class Feeds extends Command {
                             message: message,
                         },
                     });
-                    !(await getWebhookData(interaction.client, channel.id)) && (await createWebhook(interaction, channel as TextChannel));
+                    !(await getWebhookData(interaction.client, channel.id)) && (await createWebhook(interaction.client, channel as TextChannel, guildId as string));
                     await interaction.followUp({
                         content: emojis.t + "Added **" + user.name + "** to feed list",
                     });
@@ -121,7 +121,7 @@ export default class Feeds extends Command {
                     await removeFeed(interaction.client, find.id);
                     let webhook = guild.webhooks.find((webhook: any) => webhook.channelId === channel.id);
 
-                    if (guild.feeds.filter((feed: any) => feed.channel === channel.id).length - 1 === 0) deleteWebhook(interaction.client, guild.id, channel.id, webhook.id);
+                    if (guild.feeds.filter((feed: any) => feed.channel === channel.id).length - 1 === 0) deleteWebhook(interaction.client, guild.id, channel.id, webhook.id, webhook.channelId, webhook.guildId);
                     //@ts-ignore
                     interaction.client.streamClient.restart();
 
