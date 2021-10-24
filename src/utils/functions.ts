@@ -1,4 +1,4 @@
-import { Client, Webhook, TextChannel, Interaction, MessageEmbedOptions, CommandInteraction } from "discord.js";
+import { Client, Webhook, TextChannel, Interaction, MessageEmbedOptions, CommandInteraction, MessageActionRow } from "discord.js";
 import { hyperlink } from "@discordjs/builders";
 import Axios from "axios";
 
@@ -131,4 +131,91 @@ export const checkNSFW = (interaction: CommandInteraction): boolean => {
     };
     interaction.followUp({ embeds: [embed] });
     return channel.nsfw;
+};
+
+export const getButtons = (id: string): Array<MessageActionRow> => {
+    return [
+        new MessageActionRow().addComponents(
+            {
+                customId: "first-" + id,
+                emoji: "860524771832496138",
+                style: "PRIMARY",
+                type: "BUTTON",
+                disabled: true,
+            },
+            {
+                customId: "previous-" + id,
+                emoji: "860524798181900308",
+                style: "PRIMARY",
+                type: "BUTTON",
+                disabled: true,
+            },
+            {
+                customId: "next-" + id,
+                emoji: "860524837675073556",
+                style: "PRIMARY",
+                type: "BUTTON",
+            },
+            {
+                customId: "last-" + id,
+                emoji: "860524885230223370",
+                style: "PRIMARY",
+                type: "BUTTON",
+            }
+        ),
+        new MessageActionRow().addComponents(
+            {
+                customId: "first-" + id,
+                emoji: "860524771832496138",
+                style: "PRIMARY",
+                type: "BUTTON",
+            },
+            {
+                customId: "previous-" + id,
+                emoji: "860524798181900308",
+                style: "PRIMARY",
+                type: "BUTTON",
+            },
+            {
+                customId: "next-" + id,
+                emoji: "860524837675073556",
+                style: "PRIMARY",
+                type: "BUTTON",
+            },
+            {
+                customId: "last-" + id,
+                emoji: "860524885230223370",
+                style: "PRIMARY",
+                type: "BUTTON",
+            }
+        ),
+        new MessageActionRow().addComponents(
+            {
+                customId: "first-" + id,
+                emoji: "860524771832496138",
+                style: "PRIMARY",
+                type: "BUTTON",
+            },
+            {
+                customId: "previous-" + id,
+                emoji: "860524798181900308",
+                style: "PRIMARY",
+                type: "BUTTON",
+            },
+            {
+                customId: "next-" + id,
+                emoji: "860524837675073556",
+                style: "PRIMARY",
+                type: "BUTTON",
+                disabled: true,
+            },
+            {
+                customId: "last-" + id,
+                emoji: "860524885230223370",
+                style: "PRIMARY",
+                type: "BUTTON",
+                disabled: true,
+            }
+        ),
+    ];
 };

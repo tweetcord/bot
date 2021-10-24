@@ -3,8 +3,8 @@ import { CommandInteraction, InteractionReplyOptions, Message } from "discord.js
 import { TypeOrArrayOf } from "twitter-api-v2/dist/types/shared.types";
 import ButtonMenu from "../components/ButtonMenu";
 import Command from "../components/Command";
-import { emojis, TweetsFirstRow, TweetsLastRow, TweetsRow } from "../constants";
-import { checkNSFW } from "../utils/functions";
+import { emojis } from "../constants";
+import { checkNSFW, getButtons } from "../utils/functions";
 
 export default class Trend extends Command {
     public data() {
@@ -36,7 +36,8 @@ export default class Trend extends Command {
         if (data?.tweets?.length === 0) return interaction.reply({ content: "No tweets found", ephemeral: true });
         const answers: InteractionReplyOptions[] = [];
         const tweets = data?.tweets.slice(0, data?.tweets.length > 10 ? 10 : data.tweets.length);
-
+        let id = Date.now().toString();
+        let [TweetsFirstRow, TweetsRow, TweetsLastRow] = getButtons(id);
         for (let i = 0; i < tweets?.length; i++) {
             const url = `https://twitter.com/i/web/status/${tweets.at(i)?.id}`;
             answers?.push({
@@ -48,7 +49,8 @@ export default class Trend extends Command {
             content: `**(1/${tweets.length})** https://twitter.com/i/web/status/${tweets.at(0)?.id}`,
             components: [TweetsFirstRow],
         });
-        const menu = new ButtonMenu(answers);
+
+        const menu = new ButtonMenu(answers, id);
         return menu.start({ interaction });
     }
 }

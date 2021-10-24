@@ -11,8 +11,8 @@ export default class User extends Command {
             .setDescription("Shows information about a Twitter user")
             .addStringOption((option) => option.setName("username").setDescription("Username to find").setRequired(true));
     }
-    public async run(interaction: CommandInteraction, screen_name: string, isFromSearch?: boolean): Promise<Message | void> {
-        !isFromSearch && (await interaction?.deferReply());
+    public async run(interaction: CommandInteraction, screen_name: string, isFromSearch?: boolean): Promise<Message | any> {
+        if (!interaction.deferred && !isFromSearch) await interaction.deferReply();
         if (!checkNSFW(interaction)) return;
         try {
             let user = await interaction.client.twitter.v1.user({ screen_name: screen_name ?? interaction.options.getString("username", true) });

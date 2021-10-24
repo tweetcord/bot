@@ -7,10 +7,11 @@ export default class SelectMenu {
         this.options = options;
     }
     public async start(options: MenuOptions) {
+        let id = "users-" + Date.now();
         const row = new MessageActionRow().addComponents({
             type: "SELECT_MENU",
             placeholder: "Click me!",
-            customId: "users",
+            customId: id,
             options: this.options,
         });
         await options.interaction.followUp({ content: "Select user below", components: [row], ephemeral: true });
@@ -19,10 +20,10 @@ export default class SelectMenu {
             filter,
             time: 3e5, // 5 minute
         });
-        collector?.on("collect", (i: SelectMenuInteraction) => {
-            if (i.customId === "users") {
-                i.deferUpdate();
-                options.interaction.client.commands.get("user")?.run(options.interaction, options.data?.[Number(i.values[0]) - 1].screen_name, true);
+        collector?.on("collect", async (i: SelectMenuInteraction) => {
+            if (i.customId === id) {
+                await options.interaction.client.commands.get("user")?.run(options.interaction, options.data?.[Number(i.values[0]) - 1].screen_name, true);
+                await i.deferUpdate();
             }
         });
     }

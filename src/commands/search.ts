@@ -3,8 +3,7 @@ import { CommandInteraction, InteractionReplyOptions, Message, MessageSelectOpti
 import ButtonMenu from "../components/ButtonMenu";
 import Command from "../components/Command";
 import SelectMenu from "../components/SelectMenu";
-import { TweetsFirstRow, TweetsLastRow, TweetsRow } from "../constants";
-import { checkNSFW } from "../utils/functions";
+import { checkNSFW, getButtons } from "../utils/functions";
 
 export default class Search extends Command {
     public data() {
@@ -34,6 +33,9 @@ export default class Search extends Command {
             });
             const answers: InteractionReplyOptions[] = [];
             const tweets = data.data;
+            let id = Date.now().toString();
+            let [TweetsFirstRow, TweetsRow, TweetsLastRow] = getButtons(id);
+
             for (let i = 0; i < tweets?.length; i++) {
                 const url = `https://twitter.com/i/web/status/${tweets.at(i)?.id}`;
                 answers?.push({
@@ -53,7 +55,7 @@ export default class Search extends Command {
                 components: [TweetsFirstRow],
                 ephemeral: true,
             });
-            const menu = new ButtonMenu(answers);
+            const menu = new ButtonMenu(answers, id);
             return menu.start({ interaction });
         } else if (subcommand === "user") {
             const { data } = await interaction.client.twitter.v1.searchUsers(interaction.options.getString("username", true));
