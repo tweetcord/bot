@@ -17,7 +17,7 @@ export default class Trend extends Command {
     }
 
     public async run(interaction: CommandInteraction): Promise<Message | void> {
-        await interaction?.deferReply({ ephemeral: true });
+        await interaction?.deferReply();
         if (!checkNSFW(interaction)) return;
         let username = interaction.options.getString("username", true);
         if (username.length >= 15 && username.includes(" ")) {
@@ -42,13 +42,11 @@ export default class Trend extends Command {
             answers?.push({
                 content: `**(${i + 1}/${tweets.length})** ${url}`,
                 components: answers.length === 0 ? [TweetsFirstRow] : tweets.length === i + 1 ? [TweetsLastRow] : [TweetsRow],
-                ephemeral: true,
             });
         }
         interaction.followUp({
             content: `**(1/${tweets.length})** https://twitter.com/i/web/status/${tweets.at(0)?.id}`,
             components: [TweetsFirstRow],
-            ephemeral: true,
         });
         const menu = new ButtonMenu(answers);
         return menu.start({ interaction });

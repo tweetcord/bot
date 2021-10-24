@@ -27,7 +27,7 @@ export default class Feeds extends Command {
     }
     // Change Promise<any> please
     public async run(interaction: CommandInteraction): Promise<any> {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply();
         if ((interaction.member?.permissions as Permissions).has(Permissions.FLAGS.MANAGE_GUILD)) {
             let guild = await getGuildData(interaction);
 
@@ -71,6 +71,7 @@ export default class Feeds extends Command {
                     if (perms) {
                         await interaction.followUp({
                             content: emojis.f + "Tweetcord doen't have permissions to create webhooks. Grant permissions to continue.",
+                            ephemeral: true,
                         });
                         return;
                     }
@@ -112,7 +113,7 @@ export default class Feeds extends Command {
                             ephemeral: true,
                         });
                     }
-                    await removeFeedById(interaction, data.id, interaction.guild?.id as string, channel.id);
+                    await removeFeedById(interaction.client, data.id, interaction.guild?.id as string, channel.id);
                     let webhook = guild.webhooks.find((webhook: any) => webhook.channelId === channel.id);
 
                     if (guild.feeds.filter((feed: any) => feed.channel === channel.id).length - 1 === 0) deleteWebhook(interaction.client, guild.id, channel.id, webhook.webhookId, webhook.webhookToken);
@@ -121,7 +122,6 @@ export default class Feeds extends Command {
 
                     return interaction.followUp({
                         content: emojis.t + "Removed **" + data.username + "** from feed list.",
-                        ephemeral: true,
                     });
                 } catch (e) {
                     return interaction.followUp({

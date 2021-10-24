@@ -11,8 +11,8 @@ export default class User extends Command {
             .setDescription("Shows information about a Twitter user")
             .addStringOption((option) => option.setName("username").setDescription("Username to find").setRequired(true));
     }
-    public async run(interaction: CommandInteraction, screen_name: string): Promise<Message | void> {
-        await interaction?.deferReply({ ephemeral: true });
+    public async run(interaction: CommandInteraction, screen_name: string, isFromSearch?: boolean): Promise<Message | void> {
+        !isFromSearch && (await interaction?.deferReply());
         if (!checkNSFW(interaction)) return;
         try {
             let user = await interaction.client.twitter.v1.user({ screen_name: screen_name ?? interaction.options.getString("username", true) });
@@ -84,9 +84,13 @@ export default class User extends Command {
                 style: "LINK",
                 url: `https://twitter.com/i/user/${user.id}`,
             });
-            await interaction.followUp({ embeds: [embed], components: [buttons], ephemeral: true });
+            if (isFromSearch) {
+                await interaction.editReply({ content: " ", embeds: [embed], components: [buttons] });
+            } else {
+                await interaction.followUp({ embeds: [embed], components: [buttons] });
+            }
         } catch (e: any) {
-            interaction.followUp({ content: emojis.f + "Can't find any user with named **" + interaction.options.getString("username", true) + "**" });
+            interaction.followUp({ content: emojis.f + "Can't find any user with named **" + interaction.options.getString("username", true) + "**", ephemeral: true });
         }
     }
 }

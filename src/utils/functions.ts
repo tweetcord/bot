@@ -43,13 +43,13 @@ export const deleteWebhook = async (client: Client, channelId: string, guildId: 
             webhookToken: webhookToken,
         },
     });
-    await Axios.delete(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`);
+    await Axios.delete(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`).catch((e) => e);
     removeFeedByChannel(client, channelId, guildId);
     return del;
 };
 
-export const removeFeedById = async (interaction: Interaction, userID: string, guildId: string, channelId: string): Promise<any> => {
-    return await interaction.client.prisma.feed.deleteMany({
+export const removeFeedById = async (client: Client, userID: string, guildId: string, channelId: string): Promise<any> => {
+    return await client.prisma.feed.deleteMany({
         where: {
             twitterUserId: userID,
             guildId: guildId,
@@ -105,7 +105,6 @@ export const sendWebhookMessage = (client: Client, webhookOptions: Object, webho
         if (e.response.data.message === "Unknown Webhook") {
             await deleteWebhook(client, feed.channel, feed.guildId as string, webhookId, webhookToken);
         }
-        console.log(e.response.data);
     });
 };
 

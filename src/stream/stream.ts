@@ -1,6 +1,6 @@
 import { Client, MessageEmbedOptions } from "discord.js";
 import { blockQuote } from "@discordjs/builders";
-import { getWebhookData, sendWebhookMessage, formatTweets } from "../utils/functions";
+import { getWebhookData, sendWebhookMessage, formatTweets, removeFeedById } from "../utils/functions";
 import Twit from "twit";
 
 export default class TWStream {
@@ -80,7 +80,11 @@ export default class TWStream {
             for (let feed of feeds) {
                 webhookOptions.content = feed.message ? feed.message : "";
                 let webhook = await getWebhookData(that.client, feed.channel);
-                sendWebhookMessage(that.client, webhookOptions, webhook.webhookId, webhook.webhookToken, feed);
+                if (!webhook) {
+                    await removeFeedById(that.client, feed.twitterUserId, feed.guildId as string, feed.channel);
+                } else {
+                    sendWebhookMessage(that.client, webhookOptions, webhook.webhookId, webhook.webhookToken, feed);
+                }
             }
         });
     }

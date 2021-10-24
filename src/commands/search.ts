@@ -25,7 +25,7 @@ export default class Search extends Command {
             );
     }
     public async run(interaction: CommandInteraction): Promise<Message | void> {
-        await interaction?.deferReply({ ephemeral: true });
+        await interaction?.deferReply();
         if (!checkNSFW(interaction)) return;
         const subcommand = interaction.options.getSubcommand(true);
         if (subcommand === "tweet") {
@@ -76,8 +76,6 @@ export default class Search extends Command {
                 });
                 return;
             }
-            console.log(options);
-
             const menu = new SelectMenu(options);
             return menu.start({ interaction, data });
         }
