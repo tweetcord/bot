@@ -49,8 +49,6 @@ export const reCreateWebhook = async (client: Client, webhook: any, webhookOptio
     });
     let channel = client.channels.cache.get(webhook.channelId);
     let newWebhook = await createWebhook(client, channel as TextChannel, webhook.guildId);
-    console.log(newWebhook);
-
     sendWebhookMessage(client, newWebhook, webhookOptions);
 };
 

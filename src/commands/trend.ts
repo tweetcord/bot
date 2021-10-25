@@ -19,7 +19,7 @@ export default class Trend extends Command {
             // Duplicate olanlari silmek
             const trends = trend.trends.filter((v, i, a) => a.findIndex((t) => t.name === v.name) === i);
             const embed: MessageEmbedOptions = {
-                color: "BLURPLE",
+                color: "#1da0f2",
                 author: {
                     name: `Trends in ${woeid?.placeType?.code === 12 ? woeid?.name : `${woeid?.name}${woeid?.country ? `, ${woeid?.country}` : ""}`}`,
                     iconURL: "https://abs.twimg.com/favicons/twitter.ico",

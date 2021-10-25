@@ -24,6 +24,7 @@ export default class User extends Command {
                     iconURL: user.profile_image_url_https?.replace("_normal", ""),
                 },
                 description: Formatters.blockQuote(user.description || "No description"),
+                color: "#1da0f2",
                 thumbnail: {
                     url: user.profile_image_url_https?.replace("_normal", ""),
                 },

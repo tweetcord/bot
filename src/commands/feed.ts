@@ -151,12 +151,8 @@ export default class Feeds extends Command {
                         find.value.push(feed.twitterUserId);
                     }
                 });
-                console.log("0");
-
                 let promise = new Promise<any>(async (resolve) => {
                     let index = 0;
-                    console.log("1");
-
                     for (let channel of channels) {
                         channel.name = interaction.guild?.channels.cache.get(channel.name)?.name;
                         const { data } = await interaction.client.twitter.v2.users(channel.value);
@@ -164,7 +160,6 @@ export default class Feeds extends Command {
                         if (index === channels.length - 1) resolve("End");
                         index++;
                     }
-                    console.log("2");
                 });
                 promise.then(async () => {
                     let embed: MessageEmbedOptions = {
@@ -172,6 +167,7 @@ export default class Feeds extends Command {
                             name: interaction.client.user?.tag,
                             iconURL: interaction.client.user?.displayAvatarURL(),
                         },
+                        color: "#1da0f2",
                         fields: [...channels],
                     };
                     await interaction.followUp({ embeds: [embed] });

@@ -23,7 +23,6 @@ export default class TWStream {
         let set = new Set(feeds.map((feed: any) => feed.twitterUserId));
         let arr = Array.from(set);
         let that = this;
-        console.log(arr.find((i) => i === "1310499494912458755"));
 
         this.stream = this.streamClient.stream("statuses/filter", { follow: arr as Array<string> });
         this.stream.on("tweet", async function (tweet) {
@@ -51,6 +50,7 @@ export default class TWStream {
                 {
                     url: url,
                     description: content,
+                    color: "#1da0f2",
                     author: {
                         name: `${screen_name} (@${tweet.user.name})`,
                         icon_url: tweet.user.profile_image_url_https.replace("_normal", ""),
