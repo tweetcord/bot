@@ -1,11 +1,11 @@
-import { Client, Webhook, TextChannel, Interaction, MessageEmbedOptions, CommandInteraction, MessageActionRow } from "discord.js";
+import { Client, TextChannel, Interaction, MessageEmbedOptions, CommandInteraction, MessageActionRow } from "discord.js";
 import { hyperlink } from "@discordjs/builders";
 import Axios from "axios";
 
-export const createWebhook = async (client: Client, channel: TextChannel, guildId: string): Promise<Webhook> => {
+export const createWebhook = async (client: Client, channel: TextChannel, guildId: string): Promise<any> => {
     let webhook = await channel?.createWebhook("Tweetcord Notification");
 
-    await client.prisma.webhook.create({
+    let webhookDb = await client.prisma.webhook.create({
         data: {
             webhookId: webhook.id,
             webhookToken: webhook.token as string,
@@ -14,7 +14,7 @@ export const createWebhook = async (client: Client, channel: TextChannel, guildI
         },
     });
 
-    return webhook;
+    return webhookDb;
 };
 
 export const getGuildData = async (interaction: Interaction): Promise<any> => {
@@ -30,25 +30,28 @@ export const getGuildData = async (interaction: Interaction): Promise<any> => {
 };
 
 export const getWebhookData = async (client: Client, channelId: string): Promise<any> => {
-    return await client.prisma.webhook.findFirst({
+    let webhook = await client.prisma.webhook.findFirst({
         where: {
             channelId: channelId,
         },
     });
+    return webhook;
 };
 //@ts-ignore
 export const deleteWebhook = async (client: Client, id: string, webhookId: string, webhookToken: string, channelId, guildId): Promise<any> => {
-    /*await client.prisma.webhook.delete({
-        where: {
-            id,
-        },
-    });*/
-    let channel = client.guilds.cache.get(guildId)?.channels.cache.get(channelId);
-
-    createWebhook(client, channel as TextChannel, guildId);
-    console.log(channel);
-
     await Axios.delete(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`).catch((e) => e);
+};
+export const reCreateWebhook = async (client: Client, webhook: any, webhookOptions: Object): Promise<any> => {
+    await client.prisma.webhook.delete({
+        where: {
+            id: webhook.id,
+        },
+    });
+    let channel = client.channels.cache.get(webhook.channelId);
+    let newWebhook = await createWebhook(client, channel as TextChannel, webhook.guildId);
+    console.log(newWebhook);
+
+    sendWebhookMessage(client, newWebhook, webhookOptions);
 };
 
 export const removeFeed = async (client: Client, id: string): Promise<any> => {
@@ -99,14 +102,12 @@ export const formatString = (str: string, obj: Object): string => {
     return temp;
 };
 
-export const sendWebhookMessage = (client: Client, id: string, webhookOptions: Object, webhookId: string, webhookToken: string, channelId: string, guildId: string) => {
-    console.log(channelId, guildId);
-
-    Axios.post(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`, webhookOptions, {
+export const sendWebhookMessage = (client: Client, webhook: any, webhookOptions: Object) => {
+    Axios.post(`https://discord.com/api/webhooks/${webhook.webhookId}/${webhook.webhookToken}`, webhookOptions, {
         headers: { "Content-Type": "application/json" },
     }).catch(async (e) => {
         if (e.response && e.response.data.message === "Unknown Webhook") {
-            await deleteWebhook(client, id, webhookId, webhookToken, channelId, guildId);
+            await reCreateWebhook(client, webhook, webhookOptions);
         }
     });
 };

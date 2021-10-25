@@ -23,6 +23,7 @@ export default class TWStream {
         let set = new Set(feeds.map((feed: any) => feed.twitterUserId));
         let arr = Array.from(set);
         let that = this;
+        console.log(arr.find((i) => i === "1310499494912458755"));
 
         this.stream = this.streamClient.stream("statuses/filter", { follow: arr as Array<string> });
         this.stream.on("tweet", async function (tweet) {
@@ -39,9 +40,10 @@ export default class TWStream {
 
             if (tweet.is_quote_status) {
                 let quote = tweet.quoted_status;
-                if (!quote) return;
-                content += "\n\n" + blockQuote(`**${quote.user.screen_name} (@${quote.user.name})**`) + "\n" + quote.text;
-                await formatTweets(tweet.text);
+                if (quote) {
+                    content += "\n\n" + blockQuote(`**${quote.user.screen_name} (@${quote.user.name})**`) + "\n" + quote.text;
+                    await formatTweets(tweet.text);
+                }
             }
 
             let url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
@@ -83,7 +85,7 @@ export default class TWStream {
                 if (!webhook) {
                     await removeFeed(that.client, feed.id);
                 } else {
-                    sendWebhookMessage(that.client, webhook.id, webhookOptions, webhook.webhookId, webhook.webhookToken, webhook.channelId, webhook.guildId);
+                    sendWebhookMessage(that.client, webhook, webhookOptions);
                 }
             }
         });

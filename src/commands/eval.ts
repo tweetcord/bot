@@ -13,7 +13,7 @@ export default class Eval extends Command {
     }
     public async run(interaction: CommandInteraction): Promise<any> {
         //@ts-ignore
-        const { getGuildData, createWebhook, getWebhookData } = require("../utils/functions");
+        const { getGuildData, createWebhook, getWebhookData, removeGuildData } = require("../utils/functions");
         //@ts-ignore
         let db = interaction.client.prisma;
         //@ts-ignore
