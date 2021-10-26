@@ -50,7 +50,6 @@ export default class TWStream {
                 {
                     url: url,
                     description: content,
-                    color: "#1da0f2",
                     author: {
                         name: `${screen_name} (@${tweet.user.name})`,
                         icon_url: tweet.user.profile_image_url_https.replace("_normal", ""),
@@ -64,12 +63,12 @@ export default class TWStream {
                 let i = 0;
                 for (let img of imgs) {
                     let urlIMG = img.media_url_https;
-                    i++;
                     if (embeds[i]) {
                         embeds[i].image = { url: urlIMG };
                     } else {
                         embeds[i] = { url: url, image: { url: urlIMG } };
                     }
+                    i++;
                 }
             }
             let webhookOptions = {
@@ -92,7 +91,9 @@ export default class TWStream {
     }
 
     public async restart() {
-        this.stream.stop();
-        this.start();
+        if(this.stream){
+            this.stream.stop();
+            this.start();
+        }
     }
 }

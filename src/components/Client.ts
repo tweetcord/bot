@@ -41,7 +41,7 @@ export default class Tweetcord extends Client {
         this.addEvalCommand();
         this.prisma.$connect().then(() => {
             logger.info("[PRISMA]", "Connected to MongoDB");
-            //this.streamClient.start();
+            this.streamClient.start();
         });
     }
 

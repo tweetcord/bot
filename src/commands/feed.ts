@@ -27,7 +27,7 @@ export default class Feeds extends Command {
     }
     // Change Promise<any> please
     public async run(interaction: CommandInteraction): Promise<any> {
-        await interaction.deferReply();
+        await interaction.deferReply({ephemeral: true});
         if ((interaction.member?.permissions as Permissions).has(Permissions.FLAGS.MANAGE_GUILD)) {
             let guild = await getGuildData(interaction);
 
