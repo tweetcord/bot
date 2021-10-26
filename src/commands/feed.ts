@@ -23,11 +23,16 @@ export default class Feeds extends Command {
                     .addStringOption((option) => option.setName("username").setDescription("Username to remove").setRequired(true))
                     .addChannelOption((option) => option.setName("channel").setDescription("Channel to remove").setRequired(true))
             )
-            .addSubcommand((command) => command.setName("list").setDescription("Lists feeds"));
+            .addSubcommand((command) =>
+                command
+                    .setName("list")
+                    .setDescription("Lists feeds")
+                    .addBooleanOption((option) => option.setName("show_ids").setDescription("Show feed's id").setRequired(false))
+            );
     }
     // Change Promise<any> please
     public async run(interaction: CommandInteraction): Promise<any> {
-        await interaction.deferReply({ephemeral: true});
+        await interaction.deferReply({ ephemeral: true });
         if ((interaction.member?.permissions as Permissions).has(Permissions.FLAGS.MANAGE_GUILD)) {
             let guild = await getGuildData(interaction);
 
@@ -136,7 +141,7 @@ export default class Feeds extends Command {
                 }
             } else if (subcommand === "list") {
                 let { feeds }: any = guild;
-
+                let showIds = interaction.options.getBoolean("show_ids");
                 if (feeds.length === 0)
                     return interaction.followUp({
                         content: emojis.f + "There is nothing in the feed list",
@@ -156,7 +161,13 @@ export default class Feeds extends Command {
                     for (let channel of channels) {
                         channel.name = interaction.guild?.channels.cache.get(channel.name)?.name;
                         const { data } = await interaction.client.twitter.v2.users(channel.value);
-                        channel.value = data.map((a) => "`" + a.username + "`").join("\n");
+                        channel.value = data
+                            .map((a) => {
+                                let feed = guild.feeds.find((feed: any) => feed.twitterUserId === a.id);
+
+                                return "`" + a.username + "`" + (showIds ? " - `" + feed.id + "`" : "");
+                            })
+                            .join("\n");
                         if (index === channels.length - 1) resolve("End");
                         index++;
                     }

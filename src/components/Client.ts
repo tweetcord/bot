@@ -38,7 +38,6 @@ export default class Tweetcord extends Client {
         /*await this.prisma.guild.createMany({ data: guildJson });
         await this.prisma.webhook.createMany({ data: webhookJson });
         await this.prisma.feed.createMany({ data: feedsJson });*/
-        this.addEvalCommand();
         this.prisma.$connect().then(() => {
             logger.info("[PRISMA]", "Connected to MongoDB");
             this.streamClient.start();
@@ -118,6 +117,46 @@ export default class Tweetcord extends Client {
                 Routes.applicationCommands(this.user?.id as string),
                 { body: commands }
             );
+
+            logger.info("[SLASH]", `Successfully registered ${this.commands.size} application commands.`);
+            return `Successfully registered ${this.commands.size} application commands.`;
+        } catch (error: any) {
+            logger.error("[SLASH]", error);
+            return error.message;
+        }
+    }
+
+    public async setTestCommands() {
+        const commands = this.commands.map((a) => a.data().toJSON());
+        const twdevserver = "686640167897006215";
+        let evalC = (await this.guilds.cache.get(twdevserver)?.commands.fetch())?.find((a) => a.name === "eval");
+
+        const permissions: ApplicationCommandPermissionData[] = [
+            {
+                id: "534099893979971584", // nmw03
+                type: "USER",
+                permission: true,
+            },
+            {
+                id: "548547460276944906", // can
+                type: "USER",
+                permission: true,
+            },
+            {
+                id: "693445343332794408", // kaan
+                type: "USER",
+                permission: true,
+            },
+            {
+                id: "300573341591535617", // woxe
+                type: "USER",
+                permission: true,
+            },
+        ];
+
+        try {
+            await rest.put(Routes.applicationGuildCommands(this.user?.id as string, "686640167897006215"), { body: commands });
+            await evalC?.permissions.set({ permissions });
 
             logger.info("[SLASH]", `Successfully registered ${this.commands.size} application commands.`);
             return `Successfully registered ${this.commands.size} application commands.`;

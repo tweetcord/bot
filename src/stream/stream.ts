@@ -26,7 +26,9 @@ export default class TWStream {
 
         this.stream = this.streamClient.stream("statuses/filter", { follow: arr as Array<string> });
         this.stream.on("tweet", async function (tweet) {
-            let imgs = tweet.extended_entities?.media;
+            let imgs = tweet.entities?.media.length === tweet.extended_entities?.media.length ? tweet.entities?.media : tweet.extended_entities?.media;
+            console.log(tweet.entities?.media.length === tweet.extended_entities?.media.length);
+
             let userID = tweet.user.id_str;
             let screen_name = tweet.user.screen_name;
             let profileImageURL = tweet.user.profile_image_url_https.replace("_normal", "");
@@ -62,7 +64,7 @@ export default class TWStream {
             if (imgs) {
                 let i = 0;
                 for (let img of imgs) {
-                    let urlIMG = img.media_url_https;
+                    let urlIMG = img.media_url;
                     if (embeds[i]) {
                         embeds[i].image = { url: urlIMG };
                     } else {
@@ -91,7 +93,7 @@ export default class TWStream {
     }
 
     public async restart() {
-        if(this.stream){
+        if (this.stream) {
             this.stream.stop();
             this.start();
         }
