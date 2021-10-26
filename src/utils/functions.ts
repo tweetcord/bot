@@ -135,7 +135,7 @@ export const checkNSFW = (interaction: CommandInteraction): boolean => {
             url: "https://cdn.discordapp.com/attachments/70868118746ß7591742/714053896212971571/NSFW.gif",
         },
     };
-    interaction.followUp({ embeds: [embed] });
+    !channel.nsfw && interaction.followUp({ embeds: [embed] });
     return channel.nsfw;
 };
 

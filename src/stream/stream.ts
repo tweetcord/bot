@@ -68,7 +68,6 @@ export default class TWStream {
             if (imgs) {
                 let i = 0;
                 for (let img of imgs) {
-                    console.log(img);
                     let urlIMG = img.media_url;
                     if (embeds[i]) {
                         embeds[i].image = { url: urlIMG };
