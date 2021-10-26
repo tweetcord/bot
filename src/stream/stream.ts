@@ -26,9 +26,14 @@ export default class TWStream {
 
         this.stream = this.streamClient.stream("statuses/filter", { follow: arr as Array<string> });
         this.stream.on("tweet", async function (tweet) {
-            let imgs = tweet.entities?.media.length === tweet.extended_entities?.media.length ? tweet.entities?.media : tweet.extended_entities?.media;
-            console.log(tweet.entities?.media.length === tweet.extended_entities?.media.length);
+            let imgs = tweet.entities?.media?.length === tweet.extended_entities?.media?.length ? tweet.entities?.media : tweet.extended_entities?.media;
+            let content = await formatTweets(tweet.text);
 
+            if (tweet.extended_tweet) {
+                let ext = tweet.extended_tweet;
+                imgs = ext?.entities?.media?.length === ext?.extended_entities?.media?.length ? ext?.entities?.media : ext?.extended_entities?.media;
+                content = await formatTweets(ext.full_text);
+            }
             let userID = tweet.user.id_str;
             let screen_name = tweet.user.screen_name;
             let profileImageURL = tweet.user.profile_image_url_https.replace("_normal", "");
@@ -37,7 +42,6 @@ export default class TWStream {
                     twitterUserId: userID,
                 },
             });
-            let content = await formatTweets(tweet.text);
 
             if (tweet.is_quote_status) {
                 let quote = tweet.quoted_status;
@@ -64,6 +68,7 @@ export default class TWStream {
             if (imgs) {
                 let i = 0;
                 for (let img of imgs) {
+                    console.log(img);
                     let urlIMG = img.media_url;
                     if (embeds[i]) {
                         embeds[i].image = { url: urlIMG };
