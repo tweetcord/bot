@@ -101,15 +101,17 @@ export const formatString = (str: string, obj: Object): string => {
 };
 
 export const sendWebhookMessage = (client: Client, webhook: any, webhookOptions: Object) => {
-    console.log("Sent Tweet Notification: " + webhook.channelId)
-    Axios.post(`https://discord.com/api/webhooks/${webhook.webhookId}/${webhook.webhookToken}`, webhookOptions, {
-        headers: { "Content-Type": "application/json" },
-    }).catch(async (e) => {
-        if (e.response && e.response.data.message === "Unknown Webhook") {
-            await reCreateWebhook(client, webhook, webhookOptions);
-        }
-        console.log(e.response)
-    });
+    console.log("Sent Tweet Notification: " + webhook.channelId);
+    try {
+        Axios.post(`https://discord.com/api/webhooks/${webhook.webhookId}/${webhook.webhookToken}`, webhookOptions, {
+            headers: { "Content-Type": "application/json" },
+        }).catch(async (e) => {
+            if (e.response && e.response.data.message === "Unknown Webhook") {
+                await reCreateWebhook(client, webhook, webhookOptions);
+            }
+            console.log(e.response);
+        });
+    } catch (e) {}
 };
 
 export const formatTweets = async (text: string): Promise<string> => {
