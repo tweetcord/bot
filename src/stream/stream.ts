@@ -1,4 +1,4 @@
-import { Client, MessageEmbedOptions } from "discord.js";
+import { Client } from "discord.js";
 import { blockQuote } from "@discordjs/builders";
 import { getWebhookData, sendWebhookMessage, formatTweets, removeFeed } from "../utils/functions";
 import Twit from "twit";
@@ -52,7 +52,7 @@ export default class TWStream {
             }
 
             let url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
-            let embeds: Array<MessageEmbedOptions> = [
+            let embeds: Array<any> = [
                 {
                     url: url,
                     description: content,
@@ -63,6 +63,7 @@ export default class TWStream {
                     },
                     footer: { text: "Tweetcord Notifications", icon_url: that.client.user?.displayAvatarURL({ size: 2048 }) },
                     timestamp: new Date(),
+                    color: resolveColor("#1da0f6")
                 },
             ];
             if (imgs) {
@@ -102,4 +103,19 @@ export default class TWStream {
             this.start();
         }
     }
+}
+
+export const resolveColor = (color: any): string | number => {
+    if (typeof color === 'string') {
+        if (color === 'RANDOM') return Math.floor(Math.random() * (0xffffff + 1));
+        if (color === 'DEFAULT') return 0;
+        color = parseInt(color.replace("#", ""), 16);
+      } else if (Array.isArray(color)) {
+        color = (color[0] << 16) + (color[1] << 8) + color[2];
+      }
+  
+      if (color < 0 || color > 0xffffff) throw new RangeError('COLOR_RANGE');
+      else if (Number.isNaN(color)) throw new TypeError('COLOR_CONVERT');
+  
+      return color;
 }
