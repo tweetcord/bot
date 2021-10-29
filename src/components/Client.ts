@@ -1,4 +1,5 @@
 import { REST } from "@discordjs/rest";
+import fs from "fs";
 import { PrismaClient } from "@prisma/client";
 import { Routes } from "discord-api-types/v9";
 import { Client, Collection, Interaction, Guild, ApplicationCommandPermissionData, Message } from "discord.js";
@@ -57,6 +58,23 @@ export default class Tweetcord extends Client {
     }
     private handleLeave(e: Guild) {
         removeGuildData(this, e.id);
+    }
+    public async getBackup() {
+        let feeds = this.prisma.feed.findMany();
+        let guild = this.prisma.guild.findMany();
+        let webhook = this.prisma.webhook.findMany();
+        let feedsStr = JSON.stringify(feeds);
+        let guildStr = JSON.stringify(guild);
+        let webhookStr = JSON.stringify(webhook);
+        fs.writeFile("feeds.json", feedsStr, "utf8", (err) => {
+            console.log(err);
+        });
+        fs.writeFile("guild.json", guildStr, "utf8", (err) => {
+            console.log(err);
+        });
+        fs.writeFile("webhook.json", webhookStr, "utf8", (err) => {
+            console.log(err);
+        });
     }
     private async loadCommands() {
         const folder = resolve("dist/src/commands");
