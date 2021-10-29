@@ -33,6 +33,13 @@ export default class Feeds extends Command {
             )
             .addSubcommand((command) =>
                 command
+                    .setName("details")
+                    .setDescription("Get details from a feed")
+                    .addStringOption((option) => option.setName("username").setDescription("Feed's username to view details").setRequired(true))
+                    .addChannelOption((option) => option.setName("channel").setDescription("Feed's Channel to view details").setRequired(true))
+            )
+            .addSubcommand((command) =>
+                command
                     .setName("update")
                     .setDescription("Update a feed")
                     .addStringOption((option) => option.setName("feed_id").setDescription("Feeds id to edit").setRequired(true))
@@ -163,11 +170,7 @@ export default class Feeds extends Command {
                     return interaction.followUp({
                         content: emojis.f + "There is nothing in the feed list",
                     });
-
-                //let channels: any = [];
-
                 let ids: Array<string> = [];
-
                 feeds.forEach((feed: any) => {
                     ids.push(feed.twitterUserId);
                 });
@@ -224,6 +227,39 @@ export default class Feeds extends Command {
                         },
                     };
                     interaction.followUp({ embeds: [embed] });
+                }
+            } else if (subcommand === "details") {
+                let { feeds } = guild;
+                let username = interaction.options.getString("username", true);
+                let channel = interaction.options.getChannel("channel", true);
+                if (channel.type != "GUILD_TEXT")
+                    return interaction.followUp({
+                        content: emojis.f + "Channel must be a text channel.",
+                        ephemeral: true,
+                    });
+                try {
+                    let { data } = await interaction.client.twitter.v2.userByUsername(username);
+                    let find = feeds.find((feed: any) => feed.channel === channel.id && feed.twitterUserId === data.id);
+                    if (!find)
+                        return interaction.followUp({
+                            content: emojis.f + "There is no feeds for this username in " + channel.toString(),
+                            ephemeral: true,
+                        });
+                    let embed: MessageEmbedOptions = {
+                        author: {
+                            name: interaction.client.user?.username,
+                            iconURL: interaction.client.user?.displayAvatarURL(),
+                        },
+                        fields: [
+                            {
+                                name: data.username,
+                                value: `Id: \`${find.id}\` \n  Channel: <#${find.channel}> \n Replies: \`${find.replies}\` \n Retweets: \`${find.retweets}\``,
+                            },
+                        ],
+                    };
+                    interaction.followUp({ embeds: [embed] });
+                } catch (e) {
+                    interaction.followUp({ content: emojis.f + "Can't find any users with named **" + username + "**" });
                 }
             }
         } else {
