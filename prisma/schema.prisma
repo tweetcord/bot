@@ -33,6 +33,8 @@ model Feed {
   Guild         Guild?      @relation(fields: [guildId], references: [id])
   guildId       String?
   twitterUserId String
+  replies       Boolean     @default(false)
+  retweets      Boolean     @default(false)
 }
 
 model Webhook {

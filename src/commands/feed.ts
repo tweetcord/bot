@@ -15,6 +15,8 @@ export default class Feeds extends Command {
                     .addStringOption((option) => option.setName("username").setDescription("Username to add").setRequired(true))
                     .addChannelOption((option) => option.setName("channel").setDescription("Channel to add").setRequired(true))
                     .addStringOption((option) => option.setName("message").setDescription("A message that will be sent by bot when there is new tweet"))
+                    .addBooleanOption((option) => option.setName("replies").setDescription("Show replies when you get notification"))
+                    .addBooleanOption((option) => option.setName("retweets").setDescription("Show retweets when you get notification"))
             )
             .addSubcommand((command) =>
                 command
@@ -27,7 +29,16 @@ export default class Feeds extends Command {
                 command
                     .setName("list")
                     .setDescription("Lists feeds")
-                    .addBooleanOption((option) => option.setName("show_ids").setDescription("Show feed's id").setRequired(false))
+                    .addBooleanOption((option) => option.setName("details").setDescription("Show feed's details.").setRequired(false))
+            )
+            .addSubcommand((command) =>
+                command
+                    .setName("update")
+                    .setDescription("Update a feed")
+                    .addStringOption((option) => option.setName("feed_id").setDescription("Feeds id to edit").setRequired(true))
+                    .addStringOption((option) => option.setName("message").setDescription("New message for the feed"))
+                    .addBooleanOption((option) => option.setName("replies").setDescription("Show replies when you get notification"))
+                    .addBooleanOption((option) => option.setName("retweets").setDescription("Show retweets when you get notification"))
             );
     }
     // Change Promise<any> please
@@ -46,6 +57,9 @@ export default class Feeds extends Command {
             }
 
             const subcommand = interaction.options.getSubcommand(true);
+            let showReplies = interaction.options.getBoolean("replies") ? interaction.options.getBoolean("replies") : false;
+            let showRetweets = interaction.options.getBoolean("retweets") ? interaction.options.getBoolean("retweets") : false;
+
             if (subcommand === "add") {
                 if (guild.feeds.length === 30)
                     return await interaction.followUp({
@@ -92,13 +106,17 @@ export default class Feeds extends Command {
                             guildId,
                             twitterUserId: user.id,
                             message: message,
+                            replies: showReplies as boolean,
+                            retweets: showRetweets as boolean,
                         },
                     });
+
                     !(await getWebhookData(interaction.client, channel.id)) && (await createWebhook(interaction.client, channel as TextChannel, guildId as string));
                     await interaction.followUp({
                         content: emojis.t + "Added **" + user.name + "** to feed list",
                     });
                 } catch (e) {
+                    console.log(e);
                     return interaction.followUp({
                         content: emojis.f + "Can't find any user with named **" + username + "**",
                         ephemeral: true,
@@ -141,7 +159,6 @@ export default class Feeds extends Command {
                 }
             } else if (subcommand === "list") {
                 let { feeds }: any = guild;
-                let showIds = interaction.options.getBoolean("show_ids");
                 if (feeds.length === 0)
                     return interaction.followUp({
                         content: emojis.f + "There is nothing in the feed list",
@@ -163,9 +180,7 @@ export default class Feeds extends Command {
                         const { data } = await interaction.client.twitter.v2.users(channel.value);
                         channel.value = data
                             .map((a) => {
-                                let feed = guild.feeds.find((feed: any) => feed.twitterUserId === a.id);
-
-                                return "`" + a.username + "`" + (showIds ? " - `" + feed.id + "`" : "");
+                                return "`" + a.username + "`";
                             })
                             .join("\n");
                         if (index === channels.length - 1) resolve("End");
