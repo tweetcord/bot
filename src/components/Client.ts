@@ -128,7 +128,7 @@ export default class Tweetcord extends Client {
 
     public async setTestCommands() {
         const commands = this.commands.map((a) => a.data().toJSON());
-        const twdevserver = "686640167897006215";
+        const twdevserver = "694837515651252308";
         let evalC = (await this.guilds.cache.get(twdevserver)?.commands.fetch())?.find((a) => a.name === "eval");
 
         const permissions: ApplicationCommandPermissionData[] = [
@@ -155,7 +155,7 @@ export default class Tweetcord extends Client {
         ];
 
         try {
-            await rest.put(Routes.applicationGuildCommands(this.user?.id as string, "686640167897006215"), { body: commands });
+            await rest.put(Routes.applicationGuildCommands(this.user?.id as string, "694837515651252308"), { body: commands });
             await evalC?.permissions.set({ permissions });
 
             logger.info("[SLASH]", `Successfully registered ${this.commands.size} application commands.`);

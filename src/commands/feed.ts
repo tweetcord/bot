@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, Permissions, TextChannel, MessageEmbedOptions } from "discord.js";
+import { CommandInteraction, MessageEmbedOptions, Permissions, TextChannel } from "discord.js";
 import { getGuildData, createWebhook, getWebhookData, removeFeed, deleteWebhook } from "../utils/functions";
 import Command from "../components/Command";
 import { emojis } from "../constants";
@@ -144,7 +144,7 @@ export default class Feeds extends Command {
                     await removeFeed(interaction.client, find.id);
                     let webhook = guild.webhooks.find((webhook: any) => webhook.channelId === channel.id);
 
-                    if (guild.feeds.filter((feed: any) => feed.channel === channel.id).length - 1 === 0) deleteWebhook(interaction.client, guild.id, channel.id, webhook.id, webhook.channelId, webhook.guildId);
+                    if (guild.feeds.filter((feed: any) => feed.channel === channel.id).length - 1 === 0) deleteWebhook(interaction.client, webhook.id, webhook.webhookId, webhook.webhookToken);
                     //@ts-ignore
                     interaction.client.streamClient.restart();
 
@@ -164,40 +164,67 @@ export default class Feeds extends Command {
                         content: emojis.f + "There is nothing in the feed list",
                     });
 
-                let channels: any = [];
-                await feeds.forEach((feed: any) => {
-                    if (!channels.find((channel: any) => channel.name === feed.channel)) {
-                        channels.push({ name: feed.channel, value: [feed.twitterUserId] });
+                //let channels: any = [];
+
+                let ids: Array<string> = [];
+
+                feeds.forEach((feed: any) => {
+                    ids.push(feed.twitterUserId);
+                });
+                let idSet = new Set(ids);
+                let idArr = Array.from(idSet);
+                const { data } = await interaction.client.twitter.v2.users(idArr);
+                let feedsUnique: any = [];
+
+                for (let feed of feeds) {
+                    let find = feedsUnique.find((f: any) => f.name === feed.channel);
+
+                    if (find) {
+                        find.value = [...find.value, data.find((user) => user.id === feed.twitterUserId)?.username];
                     } else {
-                        let find = channels.find((channel: any) => channel.name === feed.channel);
-                        find.value.push(feed.twitterUserId);
+                        feedsUnique.push({ name: feed.channel, value: [data.find((user) => user.id === feed.twitterUserId)?.username], inline: true });
                     }
+                }
+
+                feedsUnique.map((feed: any) => {
+                    (feed.name = interaction.guild?.channels.cache.get(feed.name)?.name), (feed.value = feed.value.map((str: string) => "`" + str + "`").join("\n"));
                 });
-                let promise = new Promise<any>(async (resolve) => {
-                    let index = 0;
-                    for (let channel of channels) {
-                        channel.name = interaction.guild?.channels.cache.get(channel.name)?.name;
-                        const { data } = await interaction.client.twitter.v2.users(channel.value);
-                        channel.value = data
-                            .map((a) => {
-                                return "`" + a.username + "`";
-                            })
-                            .join("\n");
-                        if (index === channels.length - 1) resolve("End");
-                        index++;
+
+                if (feedsUnique.length > 15) {
+                    let embed: Array<MessageEmbedOptions> = [];
+                    for (let i = 0; i < 2; i++) {
+                        let slice = feedsUnique.slice(i * 15, (i + 1) * 15);
+                        if (i === 0) {
+                            embed.push({
+                                author: {
+                                    name: interaction.client.user?.username,
+                                    iconURL: interaction.client.user?.displayAvatarURL(),
+                                },
+                                fields: [...slice],
+                            });
+                        } else {
+                            embed.push({
+                                fields: [...slice],
+                                footer: {
+                                    text: "Total feed count: " + ids.length,
+                                },
+                            });
+                        }
                     }
-                });
-                promise.then(async () => {
+                    interaction.followUp({ embeds: embed });
+                } else {
                     let embed: MessageEmbedOptions = {
                         author: {
-                            name: interaction.client.user?.tag,
+                            name: interaction.client.user?.username,
                             iconURL: interaction.client.user?.displayAvatarURL(),
                         },
-                        color: "#1da0f2",
-                        fields: [...channels],
+                        fields: [...feedsUnique],
+                        footer: {
+                            text: "Total feed count: " + ids.length,
+                        },
                     };
-                    await interaction.followUp({ embeds: [embed] });
-                });
+                    interaction.followUp({ embeds: [embed] });
+                }
             }
         } else {
             return interaction.followUp({

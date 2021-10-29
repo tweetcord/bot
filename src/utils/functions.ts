@@ -38,8 +38,8 @@ export const getWebhookData = async (client: Client, channelId: string): Promise
     return webhook;
 };
 //@ts-ignore
-export const deleteWebhook = async (client: Client, id: string, webhookId: string, webhookToken: string, channelId, guildId): Promise<any> => {
-    await Axios.delete(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`).catch((e) => e);
+export const deleteWebhook = async (client: Client, id: string, webhookId: string, webhookToken: string): Promise<any> => {
+    await Axios.delete(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`);
 };
 export const reCreateWebhook = async (client: Client, webhook: any, webhookOptions: Object): Promise<any> => {
     await client.prisma.webhook.delete({
@@ -82,10 +82,14 @@ export const removeGuildData = async (client: Client, guildId: string, db?: any)
     });
     if (db && db.webhooks.length > 0) {
         for (let webhook of db.webhooks) {
-            await Axios.delete(`https://discord.com/api/webhooks/${webhook.webhookId}/${webhook.webhookToken}`);
+            await Axios.delete(`https://discord.com/api/webhooks/${webhook.webhookId}/${webhook.webhookToken}`).catch((e) => {
+                if (e.response.code === 20029) {
+                    console.log("Rate limited");
+                }
+            });
         }
     }
-    await client.prisma.guild.deleteMany({
+    await client.prisma.guild.delete({
         where: {
             id: guildId,
         },
