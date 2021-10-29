@@ -103,6 +103,8 @@ export default class TWStream {
         if (this.stream) {
             this.stream.stop();
             this.start();
+        } else {
+            this.start();
         }
     }
 }

@@ -84,8 +84,9 @@ export const removeGuildData = async (client: Client, guildId: string, db?: any)
         for (let webhook of db.webhooks) {
             await Axios.delete(`https://discord.com/api/webhooks/${webhook.webhookId}/${webhook.webhookToken}`).catch((e) => {
                 if (e.response.code === 20029) {
-                    console.log("Rate limited");
+                    return "Rate Limited";
                 }
+                return e.response.message;
             });
         }
     }
