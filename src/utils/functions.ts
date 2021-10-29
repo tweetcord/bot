@@ -144,6 +144,19 @@ export const checkNSFW = (interaction: CommandInteraction): boolean => {
     return channel.nsfw;
 };
 
+export const updateFeed = async (interaction: Interaction, id: string, message: string, replies: boolean, retweets: boolean) => {
+    await interaction.client.prisma.feed.update({
+        where: {
+            id,
+        },
+        data: {
+            message,
+            replies,
+            retweets,
+        },
+    });
+};
+
 export const getButtons = (id: string): Array<MessageActionRow> => {
     return [
         new MessageActionRow().addComponents(

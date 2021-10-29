@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbedOptions, Permissions, TextChannel } from "discord.js";
-import { getGuildData, createWebhook, getWebhookData, removeFeed, deleteWebhook } from "../utils/functions";
+import { getGuildData, createWebhook, getWebhookData, removeFeed, deleteWebhook, updateFeed } from "../utils/functions";
 import Command from "../components/Command";
 import { emojis } from "../constants";
 export default class Feeds extends Command {
@@ -25,12 +25,7 @@ export default class Feeds extends Command {
                     .addStringOption((option) => option.setName("username").setDescription("Username to remove").setRequired(true))
                     .addChannelOption((option) => option.setName("channel").setDescription("Channel to remove").setRequired(true))
             )
-            .addSubcommand((command) =>
-                command
-                    .setName("list")
-                    .setDescription("Lists feeds")
-                    .addBooleanOption((option) => option.setName("details").setDescription("Show feed's details.").setRequired(false))
-            )
+            .addSubcommand((command) => command.setName("list").setDescription("Lists feeds"))
             .addSubcommand((command) =>
                 command
                     .setName("details")
@@ -261,6 +256,20 @@ export default class Feeds extends Command {
                 } catch (e) {
                     interaction.followUp({ content: emojis.f + "Can't find any users with named **" + username + "**" });
                 }
+            } else if (subcommand === "update") {
+                let message = interaction.options.getString("message");
+                let feedId = interaction.options.getString("feed_id", true);
+                if (!message && showRetweets && showReplies) return interaction.followUp({ content: emojis.f + "You have to provide at least 1 option." });
+                let { feeds } = guild;
+                let find = feeds.find((feed: any) => feed.id === feedId);
+                if (!message) message = find.message;
+                if (message === "tweetcord_remove_message") message = "";
+                if (!find) return interaction.followUp({ content: emojis.f + "Can't find any feeds with this id (`" + feedId + "`)" });
+                if (message === find.message && showReplies === find.replies && showRetweets === find.retweets) return interaction.followUp({ content: emojis.f + "Provided options same with current feed's options" });
+                await updateFeed(interaction, feedId, message as string, showReplies as boolean, showRetweets as boolean);
+                interaction.followUp({ content: emojis.t + "Feed successfully updated" });
+                //@ts-ignore
+                interaction.client.streamClient.restart();
             }
         } else {
             return interaction.followUp({
