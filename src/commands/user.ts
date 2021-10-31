@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Formatters, Message, MessageActionRow, MessageEmbedOptions, Util } from "discord.js";
 import Command from "../components/Command";
 import { emojis } from "../constants";
-import { checkNSFW } from "../utils/functions";
+import { checkNSFW, resolveColor } from "../utils/functions";
 
 export default class User extends Command {
     public data() {
@@ -24,7 +24,7 @@ export default class User extends Command {
                     iconURL: user.profile_image_url_https?.replace("_normal", ""),
                 },
                 description: Formatters.blockQuote(user.description || "No description"),
-                color: "#1da0f2",
+                color: resolveColor("#1da0f6"),
                 thumbnail: {
                     url: user.profile_image_url_https?.replace("_normal", ""),
                 },

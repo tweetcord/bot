@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Formatters, MessageActionRow, MessageEmbedOptions } from "discord.js";
+import { resolveColor } from "../utils/functions";
 import Command from "../components/Command";
 
 export default class Trend extends Command {
@@ -19,7 +20,7 @@ export default class Trend extends Command {
             // Duplicate olanlari silmek
             const trends = trend.trends.filter((v, i, a) => a.findIndex((t) => t.name === v.name) === i);
             const embed: MessageEmbedOptions = {
-                color: "#1da0f2",
+                color: resolveColor("#1da0f6"),
                 author: {
                     name: `Trends in ${woeid?.placeType?.code === 12 ? woeid?.name : `${woeid?.name}${woeid?.country ? `, ${woeid?.country}` : ""}`}`,
                     iconURL: "https://abs.twimg.com/favicons/twitter.ico",
