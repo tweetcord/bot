@@ -2,7 +2,7 @@ import { REST } from "@discordjs/rest";
 import fs from "fs";
 import { PrismaClient } from "@prisma/client";
 import { Routes } from "discord-api-types/v9";
-import { Client, Collection, Interaction, Guild, ApplicationCommandPermissionData, Message } from "discord.js";
+import { Client, Collection, Interaction, Guild, ApplicationCommandPermissionData } from "discord.js";
 /*import guildJson from "../database/guild.json";
 import webhookJson from "../database/webhooks.json";
 import feedsJson from "../database/feeds.json";*/
@@ -23,7 +23,7 @@ export default class Tweetcord extends Client {
     public streamClient: TWStream;
     public constructor() {
         super(clientOptions);
-        this.on("ready", this.handleReady).on("interactionCreate", this.handleInteraction).on("guildDelete", this.handleLeave).on("messageCreate", this.handleMessageEvent).on("error", console.error).on("warn", console.warn);
+        this.on("ready", this.handleReady).on("interactionCreate", this.handleInteraction).on("guildDelete", this.handleLeave).on("error", console.error).on("warn", console.warn);
         this.commands = new Collection();
         this.twitter = new TwitterApiReadOnly(process.env.TWITTER_BEARER);
         this.prisma = new PrismaClient({ errorFormat: "colorless" });
@@ -52,16 +52,6 @@ export default class Tweetcord extends Client {
             command?.run(interaction);
         } catch (e) {
             console.log("Error on interaction.");
-        }
-    }
-    private handleMessageEvent(m: Message) {
-        if (!m.content.startsWith("tw") || !m.content.split(" ")[1]) return;
-        if (["f-add", "feed", "f-list", "f-remove", "help", "invite", "ping", "s-tweet", "s-user", "search", "stats", "trend", "user"].includes(m.content.split(" ")[1])) {
-            try {
-                m.channel.send(`We have migrated to slash commands, type \`/help\` for more information.`);
-            } catch (e) {
-                console.log("Can't send a message.");
-            }
         }
     }
     private handleLeave(e: Guild) {
