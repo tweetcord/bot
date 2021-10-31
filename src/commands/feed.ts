@@ -227,7 +227,7 @@ export default class Feeds extends Command {
                         footer: {
                             text: "Total feed count: " + ids.length,
                         },
-                        color: resolveColor("#1da0f6")
+                        color: resolveColor("#1da0f6"),
                     };
                     interaction.followUp({ embeds: [embed] });
                 }
