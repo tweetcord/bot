@@ -3,6 +3,7 @@ import { CommandInteraction, MessageEmbedOptions, Permissions, TextChannel } fro
 import { getGuildData, createWebhook, getWebhookData, removeFeed, deleteWebhook, updateFeed } from "../utils/functions";
 import Command from "../components/Command";
 import { emojis } from "../constants";
+import { UserV2 } from "twitter-api-v2";
 export default class Feeds extends Command {
     public data() {
         return new SlashCommandBuilder()
@@ -82,8 +83,17 @@ export default class Feeds extends Command {
                         ephemeral: true,
                     });
                 }
+                let user: UserV2;
                 try {
-                    let { data: user } = await interaction.client.twitter.v2.userByUsername(username);
+                    user = (await interaction.client.twitter.v2.userByUsername(username)).data;
+                } catch (e) {
+                    console.log(e);
+                    return interaction.followUp({
+                        content: emojis.f + "Can't find any user with named **" + username + "**",
+                        ephemeral: true,
+                    });
+                }
+                try {
                     let guildId = interaction.guild?.id;
                     if (guild.feeds.find((feed: any) => feed.channel === channel.id && feed.twitterUserId === user.id)) {
                         return interaction.followUp({
@@ -117,15 +127,12 @@ export default class Feeds extends Command {
                     await interaction.followUp({
                         content: emojis.t + "Added **" + user.name + "** to feed list",
                     });
+                    //@ts-ignore
+                    interaction.client.streamClient.restart();
                 } catch (e) {
                     console.log(e);
-                    return interaction.followUp({
-                        content: emojis.f + "Can't find any user with named **" + username + "**",
-                        ephemeral: true,
-                    });
+                    interaction.followUp({ content: emojis.f + "There is an error occurred. Please try again later." });
                 }
-                //@ts-ignore
-                interaction.client.streamClient.restart();
             } else if (subcommand === "remove") {
                 let username = interaction.options.getString("username", true);
                 let channel = interaction.options.getChannel("channel", true);
@@ -263,7 +270,6 @@ export default class Feeds extends Command {
                 let { feeds } = guild;
                 let find = feeds.find((feed: any) => feed.id === feedId);
                 if (!find) return interaction.followUp({ content: emojis.f + "Can't find any feeds with this id (`" + feedId + "`)" });
-
                 if (!message) message = find.message;
                 if (message === "tweetcord_remove_message") message = "";
                 if (message === find.message && showReplies === find.replies && showRetweets === find.retweets) return interaction.followUp({ content: emojis.f + "Provided options same with current feed's options" });
