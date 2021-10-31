@@ -90,7 +90,7 @@ export const removeGuildData = async (client: Client, guildId: string, db?: any)
             });
         }
     }
-    await client.prisma.guild.delete({
+    await client.prisma.guild.deleteMany({
         where: {
             id: guildId,
         },

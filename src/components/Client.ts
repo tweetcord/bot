@@ -41,28 +41,36 @@ export default class Tweetcord extends Client {
         await this.prisma.feed.createMany({ data: feedsJson });*/
         this.prisma.$connect().then(() => {
             logger.info("[PRISMA]", "Connected to MongoDB");
-            this.streamClient.start();
+            //this.streamClient.start();
         });
     }
 
     private handleInteraction(interaction: Interaction) {
-        if (!interaction.isCommand()) return;
-        const command = this.commands.get(interaction.commandName);
-        command?.run(interaction);
+        try {
+            if (!interaction.isCommand()) return;
+            const command = this.commands.get(interaction.commandName);
+            command?.run(interaction);
+        } catch (e) {
+            console.log("Error on interaction.");
+        }
     }
     private handleMessageEvent(m: Message) {
         if (!m.content.startsWith("tw") || !m.content.split(" ")[1]) return;
         if (["f-add", "feed", "f-list", "f-remove", "help", "invite", "ping", "s-tweet", "s-user", "search", "stats", "trend", "user"].includes(m.content.split(" ")[1])) {
-            m.reply(`We have migrated to slash commands, type \`/help\` for more information.`);
+            try {
+                m.channel.send(`We have migrated to slash commands, type \`/help\` for more information.`);
+            } catch (e) {
+                console.log("Can't send a message.");
+            }
         }
     }
     private handleLeave(e: Guild) {
         removeGuildData(this, e.id);
     }
     public async getBackup() {
-        let feeds = this.prisma.feed.findMany();
-        let guild = this.prisma.guild.findMany();
-        let webhook = this.prisma.webhook.findMany();
+        let feeds = await this.prisma.feed.findMany();
+        let guild = await this.prisma.guild.findMany();
+        let webhook = await this.prisma.webhook.findMany();
         let feedsStr = JSON.stringify(feeds);
         let guildStr = JSON.stringify(guild);
         let webhookStr = JSON.stringify(webhook);

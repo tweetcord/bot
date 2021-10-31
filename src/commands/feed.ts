@@ -262,9 +262,10 @@ export default class Feeds extends Command {
                 if (!message && showRetweets && showReplies) return interaction.followUp({ content: emojis.f + "You have to provide at least 1 option." });
                 let { feeds } = guild;
                 let find = feeds.find((feed: any) => feed.id === feedId);
+                if (!find) return interaction.followUp({ content: emojis.f + "Can't find any feeds with this id (`" + feedId + "`)" });
+
                 if (!message) message = find.message;
                 if (message === "tweetcord_remove_message") message = "";
-                if (!find) return interaction.followUp({ content: emojis.f + "Can't find any feeds with this id (`" + feedId + "`)" });
                 if (message === find.message && showReplies === find.replies && showRetweets === find.retweets) return interaction.followUp({ content: emojis.f + "Provided options same with current feed's options" });
                 await updateFeed(interaction, feedId, message as string, showReplies as boolean, showRetweets as boolean);
                 interaction.followUp({ content: emojis.t + "Feed successfully updated" });
