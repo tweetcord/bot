@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Formatters, version } from "discord.js";
 import Command from "../components/Command";
+import { resolveColor } from "../utils/functions";
 
 export default class Info extends Command {
     public data() {
@@ -12,7 +13,7 @@ export default class Info extends Command {
                 {
                     title: "Tweetcord",
                     description: Formatters.blockQuote("Imagine a bot... that allows you to interact with Twitter without leaving Discord"),
-                    color: "#1da0f2",
+                    color: resolveColor("#1da0f6"),
                     fields: [
                         {
                             name: "Servers",

@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbedOptions, Permissions, TextChannel } from "discord.js";
-import { getGuildData, createWebhook, getWebhookData, removeFeed, deleteWebhook, updateFeed } from "../utils/functions";
+import { getGuildData, createWebhook, getWebhookData, removeFeed, deleteWebhook, updateFeed, resolveColor } from "../utils/functions";
 import Command from "../components/Command";
 import { emojis } from "../constants";
 import { UserV2 } from "twitter-api-v2";
@@ -227,6 +227,7 @@ export default class Feeds extends Command {
                         footer: {
                             text: "Total feed count: " + ids.length,
                         },
+                        color: resolveColor("#1da0f6")
                     };
                     interaction.followUp({ embeds: [embed] });
                 }

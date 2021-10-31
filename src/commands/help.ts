@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, hyperlink } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbedOptions } from "discord.js";
 import Command from "../components/Command";
+import { resolveColor } from "../utils/functions";
 
 export default class Help extends Command {
     public data() {
@@ -13,7 +14,7 @@ export default class Help extends Command {
                 name: "Tweetcord",
             },
             description: `If you need help join ${hyperlink("support server", "https://discord.com/invite/tV22Kvj")}.`,
-            color: "#1da0f2",
+            color: resolveColor("#1da0f6"),
             fields: [
                 { name: "**Feed**", value: "`/feed add`, `/feed remove`, `/feed list`" },
                 { name: "**Search**", value: "`/search tweet`, `/search user`" },
