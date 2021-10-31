@@ -104,6 +104,7 @@ export default class Feeds extends Command {
 
                     let perms =
                         !interaction.guild?.members.cache.get(interaction.client.user?.id as string)?.permissions.has("MANAGE_WEBHOOKS") || channel.permissionOverwrites.cache.get(interaction.client.user?.id as string)?.deny.has("MANAGE_WEBHOOKS");
+                    console.log(perms);
                     if (perms) {
                         await interaction.followUp({
                             content: emojis.f + "Tweetcord doen't have permissions to create webhooks. Grant permissions to continue.",
@@ -111,7 +112,7 @@ export default class Feeds extends Command {
                         });
                         return;
                     }
-
+                    !(await getWebhookData(interaction.client, channel.id)) && (await createWebhook(interaction.client, channel as TextChannel, guildId as string));
                     await interaction.client.prisma.feed.create({
                         data: {
                             channel: channel.id,
@@ -123,7 +124,6 @@ export default class Feeds extends Command {
                         },
                     });
 
-                    !(await getWebhookData(interaction.client, channel.id)) && (await createWebhook(interaction.client, channel as TextChannel, guildId as string));
                     await interaction.followUp({
                         content: emojis.t + "Added **" + user.name + "** to feed list",
                     });
