@@ -129,9 +129,14 @@ export default class Feeds extends Command {
                     });
                     //@ts-ignore
                     interaction.client.streamClient.restart();
-                } catch (e) {
+                } catch (e: any) {
                     console.log(e);
-                    interaction.followUp({ content: emojis.f + "There is an error occurred. Please try again later." });
+
+                    if (e.code === 50013) {
+                        interaction.followUp({ content: emojis.f + "Tweetcord doen't have permissions to create webhooks. Grant permissions to continue." });
+                    } else {
+                        interaction.followUp({ content: emojis.f + "There is an error occurred. Please try again later." });
+                    }
                 }
             } else if (subcommand === "remove") {
                 let username = interaction.options.getString("username", true);
