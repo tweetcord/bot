@@ -2,6 +2,7 @@ import { REST } from "@discordjs/rest";
 import { PrismaClient } from "@prisma/client";
 import { Routes } from "discord-api-types/v9";
 import { Client, Collection, Interaction, Guild, ApplicationCommandPermissionData } from "discord.js";
+import { exec } from "child_process";
 /*import guildJson from "../database/guild.json";
 import webhookJson from "../database/webhooks.json";
 import feedsJson from "../database/feeds.json";*/
@@ -16,7 +17,7 @@ import { removeGuildData } from "../utils/functions";
 const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
 
 export default class Tweetcord extends Client {
-    readonly commands: Collection<string, Command>;
+    public commands: Collection<string, Command>;
     public twitter: TwitterApiReadOnly;
     public prisma: PrismaClient;
     public streamClient: TWStream;
@@ -40,7 +41,7 @@ export default class Tweetcord extends Client {
         await this.prisma.feed.createMany({ data: feedsJson });*/
         this.prisma.$connect().then(() => {
             logger.info("[PRISMA]", "Connected to MongoDB");
-            //this.streamClient.start();
+            this.streamClient.start();
         });
     }
 
@@ -56,15 +57,24 @@ export default class Tweetcord extends Client {
     private handleLeave(e: Guild) {
         removeGuildData(this, e.id);
     }
-    private async loadCommands() {
+    public async loadCommands(isReload?: Boolean) {
         const folder = resolve("dist/src/commands");
         const commands = readdirSync(folder).filter((c) => c.endsWith(".js"));
-
         for (const command of commands) {
+            if (isReload) delete require.cache[join(folder, command)];
             const commandFile = await import(join(folder, command));
             const cmd: Command = new commandFile.default();
             this.commands.set(cmd.data().toJSON().name, cmd);
         }
+    }
+    public async reloadCommands() {
+        exec("tsc", async (error) => {
+            if (error) {
+                console.error(`exec error: ${error}`);
+                return;
+            }
+            this.loadCommands(true);
+        });
     }
     //@ts-ignore
     private async addEvalCommand() {

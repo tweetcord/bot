@@ -87,7 +87,6 @@ export default class Feeds extends Command {
                 try {
                     user = (await interaction.client.twitter.v2.userByUsername(username)).data;
                 } catch (e) {
-                    console.log(e);
                     return interaction.followUp({
                         content: emojis.f + "Can't find any user with named **" + username + "**",
                         ephemeral: true,
@@ -103,9 +102,8 @@ export default class Feeds extends Command {
                     }
 
                     let perms =
-                        !interaction.guild?.members.cache.get(interaction.client.user?.id as string)?.permissions.has("MANAGE_WEBHOOKS") || channel.permissionOverwrites.cache.get(interaction.client.user?.id as string)?.deny.has("MANAGE_WEBHOOKS");
-                    console.log(perms);
-                    if (perms) {
+                        !interaction.guild?.members.cache.get(interaction.client.user?.id as string)?.permissions.has("MANAGE_WEBHOOKS") || channel.permissionOverwrites.cache.get(interaction.client.user?.id as string)?.allow.has("MANAGE_WEBHOOKS");
+                    if (!perms) {
                         await interaction.followUp({
                             content: emojis.f + "Tweetcord doen't have permissions to create webhooks. Grant permissions to continue.",
                             ephemeral: true,
@@ -130,8 +128,6 @@ export default class Feeds extends Command {
                     //@ts-ignore
                     interaction.client.streamClient.restart();
                 } catch (e: any) {
-                    console.log(e);
-
                     if (e.code === 50013) {
                         interaction.followUp({ content: emojis.f + "Tweetcord doen't have permissions to create webhooks. Grant permissions to continue." });
                     } else {
