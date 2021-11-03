@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbedOptions, Permissions, TextChannel } from "discord.js";
-import { getGuildData, createWebhook, getWebhookData, removeFeed, deleteWebhook, updateFeed, resolveColor } from "../utils/functions";
+import { getGuildData, createWebhook, getWebhookData, removeFeed, deleteWebhook, updateFeed, resolveColor, iDefer, iFollowUp } from "../utils/functions";
 import Command from "../components/Command";
 import { emojis } from "../constants";
 import { UserV2 } from "twitter-api-v2";
@@ -46,7 +46,7 @@ export default class Feeds extends Command {
     }
     // Change Promise<any> please
     public async run(interaction: CommandInteraction): Promise<any> {
-        await interaction.deferReply({ ephemeral: true });
+        await iDefer(interaction, { ephemeral: true });
         if ((interaction.member?.permissions as Permissions).has(Permissions.FLAGS.MANAGE_GUILD)) {
             let guild = await getGuildData(interaction);
 
@@ -65,20 +65,20 @@ export default class Feeds extends Command {
 
             if (subcommand === "add") {
                 if (guild.feeds.length === 30)
-                    return await interaction.followUp({
+                    return await iFollowUp(interaction, {
                         content: emojis.f + "You've reached the 30 feed limit",
                     });
                 let username = interaction.options.getString("username", true);
                 let channel = interaction.options.getChannel("channel", true);
                 if (channel.type != "GUILD_TEXT")
-                    return interaction.followUp({
+                    return iFollowUp(interaction, {
                         content: emojis.f + "Channel must be a text channel.",
                         ephemeral: true,
                     });
                 let message = interaction.options.getString("message");
                 if (!message) message = "";
                 if (message.length > 100) {
-                    return interaction.followUp({
+                    return iFollowUp(interaction, {
                         content: emojis.f + "Message length cannot exceed 100 characters.",
                         ephemeral: true,
                     });
@@ -87,7 +87,7 @@ export default class Feeds extends Command {
                 try {
                     user = (await interaction.client.twitter.v2.userByUsername(username)).data;
                 } catch (e) {
-                    return interaction.followUp({
+                    return iFollowUp(interaction, {
                         content: emojis.f + "Can't find any user with named **" + username + "**",
                         ephemeral: true,
                     });
@@ -95,7 +95,7 @@ export default class Feeds extends Command {
                 try {
                     let guildId = interaction.guild?.id;
                     if (guild.feeds.find((feed: any) => feed.channel === channel.id && feed.twitterUserId === user.id)) {
-                        return interaction.followUp({
+                        return iFollowUp(interaction, {
                             content: emojis.f + `${username}’s feed you are trying to add at <#${channel.id}> is currently at feed list`,
                             ephemeral: true,
                         });
@@ -104,7 +104,7 @@ export default class Feeds extends Command {
                     let perms =
                         !interaction.guild?.members.cache.get(interaction.client.user?.id as string)?.permissions.has("MANAGE_WEBHOOKS") || channel.permissionOverwrites.cache.get(interaction.client.user?.id as string)?.allow.has("MANAGE_WEBHOOKS");
                     if (!perms) {
-                        await interaction.followUp({
+                        await iFollowUp(interaction, {
                             content: emojis.f + "Tweetcord doen't have permissions to create webhooks. Grant permissions to continue.",
                             ephemeral: true,
                         });
@@ -122,23 +122,23 @@ export default class Feeds extends Command {
                         },
                     });
 
-                    await interaction.followUp({
+                    await iFollowUp(interaction, {
                         content: emojis.t + "Added **" + user.name + "** to feed list",
                     });
                     //@ts-ignore
                     interaction.client.streamClient.restart();
                 } catch (e: any) {
                     if (e.code === 50013) {
-                        interaction.followUp({ content: emojis.f + "Tweetcord doen't have permissions to create webhooks. Grant permissions to continue." });
+                        iFollowUp(interaction, { content: emojis.f + "Tweetcord doen't have permissions to create webhooks. Grant permissions to continue." });
                     } else {
-                        interaction.followUp({ content: emojis.f + "There is an error occurred. Please try again later." });
+                        iFollowUp(interaction, { content: emojis.f + "There is an error occurred. Please try again later." });
                     }
                 }
             } else if (subcommand === "remove") {
                 let username = interaction.options.getString("username", true);
                 let channel = interaction.options.getChannel("channel", true);
                 if (channel.type != "GUILD_TEXT")
-                    return interaction.followUp({
+                    return iFollowUp(interaction, {
                         content: emojis.f + "Channel must be a text channel.",
                         ephemeral: true,
                     });
@@ -146,7 +146,7 @@ export default class Feeds extends Command {
                     let { data } = await interaction.client.twitter.v2.userByUsername(username);
                     let find = guild.feeds.find((user: any) => data.id === user.twitterUserId && user.channel === channel.id);
                     if (!find) {
-                        return interaction.followUp({
+                        return iFollowUp(interaction, {
                             content: emojis.f + "There is no feeds for this username.",
                             ephemeral: true,
                         });
@@ -158,11 +158,11 @@ export default class Feeds extends Command {
                     //@ts-ignore
                     interaction.client.streamClient.restart();
 
-                    return interaction.followUp({
+                    return iFollowUp(interaction, {
                         content: emojis.t + "Removed **" + data.username + "** from feed list.",
                     });
                 } catch (e) {
-                    return interaction.followUp({
+                    return iFollowUp(interaction, {
                         content: emojis.f + "Can't find any user with named **" + username + "**",
                         ephemeral: true,
                     });
@@ -170,7 +170,7 @@ export default class Feeds extends Command {
             } else if (subcommand === "list") {
                 let { feeds }: any = guild;
                 if (feeds.length === 0)
-                    return interaction.followUp({
+                    return iFollowUp(interaction, {
                         content: emojis.f + "There is nothing in the feed list",
                     });
                 let ids: Array<string> = [];
@@ -217,7 +217,7 @@ export default class Feeds extends Command {
                             });
                         }
                     }
-                    interaction.followUp({ embeds: embed });
+                    iFollowUp(interaction, { embeds: embed });
                 } else {
                     let embed: MessageEmbedOptions = {
                         author: {
@@ -230,14 +230,14 @@ export default class Feeds extends Command {
                         },
                         color: resolveColor("#1da0f6"),
                     };
-                    interaction.followUp({ embeds: [embed] });
+                    iFollowUp(interaction, { embeds: [embed] });
                 }
             } else if (subcommand === "details") {
                 let { feeds } = guild;
                 let username = interaction.options.getString("username", true);
                 let channel = interaction.options.getChannel("channel", true);
                 if (channel.type != "GUILD_TEXT")
-                    return interaction.followUp({
+                    return iFollowUp(interaction, {
                         content: emojis.f + "Channel must be a text channel.",
                         ephemeral: true,
                     });
@@ -245,7 +245,7 @@ export default class Feeds extends Command {
                     let { data } = await interaction.client.twitter.v2.userByUsername(username);
                     let find = feeds.find((feed: any) => feed.channel === channel.id && feed.twitterUserId === data.id);
                     if (!find)
-                        return interaction.followUp({
+                        return iFollowUp(interaction, {
                             content: emojis.f + "There is no feeds for this username in " + channel.toString(),
                             ephemeral: true,
                         });
@@ -261,27 +261,27 @@ export default class Feeds extends Command {
                             },
                         ],
                     };
-                    interaction.followUp({ embeds: [embed] });
+                    iFollowUp(interaction, { embeds: [embed] });
                 } catch (e) {
-                    interaction.followUp({ content: emojis.f + "Can't find any users with named **" + username + "**" });
+                    iFollowUp(interaction, { content: emojis.f + "Can't find any users with named **" + username + "**" });
                 }
             } else if (subcommand === "update") {
                 let message = interaction.options.getString("message");
                 let feedId = interaction.options.getString("feed_id", true);
-                if (!message && showRetweets && showReplies) return interaction.followUp({ content: emojis.f + "You have to provide at least 1 option." });
+                if (!message && showRetweets && showReplies) return iFollowUp(interaction, { content: emojis.f + "You have to provide at least 1 option." });
                 let { feeds } = guild;
                 let find = feeds.find((feed: any) => feed.id === feedId);
-                if (!find) return interaction.followUp({ content: emojis.f + "Can't find any feeds with this id (`" + feedId + "`)" });
+                if (!find) return iFollowUp(interaction, { content: emojis.f + "Can't find any feeds with this id (`" + feedId + "`)" });
                 if (!message) message = find.message;
                 if (message === "tweetcord_remove_message") message = "";
-                if (message === find.message && showReplies === find.replies && showRetweets === find.retweets) return interaction.followUp({ content: emojis.f + "Provided options same with current feed's options" });
+                if (message === find.message && showReplies === find.replies && showRetweets === find.retweets) return iFollowUp(interaction, { content: emojis.f + "Provided options same with current feed's options" });
                 await updateFeed(interaction, feedId, message as string, showReplies as boolean, showRetweets as boolean);
-                interaction.followUp({ content: emojis.t + "Feed successfully updated" });
+                iFollowUp(interaction, { content: emojis.t + "Feed successfully updated" });
                 //@ts-ignore
                 interaction.client.streamClient.restart();
             }
         } else {
-            return interaction.followUp({
+            return iFollowUp(interaction, {
                 content: emojis.f + "You don't have required permission",
                 ephemeral: true,
             });

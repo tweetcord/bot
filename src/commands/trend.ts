@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Formatters, MessageActionRow, MessageEmbedOptions } from "discord.js";
-import { resolveColor } from "../utils/functions";
+import { iDefer, iReply, resolveColor } from "../utils/functions";
 import Command from "../components/Command";
 
 export default class Trend extends Command {
@@ -11,7 +11,7 @@ export default class Trend extends Command {
             .addStringOption((option) => option.setName("place").setDescription("Place to search").setRequired(true));
     }
     public async run(interaction: CommandInteraction): Promise<any> {
-        await interaction?.deferReply();
+        await iDefer(interaction);
         const country = interaction.options.getString("place", true);
         try {
             const woeid = await this.woeid(country, interaction);
@@ -69,7 +69,7 @@ export default class Trend extends Command {
                     label: "Change your trends location",
                 }
             );
-            await interaction.editReply({ embeds: [embed], components: [buttons] });
+            await iReply(interaction, { embeds: [embed], components: [buttons] });
         } catch (err: any) {
             const support = new MessageActionRow().addComponents({
                 style: "LINK",
@@ -78,10 +78,10 @@ export default class Trend extends Command {
                 label: "Join support server",
             });
             if (err?.errors?.[0].code === 34) {
-                return interaction.editReply({ content: `No trends found for ${country}` });
+                return iReply(interaction, { content: `No trends found for ${country}` });
             } else {
                 console.error(err.stack);
-                return interaction.editReply({
+                return iReply(interaction, {
                     content: `An error occurred. Please join support server and report this error: ${Formatters.codeBlock("js", err.message)}`,
                     components: [support],
                 });

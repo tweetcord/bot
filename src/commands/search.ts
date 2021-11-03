@@ -3,7 +3,7 @@ import { CommandInteraction, InteractionReplyOptions, Message, MessageSelectOpti
 import ButtonMenu from "../components/ButtonMenu";
 import Command from "../components/Command";
 import SelectMenu from "../components/SelectMenu";
-import { checkNSFW, getButtons } from "../utils/functions";
+import { checkNSFW, getButtons, iDefer, iFollowUp } from "../utils/functions";
 
 export default class Search extends Command {
     public data() {
@@ -24,7 +24,7 @@ export default class Search extends Command {
             );
     }
     public async run(interaction: CommandInteraction): Promise<Message | void> {
-        await interaction?.deferReply();
+        await iDefer(interaction);
         if (!checkNSFW(interaction)) return;
         const subcommand = interaction.options.getSubcommand(true);
         if (subcommand === "tweet") {
@@ -44,13 +44,13 @@ export default class Search extends Command {
                 });
             }
             if (!tweets) {
-                await interaction.followUp({
+                await iFollowUp(interaction, {
                     content: "No results found.",
                     ephemeral: true,
                 });
                 return;
             }
-            await interaction.followUp({
+            await iFollowUp(interaction, {
                 content: `**(1/${tweets.length})** https://twitter.com/i/web/status/${tweets.at(0)?.id}`,
                 components: [TweetsFirstRow],
                 ephemeral: true,
@@ -72,7 +72,7 @@ export default class Search extends Command {
                 );
             });
             if (options.length === 0) {
-                await interaction.followUp({
+                await iFollowUp(interaction, {
                     content: "No results found.",
                     ephemeral: true,
                 });

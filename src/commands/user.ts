@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Formatters, Message, MessageActionRow, MessageEmbedOptions, Util } from "discord.js";
 import Command from "../components/Command";
 import { emojis } from "../constants";
-import { checkNSFW, resolveColor } from "../utils/functions";
+import { checkNSFW, iDefer, iEditReply, iFollowUp, resolveColor } from "../utils/functions";
 
 export default class User extends Command {
     public data() {
@@ -12,7 +12,7 @@ export default class User extends Command {
             .addStringOption((option) => option.setName("username").setDescription("Username to find").setRequired(true));
     }
     public async run(interaction: CommandInteraction, screen_name: string, isFromSearch?: boolean): Promise<Message | any> {
-        if (!interaction.deferred && !isFromSearch) await interaction.deferReply();
+        if (!interaction.deferred && !isFromSearch) await iDefer(interaction);
         if (!checkNSFW(interaction)) return;
         try {
             let user = await interaction.client.twitter.v1.user({ screen_name: screen_name ?? interaction.options.getString("username", true) });
@@ -86,12 +86,12 @@ export default class User extends Command {
                 url: `https://twitter.com/i/user/${user.id}`,
             });
             if (isFromSearch) {
-                await interaction.editReply({ content: " ", embeds: [embed], components: [buttons] });
+                await iEditReply(interaction, { content: " ", embeds: [embed], components: [buttons] });
             } else {
-                await interaction.followUp({ embeds: [embed], components: [buttons] });
+                await iFollowUp(interaction, { embeds: [embed], components: [buttons] });
             }
         } catch (e: any) {
-            interaction.followUp({ content: emojis.f + "Can't find any user with named **" + interaction.options.getString("username", true) + "**", ephemeral: true });
+            iFollowUp(interaction, { content: emojis.f + "Can't find any user with named **" + interaction.options.getString("username", true) + "**", ephemeral: true });
         }
     }
 }

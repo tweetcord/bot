@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Formatters } from "discord.js";
 import { inspect } from "util";
 import Command from "../components/Command";
+import { iFollowUp } from "../utils/functions";
 
 export default class Eval extends Command {
     public data() {
@@ -33,12 +34,12 @@ export default class Eval extends Command {
             const asynchr = code.includes("return") || code.includes("await");
             let output = await eval(asynchr ? `(async()=>{${code}})();` : code);
             if (typeof output !== "string") output = inspect(output, { depth: 0 });
-            return interaction.followUp({
+            return iFollowUp(interaction, {
                 content: Formatters.blockQuote(Formatters.codeBlock("js", output.replace(new RegExp(interaction.client.token!, "gi"), "[TOKEN]"))),
             });
         } catch (err: any) {
             console.error("Eval command error:", err);
-            return interaction.followUp({
+            return iFollowUp(interaction, {
                 content: Formatters.blockQuote(Formatters.codeBlock("js", err.message.replace(new RegExp(interaction.client.token!, "gi"), "[TOKEN]"))),
             });
         }

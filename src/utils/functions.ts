@@ -1,4 +1,4 @@
-import { Client, TextChannel, Interaction, MessageEmbedOptions, CommandInteraction, MessageActionRow } from "discord.js";
+import { Client, TextChannel, Interaction, MessageEmbedOptions, CommandInteraction, MessageActionRow, InteractionReplyOptions, MessageComponentInteraction, SelectMenuInteraction } from "discord.js";
 import { hyperlink } from "@discordjs/builders";
 import Axios from "axios";
 
@@ -140,7 +140,7 @@ export const checkNSFW = (interaction: CommandInteraction): boolean => {
             url: "https://cdn.discordapp.com/attachments/70868118746ß7591742/714053896212971571/NSFW.gif",
         },
     };
-    !channel.nsfw && interaction.followUp({ embeds: [embed] });
+    !channel.nsfw && iFollowUp(interaction, { embeds: [embed] });
     return channel.nsfw;
 };
 
@@ -257,4 +257,49 @@ export const resolveColor = (color: any): any => {
     else if (Number.isNaN(color)) throw new TypeError("COLOR_CONVERT");
 
     return color;
+};
+
+export const iDefer = async (interaction: CommandInteraction | MessageComponentInteraction, options?: InteractionReplyOptions) => {
+    try {
+        await interaction.deferReply(options);
+    } catch (e) {
+        console.log("Can't defer interaction");
+    }
+};
+export const iDeferUpdate = async (interaction: SelectMenuInteraction | MessageComponentInteraction, options?: InteractionReplyOptions) => {
+    try {
+        await interaction.deferUpdate(options);
+    } catch (e) {
+        console.log("Can't defer update interaction");
+    }
+};
+export const iFollowUp = async (interaction: CommandInteraction, options: InteractionReplyOptions) => {
+    try {
+        await interaction.followUp(options);
+    } catch (e) {
+        console.log("Can't followUp interaction");
+    }
+};
+export const iEdit = async (interaction: CommandInteraction | MessageComponentInteraction, options: InteractionReplyOptions) => {
+    try {
+        await interaction.editReply(options);
+    } catch (e) {
+        console.log("Can't edit interaction");
+    }
+};
+
+export const iReply = async (interaction: CommandInteraction, options: InteractionReplyOptions) => {
+    try {
+        await interaction.reply(options);
+    } catch (e) {
+        console.log("Can't reply interaction", e);
+    }
+};
+
+export const iEditReply = async (interaction: CommandInteraction | MessageComponentInteraction, options: InteractionReplyOptions) => {
+    try {
+        await interaction.editReply(options);
+    } catch (e) {
+        console.log("Can't edit reply interaction", e);
+    }
 };

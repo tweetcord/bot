@@ -1,4 +1,5 @@
 import { MessageActionRow, MessageComponentInteraction, MessageSelectOptionData, SelectMenuInteraction } from "discord.js";
+import { iDeferUpdate, iFollowUp } from "../utils/functions";
 import { MenuOptions } from "./Types";
 
 export default class SelectMenu {
@@ -14,7 +15,7 @@ export default class SelectMenu {
             customId: id,
             options: this.options,
         });
-        await options.interaction.followUp({ content: "Select user below", components: [row], ephemeral: true });
+        await iFollowUp(options.interaction, { content: "Select user below", components: [row], ephemeral: true });
         const filter = (i: MessageComponentInteraction) => i.user.id === options.interaction?.user.id;
         const collector = options.interaction.channel?.createMessageComponentCollector({
             filter,
@@ -23,7 +24,7 @@ export default class SelectMenu {
         collector?.on("collect", async (i: SelectMenuInteraction) => {
             if (i.customId === id) {
                 await options.interaction.client.commands.get("user")?.run(options.interaction, options.data?.[Number(i.values[0]) - 1].screen_name, true);
-                await i.deferUpdate();
+                await iDeferUpdate(i);
             }
         });
     }

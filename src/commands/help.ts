@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, hyperlink } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbedOptions } from "discord.js";
 import Command from "../components/Command";
-import { resolveColor } from "../utils/functions";
+import { iReply, resolveColor } from "../utils/functions";
 
 export default class Help extends Command {
     public data() {
@@ -23,7 +23,7 @@ export default class Help extends Command {
             timestamp: new Date(),
         };
 
-        return interaction.reply({
+        return iReply(interaction, {
             embeds: [embed],
             ephemeral: commandName ? true : false,
         });

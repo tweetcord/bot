@@ -4,7 +4,7 @@ import { TypeOrArrayOf } from "twitter-api-v2/dist/types/shared.types";
 import ButtonMenu from "../components/ButtonMenu";
 import Command from "../components/Command";
 import { emojis } from "../constants";
-import { checkNSFW, getButtons } from "../utils/functions";
+import { checkNSFW, getButtons, iDefer, iFollowUp } from "../utils/functions";
 
 export default class Trend extends Command {
     public data() {
@@ -17,17 +17,17 @@ export default class Trend extends Command {
     }
 
     public async run(interaction: CommandInteraction): Promise<Message | void> {
-        await interaction?.deferReply();
+        await iDefer(interaction);
         if (!checkNSFW(interaction)) return;
         let username = interaction.options.getString("username", true);
         if (username.length >= 15 && username.includes(" ")) {
-            interaction.followUp({ content: emojis.f + "The length of the username can't exceed 15 characters or include any spaces." });
+            iFollowUp(interaction, { content: emojis.f + "The length of the username can't exceed 15 characters or include any spaces." });
             return;
         }
         try {
             let { data: user } = await interaction.client.twitter.v2.userByUsername(username);
             if (!user) {
-                interaction.followUp({ content: emojis.f + "Can't find any users with named **" + username + "**" });
+                iFollowUp(interaction, { content: emojis.f + "Can't find any users with named **" + username + "**" });
                 return;
             }
             const exclude: TypeOrArrayOf<"replies" | "retweets"> | undefined = [];
@@ -46,7 +46,7 @@ export default class Trend extends Command {
                     components: answers.length === 0 ? [TweetsFirstRow] : tweets.length === i + 1 ? [TweetsLastRow] : [TweetsRow],
                 });
             }
-            interaction.followUp({
+            await iFollowUp(interaction, {
                 content: `**(1/${tweets.length})** https://twitter.com/i/web/status/${tweets.at(0)?.id}`,
                 components: [TweetsFirstRow],
             });
@@ -54,7 +54,7 @@ export default class Trend extends Command {
             const menu = new ButtonMenu(answers, id);
             return menu.start({ interaction });
         } catch (e) {
-            await interaction.followUp({ content: emojis.f + "Can't find any users with named **" + username + "**" });
+            await iFollowUp(interaction, { content: emojis.f + "Can't find any users with named **" + username + "**" });
         }
     }
 }

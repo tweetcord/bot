@@ -1,5 +1,6 @@
 import { InteractionReplyOptions, MessageComponentInteraction } from "discord.js";
 import { TweetsCollectorEndButtons } from "../constants";
+import { iDeferUpdate, iEditReply } from "../utils/functions";
 import { MenuOptions } from "./Types";
 
 export default class ButtonMenu {
@@ -19,25 +20,24 @@ export default class ButtonMenu {
         let page = 0;
         collector?.on("collect", async (i: MessageComponentInteraction) => {
             if (!i.customId.includes(this.id)) return;
-            await i.deferUpdate();
+            await iDeferUpdate(i);
             switch (i.customId) {
                 case "first-" + this.id:
                     page = 0;
-                    await i.editReply(this.pages[0]);
-
+                    await iEditReply(i, this.pages[0]);
                     break;
                 case "previous-" + this.id:
                     page--;
-                    await i.editReply(this.pages[page]);
+                    await iEditReply(i, this.pages[page]);
                     break;
                 case "next-" + this.id:
                     page++;
 
-                    await i.editReply(this.pages[page]);
+                    await iEditReply(i, this.pages[page]);
                     break;
                 case "last-" + this.id:
                     page = this.pages.length - 1;
-                    await i.editReply(this.pages[page]);
+                    await iEditReply(i, this.pages[page]);
                     break;
             }
         });
