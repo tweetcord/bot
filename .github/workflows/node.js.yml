@@ -9,6 +9,11 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  DISCORD_TOKEN: {{ secrets.DISCORD_TOKEN }}
+  TWITTER_BEARER: {{ secrets.TWITTER_BEARER }}
+  DATABASE_URL: {{ secrets.DATABASE_URL }}
+
 jobs:
   build:
 
@@ -28,7 +33,3 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm start
-env:
-  DISCORD_TOKEN: {{ secrets.DISCORD_TOKEN }}
-  TWITTER_BEARER: {{ secrets.TWITTER_BEARER }}
-  DATABASE_URL: {{ secrets.DATABASE_URL }}
