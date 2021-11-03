@@ -21,12 +21,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Create env file
-        run: touch .env
-          echo DISCORD_TOKEN="{{ secrets.DISCORD_TOKEN }}" >> .env
-          echo TWITTER_BEARER =${{ secrets.TWITTER_BEARER }} >> .env
-          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
-          cat .env
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
@@ -34,3 +28,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm start
+    env:
+      DISCORD_TOKEN: {{ secrets.DISCORD_TOKEN }}
+      TWITTER_BEARER: {{ secrets.TWITTER_BEARER }}
+      DATABASE_URL: {{ secrets.DATABASE_URL }}
