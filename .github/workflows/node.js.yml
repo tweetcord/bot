@@ -10,9 +10,9 @@ on:
     branches: [ master ]
 
 env:
-  DISCORD_TOKEN: {{ secrets.DISCORD_TOKEN }}
-  TWITTER_BEARER: {{ secrets.TWITTER_BEARER }}
-  DATABASE_URL: {{ secrets.DATABASE_URL }}
+  DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+  TWITTER_BEARER: ${{ secrets.TWITTER_BEARER }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
   build:
