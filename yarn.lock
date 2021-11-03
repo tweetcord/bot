@@ -12,6 +12,16 @@
     ts-mixer "^6.0.0"
     tslib "^2.3.1"
 
+"@discordjs/builders@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@discordjs/builders/-/builders-0.8.2.tgz#c3ef99caa9ebe70a4196b987011d90136c71054a"
+  dependencies:
+    "@sindresorhus/is" "^4.2.0"
+    discord-api-types "^0.24.0"
+    ow "^0.27.0"
+    ts-mixer "^6.0.0"
+    tslib "^2.3.1"
+
 "@discordjs/collection@^0.1.6":
   version "0.1.6"
   resolved "https://registry.npmjs.org/@discordjs/collection/-/collection-0.1.6.tgz"
@@ -124,7 +134,7 @@
     "@sentry/types" "6.13.3"
     tslib "^1.9.3"
 
-"@sindresorhus/is@^4.0.1":
+"@sindresorhus/is@^4.0.1", "@sindresorhus/is@^4.2.0":
   version "4.2.0"
   resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-4.2.0.tgz"
 
@@ -286,6 +296,10 @@ discord-api-types@^0.22.0:
 discord-api-types@^0.23.1:
   version "0.23.1"
   resolved "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.23.1.tgz"
+
+discord-api-types@^0.24.0:
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.24.0.tgz#9e429b8a1ddb4147134dfb3109093422de7ec549"
 
 discord.js@^13.2.0-dev.1632830601.3b14883:
   version "13.2.0"
