@@ -1,7 +1,9 @@
+const os = require("os");
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Formatters, version } from "discord.js";
 import Command from "../components/Command";
 import { iReply, resolveColor } from "../utils/functions";
+
 
 export default class Info extends Command {
     public data() {
@@ -31,18 +33,18 @@ export default class Info extends Command {
                             inline: true,
                         },
                         {
-                            name: `${Formatters.formatEmoji("880242179879096320")} Discord.js version`,
+                            name: `Discord.js version`,
                             value: version,
                             inline: true,
                         },
                         {
-                            name: `${Formatters.formatEmoji("880498321012187167")} Node.js version`,
+                            name: `Node.js version`,
                             value: process.version.replace("v", ""),
                             inline: true,
                         },
                         {
-                            name: `${Formatters.formatEmoji("869705214452719696")} Ubuntu version`,
-                            value: "20.04",
+                            name: `Operating at`,
+                            value: "CentOS, " + os.version(),
                             inline: true,
                         },
                     ],
