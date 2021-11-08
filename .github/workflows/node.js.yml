@@ -23,9 +23,11 @@ jobs:
     - name: Make envfile
       uses: SpicyPizza/create-envfile@v1.2
       with:
+        envkey_DEBUG: false
         envkey_DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         envkey_TWITTER_BEARER: ${{ secrets.TWITTER_BEARER }}
         envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        directory: "/home/tweetcord/bot_github/bot/bot/"
         file_name: .env
   build:
 
