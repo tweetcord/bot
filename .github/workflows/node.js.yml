@@ -20,8 +20,8 @@ jobs:
     runs-on: self-hosted
  
     steps:
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v1
+    - uses: SpicyPizza/create-envfile@v1.2
+    - name: Create .env file
       with:
         envkey_DISCORD_TOKEN: ${{ secrets.SECRET_KEY }}
         envkey_TWITTER_BEARER: ${{ secrets.TWITTER_BEARER }}
