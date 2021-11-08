@@ -9,11 +9,6 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-  TWITTER_BEARER: ${{ secrets.TWITTER_BEARER }}
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
 jobs:
   create-envfile:
  
@@ -23,12 +18,10 @@ jobs:
     - name: Make envfile
       uses: SpicyPizza/create-envfile@v1.2
       with:
-        envkey_DEBUG: false
         envkey_DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         envkey_TWITTER_BEARER: ${{ secrets.TWITTER_BEARER }}
         envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
         directory: "/home/tweetcord/bot_github/bot/bot/"
-        file_name: .env
   build:
 
     runs-on: self-hosted
