@@ -31,7 +31,7 @@
     "devDependencies": {
         "@types/node": "^16.11.6",
         "@types/twit": "^2.2.30",
-        "prisma": "^3.4.0"
+        "prisma": "^3.4.1"
     },
     "nodemonConfig": {
         "ignore": [
