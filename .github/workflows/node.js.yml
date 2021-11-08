@@ -15,6 +15,18 @@ env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
+  create-envfile:
+ 
+    runs-on: self-hosted
+ 
+    steps:
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v1
+      with:
+        envkey_DISCORD_TOKEN: ${{ secrets.SECRET_KEY }}
+        envkey_TWITTER_BEARER: ${{ secrets.TWITTER_BEARER }}
+        envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        file_name: .env
   build:
 
     runs-on: self-hosted
@@ -32,4 +44,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+    
     - run: rm -rf dist && tsc
