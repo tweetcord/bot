@@ -22,6 +22,7 @@
         "chalk": "^4.1.2",
         "discord.js": "^13.3.1",
         "dotenv": "^10.0.0",
+        "nodemon": "^2.0.14",
         "twit": "^2.2.11",
         "twitter-api-v2": "^1.6.5",
         "utf-8-validate": "^5.0.6"
@@ -30,5 +31,13 @@
         "@types/node": "^16.11.6",
         "@types/twit": "^2.2.30",
         "prisma": "^3.4.0"
+    },
+    "nodemonConfig": {
+        "ignore": [
+            "dist/*",
+            "node_modules/*",
+            ".github/",
+            "@types/"
+        ]
     }
 }
