@@ -49,7 +49,7 @@ export const reCreateWebhook = async (client: Client, webhook: any, webhookOptio
   });
   let channel = client.channels.cache.get(webhook.channelId);
   let newWebhook = await createWebhook(client, channel as TextChannel, webhook.guildId);
-  sendWebhookMessage(client, newWebhook, webhookOptions);
+  newWebhook && sendWebhookMessage(client, newWebhook, webhookOptions);
 };
 
 export const removeFeed = async (client: Client, id: string): Promise<any> => {
