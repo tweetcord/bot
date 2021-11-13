@@ -53,8 +53,6 @@ export default class TWStream {
         }
 
         let url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
-        console.log(tweet.user);
-
         let embeds: Array<any> = [
           {
             url: url,
