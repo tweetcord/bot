@@ -47,18 +47,20 @@ export default class TWStream {
         if (tweet.is_quote_status) {
           let quote = tweet.quoted_status;
           if (quote) {
-            content += "\n\n" + blockQuote(`**${quote.user.screen_name} (@${quote.user.name})**`) + "\n" + quote.text;
+            content += "\n\n" + blockQuote(`**${quote.user.name} (@${quote.user.screen_name})**`) + "\n" + quote.text;
             await formatTweets(tweet.text);
           }
         }
 
         let url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
+        console.log(tweet.user);
+
         let embeds: Array<any> = [
           {
             url: url,
             description: content,
             author: {
-              name: `${tweet.user.name} (@${tweet.user.username})`,
+              name: `${tweet.user.name} (@${tweet.user.screen_name})`,
               icon_url: tweet.user.profile_image_url_https.replace("_normal", ""),
               url: url,
             },
