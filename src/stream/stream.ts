@@ -36,7 +36,6 @@ export default class TWStream {
           content = await formatTweets(ext.full_text);
         }
         let userID = tweet.user.id_str;
-        let screen_name = tweet.user.screen_name;
         let profileImageURL = tweet.user.profile_image_url_https.replace("_normal", "");
         let feeds = await that.client.prisma.feed.findMany({
           where: {
@@ -80,7 +79,7 @@ export default class TWStream {
           }
         }
         let webhookOptions = {
-          username: `${screen_name} (@${tweet.user.name})`,
+          username: `${tweet.user.name} (@${tweet.user.screen_name})`,
           avatar_url: profileImageURL,
           embeds: embeds,
           content: "",
