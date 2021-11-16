@@ -121,6 +121,7 @@ export default class Feeds extends Command {
           if (e.code === 50013) {
             iFollowUp(interaction, { content: emojis.f + "Tweetcord doen't have permissions to create webhooks. Grant permissions to continue." });
           } else {
+            console.log(e)
             iFollowUp(interaction, { content: emojis.f + "There is an error occurred. Please try again later." });
           }
         }
