@@ -16,12 +16,7 @@ import Command from "./Command";
 import * as logger from "./Logger";
 import { removeGuildData } from "../utils/functions";
 const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
-/*import { google } from "googleapis";
-const SCOPES = ["https://www.googleapis.com/auth/drive"];
-
-const auth = new google.auth.GoogleAuth({
-  scopes: SCOPES,
-});*/
+require("dotenv").config();
 
 export default class Tweetcord extends Client {
   public commands: Collection<string, Command>;
@@ -191,7 +186,13 @@ export default class Tweetcord extends Client {
       return error.message;
     }
   }
-  /*public async createAndUpladFile() {
+  public async getBackup() {
+    const { google } = require("googleapis");
+    const SCOPES = ["https://www.googleapis.com/auth/drive"];
+
+    const auth = new google.auth.GoogleAuth({
+      scopes: SCOPES,
+    });
     let feeds = await this.prisma.feed.findMany();
     let guild = await this.prisma.guild.findMany();
     let webhook = await this.prisma.webhook.findMany();
@@ -247,5 +248,5 @@ export default class Tweetcord extends Client {
         }
       }
     );
-  }*/
+  }
 }
