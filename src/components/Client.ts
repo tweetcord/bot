@@ -16,6 +16,12 @@ import Command from "./Command";
 import * as logger from "./Logger";
 import { removeGuildData } from "../utils/functions";
 const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
+import { google } from "googleapis";
+const SCOPES = ["https://www.googleapis.com/auth/drive"];
+
+const auth = new google.auth.GoogleAuth({
+  scopes: SCOPES,
+});
 
 export default class Tweetcord extends Client {
   public commands: Collection<string, Command>;
@@ -184,5 +190,62 @@ export default class Tweetcord extends Client {
       logger.error("[SLASH]", error);
       return error.message;
     }
+  }
+  public async createAndUpladFile() {
+    let feeds = await this.prisma.feed.findMany();
+    let guild = await this.prisma.guild.findMany();
+    let webhook = await this.prisma.webhook.findMany();
+    let feedsStr = JSON.stringify(feeds);
+    let guildStr = JSON.stringify(guild);
+    let webhookStr = JSON.stringify(webhook);
+    const driveService = google.drive({ version: "v3", auth });
+    let date = new Date();
+    let format = date.getDay() + "/" + date.getMonth() + "/" + date.getFullYear();
+    var folderMetaData = {
+      name: format,
+      mimeType: "application/vnd.google-apps.folder",
+      parents: ["1Zmve1gkD0w0M8cB1u_Z3J712Am5e2yCB"],
+    };
+
+    driveService.files.create(
+      {
+        //@ts-ignore
+        resource: folderMetaData,
+        fields: "id",
+      },
+      async function (err: any, file: any) {
+        if (err) return console.log(err);
+        let list = ["webhooks", "feeds", "guilds"];
+        for (let i = 0; i < list.length; i++) {
+          let currentName = list[i];
+          let current = {};
+          switch (i) {
+            case 0:
+              current = webhookStr;
+              break;
+            case 1:
+              current = feedsStr;
+              break;
+            case 2:
+              current = guildStr;
+              break;
+          }
+          let fileMetaData = {
+            name: currentName + ".json",
+            parents: [file.data.id],
+          };
+          let media = {
+            mimeType: "application/json",
+            body: current,
+          };
+          await driveService.files.create({
+            //@ts-ignore
+            resource: fileMetaData,
+            media: media,
+            fileds: "id",
+          });
+        }
+      }
+    );
   }
 }
