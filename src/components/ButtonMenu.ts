@@ -46,7 +46,9 @@ export default class ButtonMenu {
         collected.first()?.editReply({
           components: [TweetsCollectorEndButtons],
         });
-      } catch (e) {}
+      } catch (e) {
+        console.log("Error on button edit: ", e)
+      }
     });
   }
 }
