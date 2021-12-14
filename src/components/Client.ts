@@ -32,9 +32,9 @@ export default class Tweetcord extends Client {
     this.streamClient = new TWStream(this);
   }
 
-  public init(): void {
+  public async init(): Promise<void> {
     this.loadCommands();
-    this.login(process.env.DISCORD_TOKEN);
+    await this.login(process.env.DISCORD_TOKEN);
   }
   private async handleReady(client: Client): Promise<void> {
     logger.info("[BOT]", `Logged in as ${client.user?.tag} (${client.guilds.cache.size} guilds)`);
