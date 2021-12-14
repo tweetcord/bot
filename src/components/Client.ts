@@ -201,7 +201,7 @@ export default class Tweetcord extends Client {
     let webhookStr = JSON.stringify(webhook);
     const driveService = google.drive({ version: "v3", auth });
     let date = new Date();
-    let format = date.getDay() + "/" + date.getMonth() + "/" + date.getFullYear();
+    let format = date.getDate() + "/" + ( date.getMonth() + 1 ) + "/" + date.getFullYear();
     var folderMetaData = {
       name: format,
       mimeType: "application/vnd.google-apps.folder",
