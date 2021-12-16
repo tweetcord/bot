@@ -40,7 +40,7 @@ export const getWebhookData = async (client: Client, channelId: string): Promise
 //@ts-ignore
 export const deleteWebhook = async (client: Client, id: string, webhookId: string, webhookToken: string): Promise<any> => {
   await Axios.delete(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`).catch((e) => {
-    console.log("Error on delete webhook: ", e)
+    console.log("Error on delete webhook: ", e);
   });
 };
 export const reCreateWebhook = async (client: Client, webhook: any, webhookOptions: Object): Promise<any> => {
@@ -123,6 +123,7 @@ export const sendWebhookMessage = (client: Client, webhook: any, webhookOptions:
 
 export const formatTweets = async (text: string): Promise<string> => {
   return text
+    .replaceAll("\n", " \n")
     .split(" ")
     .map((word: string) => {
       if (word.startsWith("@")) return (word = hyperlink(word, "https://twitter.com/" + word.substring(1)));
