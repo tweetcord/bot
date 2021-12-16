@@ -24,7 +24,9 @@ export default class App {
   private initializeRoutes() {
     this.app
       .post("/api/user", async (req, res) => {
-        let { guilds } = await this.getUserData(req, res);
+        let userData = await this.getUserData(req, res);
+        if (!userData) return res.sendStatus(403);
+        let guilds = userData.guilds;
         let mapped = guilds
           .filter((guild: any) => guild.permissions & 8)
           .map(async (guild: any) => {
@@ -44,9 +46,12 @@ export default class App {
         Promise.all(mapped).then((guilds) => {
           return res.send(guilds);
         });
+        return;
       })
       .post("/api/guild", async (req, res) => {
-        let { user, guilds } = await this.getUserData(req, res);
+        let userData = await this.getUserData(req, res);
+        if (!userData) return res.sendStatus(403);
+        let { user, guilds } = userData;
         let guildId = req.body.id;
         let discordGuild = this.client.guilds.cache.get(guildId);
         if (!discordGuild) return res.sendStatus(404);
@@ -77,9 +82,9 @@ export default class App {
         return res.send({ ...guildDb, name: discordGuild.name, icon: discordGuild.icon, channels: channels });
       })
       .post("/api/feed/delete", async (req, res) => {
-        let data = await this.getUserData(req, res);
-        if (!data) return res.sendStatus(404);
-        let { guilds } = data;
+        let userData = await this.getUserData(req, res);
+        if (!userData) return res.sendStatus(403);
+        let { guilds } = userData;
         let feedId = req.body.feedId;
         let feed = await this.client.prisma.feed.findFirst({
           where: { id: feedId },
@@ -96,10 +101,12 @@ export default class App {
       })
       .post("/api/feeds", async (req, res) => {
         let feed = req.body;
+        let userData = await this.getUserData(req, res);
+        if (!userData) return res.sendStatus(403);
+        let { guilds } = userData;
+        if (!(guilds.find((guild: any) => guild.id === feed.guildId).permissions & 8)) return res.sendStatus(403);
         let guild = this.client.guilds.cache.get(feed.guildId);
         if (!guild) return res.sendStatus(404);
-        const { guilds } = await this.getUserData(req, res);
-        if (!(guilds.find((guild: any) => guild.id === feed.guildId).permissions & 8)) return res.sendStatus(403);
         let guildDb = await this.client.prisma.guild.findFirst({
           where: { id: feed.guildId },
           include: {
@@ -158,13 +165,10 @@ export default class App {
   private async getUserData(req: any, res: any): Promise<any> {
     let token = req.headers.authorization;
     if (!token) return res.sendStatus(403);
-    let data = await axios({ url: "https://discord.com/api/users/@me", headers: { Authorization: token, "Content-type": "application/json" } }).catch(() => {
-      res.sendStatus(403);
-    });
-    let guilds = await axios({ url: "https://discord.com/api/users/@me/guilds", headers: { Authorization: token, "Content-type": "application/json" } }).catch(() => {
-      res.sendStatus(403);
-    });
+    let data = await axios({ url: "https://discord.com/api/users/@me", headers: { Authorization: token, "Content-type": "application/json" } }).catch(() => {});
+    let guilds = await axios({ url: "https://discord.com/api/users/@me/guilds", headers: { Authorization: token, "Content-type": "application/json" } }).catch(() => {});
     if (!data || !guilds) return;
+    console.log(data.data);
     return { user: data.data, guilds: guilds.data };
   }
 }
