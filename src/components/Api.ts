@@ -138,6 +138,7 @@ export default class App {
               message: feed.message,
               replies: feed.replies,
               retweets: feed.retweets,
+              keywords: feed.keywords,
             },
           });
         } else {
@@ -155,6 +156,7 @@ export default class App {
               message: feed.message,
               replies: feed.replies,
               retweets: feed.retweets,
+              keywords: feed.keywords,
             },
           });
         }

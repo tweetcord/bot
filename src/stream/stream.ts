@@ -88,6 +88,7 @@ export default class TWStream {
         for (let feed of feeds) {
           if (tweet.in_reply_to_status_id && !feed.replies) continue;
           if (tweet.retweeted_status && !feed.retweets) continue;
+          if (content.split(" ").some((key) => feed.keywords.some((keywords) => key === keywords))) continue;
           webhookOptions.content = feed.message ? feed.message : "";
           let webhook = await getWebhookData(that.client, feed.channel);
           if (!webhook) {

@@ -35,6 +35,7 @@ model Feed {
   twitterUserId String
   replies       Boolean     @default(false)
   retweets      Boolean     @default(false)
+  keywords      String[]    
 }
 
 model Webhook {

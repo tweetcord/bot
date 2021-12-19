@@ -109,6 +109,7 @@ export default class Feeds extends Command {
               message: message,
               replies: showReplies as boolean,
               retweets: showRetweets as boolean,
+              keywords: [],
             },
           });
 
@@ -120,10 +121,12 @@ export default class Feeds extends Command {
         } catch (e: any) {
           if (e.code === 50013) {
             iFollowUp(interaction, { content: emojis.f + "Tweetcord doen't have permissions to create webhooks. Grant permissions to continue." });
-          } else if(e.code === 30007){
-            iFollowUp(interaction, { content: emojis.f + "The channel you are trying to add a feed to has the maximum number of webhooks (10). If you want to add a feed, you need to delete one of the webhooks." });
-          }else {
-            console.log(e)
+          } else if (e.code === 30007) {
+            iFollowUp(interaction, {
+              content: emojis.f + "The channel you are trying to add a feed to has the maximum number of webhooks (10). If you want to add a feed, you need to delete one of the webhooks.",
+            });
+          } else {
+            console.log(e);
             iFollowUp(interaction, { content: emojis.f + "There is an error occurred. Please try again later." });
           }
         }
