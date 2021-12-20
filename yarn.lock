@@ -1864,10 +1864,10 @@ twit@^2.2.11:
     mime "^1.3.4"
     request "^2.68.0"
 
-twitter-api-v2@^1.6.5:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/twitter-api-v2/-/twitter-api-v2-1.7.2.tgz#56a8213a478e84d8e0e35e23c1714243878b0107"
-  integrity sha512-kN9ADZ6+Qbrg/8Jz9p2VDylvCCLVOwNow8JnJxLrYq0P8+UlCioec5tVBWdcf6Q2GtOO+RwxqeWQUffH1Cm5MA==
+twitter-api-v2@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/twitter-api-v2/-/twitter-api-v2-1.8.0.tgz#2671dde605c5de5efe29c7e6f9ff11b3fbe51f7b"
+  integrity sha512-aslxbzSf+i2bIRbH7RK4k3H2cU2KUHAxwoNlcYJkqq/sX+S2wocjP6olqcnReANylLGY4g3vqZMpnFC59jH3Eg==
 
 type-fest@^0.20.2:
   version "0.20.2"
