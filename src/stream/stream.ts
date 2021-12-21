@@ -10,10 +10,10 @@ export default class TWStream {
   public constructor(Tweetcord: Client) {
     this.client = Tweetcord;
     this.streamClient = new Twit({
-      consumer_key: "9h8cxlDBXHIvFEqgAvKd3KUoC",
-      consumer_secret: "RuNX1E4r4IRDd0k949yabNj0pR8pzjaPM2RtAxi5OfSAkY5vmA",
-      access_token: "1310499494912458755-lWMfCOShmSuDZY46fEvEk0NV4lJRE1",
-      access_token_secret: "2SuTuVlOndLVlGOvjdLnoP380q31Njfi2ArZ0DRIJyNrA",
+      consumer_key: "eL6OXdMUqVMBFWexNQsXg0T8Q",
+      consumer_secret: "r2K7uhYQjeWOlNU02JoMxcXuC5suOjGIsXMG9xKcMPpLcnIzjL",
+      access_token: "1310499494912458755-xLht9pfcRkr1IBDfST5XNHeGjnJnNN",
+      access_token_secret: "BzLDhp9LJIvMSGIKT6MzDJup4a8z4FWX2oqr1GQkqwdY3",
     });
   }
 
