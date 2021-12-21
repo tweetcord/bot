@@ -1,10 +1,13 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
+import expressSession from "express-session";
+import passport from "passport";
+import "./Passport";
 import axios from "axios";
 import cors from "cors";
 import Tweetcord from "./Client";
 import { TextChannel } from "discord.js";
 export default class App {
-  public app: express.Application;
+  public app: any;
   public client: Tweetcord;
   constructor(client: Tweetcord) {
     this.app = express();
@@ -16,6 +19,9 @@ export default class App {
   private initializeMiddlewares() {
     this.app.use(express.json());
     this.app.use(cors());
+    this.app.use(expressSession({ resave: false, saveUninitialized: true, secret: "nOUUd1C2uX3RzGq9CL1i7AZISEiVrBAY" }));
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
   }
 
   public listen() {
@@ -23,7 +29,7 @@ export default class App {
   }
   private initializeRoutes() {
     this.app
-      .post("/api/user", async (req, res) => {
+      .post("/api/user", async (req: Request, res: Response) => {
         let userData = await this.getUserData(req, res);
         if (!userData) return res.sendStatus(403);
         let guilds = userData.guilds;
@@ -48,7 +54,7 @@ export default class App {
         });
         return;
       })
-      .post("/api/guild", async (req, res) => {
+      .post("/api/guild", async (req: Request, res: Response) => {
         let userData = await this.getUserData(req, res);
         if (!userData) return res.sendStatus(403);
         let { user, guilds } = userData;
@@ -65,11 +71,11 @@ export default class App {
           },
         });
         if (guildDb) {
-          let mappedId = new Set(guildDb.feeds.map((feed) => feed.twitterUserId));
-          let idArr = Array.from(mappedId);
+          let mappedId = new Set(guildDb.feeds.map((feed: any) => feed.twitterUserId));
+          let idArr = Array.from(mappedId) as string[];
           if (idArr.length > 0) {
             let { data: users } = await this.client.twitter.v2.users(idArr, { "user.fields": ["profile_image_url", "description", "public_metrics"] });
-            let mapDB = guildDb.feeds.map((feed) => {
+            let mapDB = guildDb.feeds.map((feed: any) => {
               return {
                 ...feed,
                 user: users.find((user) => feed.twitterUserId === user.id),
@@ -81,7 +87,7 @@ export default class App {
         let channels = discordGuild.channels.cache.filter((channel) => channel.type === "GUILD_TEXT");
         return res.send({ ...guildDb, name: discordGuild.name, icon: discordGuild.icon, channels: channels });
       })
-      .post("/api/feed/delete", async (req, res) => {
+      .post("/api/feed/delete", async (req: Request, res: Response) => {
         let userData = await this.getUserData(req, res);
         if (!userData) return res.sendStatus(403);
         let { guilds } = userData;
@@ -99,7 +105,7 @@ export default class App {
         });
         return res.sendStatus(200);
       })
-      .post("/api/feeds", async (req, res) => {
+      .post("/api/feeds", async (req: Request, res: Response) => {
         let feed = req.body;
         let userData = await this.getUserData(req, res);
         if (!userData) return res.sendStatus(403);
@@ -114,7 +120,7 @@ export default class App {
             webhooks: true,
           },
         });
-        if (guildDb && !guildDb.webhooks.find((webhook) => webhook.channelId === feed.channel)) {
+        if (guildDb && !guildDb.webhooks.find((webhook: any) => webhook.channelId === feed.channel)) {
           let channel = this.client.channels.cache.get(feed.channel) as TextChannel;
           let webhook = await channel?.createWebhook("Tweetcord Notification");
           if (!webhook) return res.send({ code: 403, message: "Webhook creation failed" });
@@ -142,7 +148,7 @@ export default class App {
             },
           });
         } else {
-          let find = guildDb?.feeds.find((feed) => feed.twitterUserId === feed.twitterUserId);
+          let find = guildDb?.feeds.find((feed: any) => feed.twitterUserId === feed.twitterUserId);
           if (!find) return res.send({ code: 404, message: "Feed not found" });
           if (find === feed) return;
           await this.client.prisma.feed.update({
@@ -161,9 +167,24 @@ export default class App {
           });
         }
         return res.sendStatus(200);
+      })
+      .get("/auth/twitter", passport.authenticate("twitter"))
+      .get("/auth/twitter/callback", passport.authenticate("twitter", { failureRedirect: "/auth/error" }), (_req: Request, res: Response) => {
+        res.redirect("/getTwitter");
+      })
+      .get("/auth/error", (_req: Request, res: Response) => res.send("Unknown Error"))
+      .get("/getTwitter", this.isLoggedIn, (req: Request, res: Response) => {
+        if (!req.user) return res.send("Not logged in");
+        return res.send(`${req?.user}`);
       });
   }
-
+  private isLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
+    if (req.user) {
+      next();
+    } else {
+      res.status(401).send("Not Logged In");
+    }
+  };
   private async getUserData(req: any, res: any): Promise<any> {
     let token = req.headers.authorization;
     if (!token) return res.sendStatus(403);
