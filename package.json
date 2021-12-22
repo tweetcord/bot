@@ -41,7 +41,7 @@
     "@types/node": "^17.0.2",
     "@types/passport": "^1.0.7",
     "@types/twit": "^2.2.30",
-    "prisma": "^3.4.0"
+    "prisma": "^3.7.0"
   },
   "nodemonConfig": {
     "ignore": [
