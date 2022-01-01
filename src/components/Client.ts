@@ -50,7 +50,7 @@ export default class Tweetcord extends Client {
         await this.prisma.feed.createMany({ data: feedsJson });*/
     this.prisma.$connect().then(() => {
       logger.info("[PRISMA]", "Connected to MongoDB");
-      //this.streamClient.start();
+      this.streamClient.start();
     });
   }
 
