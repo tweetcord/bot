@@ -104,7 +104,7 @@ export default class Feeds extends Command {
           await interaction.client.prisma.feed.create({
             data: {
               channel: channel.id,
-              guildId,
+              guildId: guildId as string,
               twitterUserId: user.id,
               message: message,
               replies: showReplies as boolean,

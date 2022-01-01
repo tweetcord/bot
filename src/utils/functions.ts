@@ -1,6 +1,7 @@
 import { Client, TextChannel, Interaction, MessageEmbedOptions, CommandInteraction, MessageActionRow, InteractionReplyOptions, MessageComponentInteraction, SelectMenuInteraction } from "discord.js";
 import { hyperlink } from "@discordjs/builders";
 import Axios from "axios";
+import { userRateLimits } from "../constants";
 
 export const createWebhook = async (client: Client, channel: TextChannel, guildId: string): Promise<any> => {
   let webhook = await channel?.createWebhook("Tweetcord Notification");
@@ -305,4 +306,75 @@ export const iEditReply = async (interaction: CommandInteraction | MessageCompon
   } catch (e) {
     console.log("Can't edit reply interaction", e);
   }
+};
+
+export const checkUserRateLimits = (interaction: CommandInteraction, user: any) => {
+  let commandType = interaction.options.getSubcommand(true);
+  if (commandType === "ratelimits") return false;
+  //@ts-ignore
+  let userLimit = interaction.client.userRateLimits.get(user.id);
+  if (!userLimit) {
+    //@ts-ignore
+    userLimit = interaction.client.userRateLimits
+      .set(user.id, {
+        [commandType]: {
+          used: 0,
+          until: Date.now() + 1000 * 60 * 60,
+        },
+      })
+      .get(user.id);
+  } else if (!userLimit[commandType]) {
+    //@ts-ignore
+    userLimit = interaction.client.userRateLimits
+      .set(user.id, {
+        ...userLimit,
+        [commandType]: {
+          used: 0,
+          until: Date.now() + 1000 * 60 * 60,
+        },
+      })
+      .get(user.id);
+  }
+
+  if (userLimit) userLimit = checkUserRateLimitsUntil(interaction, user);
+  if (!userLimit || !userLimit[commandType]) return false;
+  let maxLimitOfCommand = formatRateLimitsByPremium(user)[commandType];
+  if (userLimit[commandType].used === maxLimitOfCommand) {
+    return userLimit[commandType].until;
+  }
+
+  //@ts-ignore
+  interaction.client.userRateLimits.set(user.id, {
+    [commandType]: {
+      used: userLimit[commandType].used + 1,
+      until: userLimit[commandType].until,
+    },
+  });
+  return false;
+};
+
+export const formatRateLimitsByPremium = (user: any) => {
+  let formatted = {};
+  Object.entries(userRateLimits).map((sub) => {
+    sub.map((defaults) => {
+      if (typeof defaults == "object") {
+        formatted[sub[0]] = user.premium ? defaults.premium : defaults.normal;
+      }
+    });
+  });
+  return formatted;
+};
+
+export const checkUserRateLimitsUntil = (interaction: CommandInteraction, user: any) => {
+  //@ts-ignore
+  let userLimit = interaction.client.userRateLimits.get(user.id);
+  if (!userLimit) return;
+  let entries = Object.entries(userLimit).map((sub) => {
+    if ((sub[1] as any).until < Date.now()) {
+      return undefined;
+    }
+    return sub;
+  });
+  //@ts-ignore
+  return interaction.client.userRateLimits.set(user.id, Object.fromEntries(entries.filter((sub) => sub))).get(user.id);
 };

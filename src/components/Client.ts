@@ -9,7 +9,7 @@ import feedsJson from "../database/feeds.json";*/
 import { AutoPoster } from "topgg-autoposter";
 import { readdirSync } from "fs";
 import { join, resolve } from "path";
-import { TwitterApiReadOnly } from "twitter-api-v2";
+import { TwitterApi } from "twitter-api-v2";
 import { clientOptions } from "../constants";
 import TWStream from "../stream/stream";
 import Command from "./Command";
@@ -20,14 +20,21 @@ require("dotenv").config();
 
 export default class Tweetcord extends Client {
   public commands: Collection<string, Command>;
-  public twitter: TwitterApiReadOnly;
+  public twitter: TwitterApi;
   public prisma: PrismaClient;
   public streamClient: TWStream;
+  public userRateLimits: Collection<string, any>;
   public constructor() {
     super(clientOptions);
     this.on("ready", this.handleReady).on("interactionCreate", this.handleInteraction).on("guildDelete", this.handleLeave).on("error", console.error).on("warn", console.warn);
     this.commands = new Collection();
-    this.twitter = new TwitterApiReadOnly(process.env.TWITTER_BEARER);
+    this.userRateLimits = new Collection();
+    this.twitter = new TwitterApi({
+      appKey: process.env.TWITTER_APPKEY as string,
+      appSecret: process.env.TWITTER_APPSECRET as string,
+      accessToken: "1310499494912458755-xLht9pfcRkr1IBDfST5XNHeGjnJnNN",
+      accessSecret: "BzLDhp9LJIvMSGIKT6MzDJup4a8z4FWX2oqr1GQkqwdY3",
+    });
     this.prisma = new PrismaClient({ errorFormat: "colorless" });
     this.streamClient = new TWStream(this);
   }
@@ -43,7 +50,7 @@ export default class Tweetcord extends Client {
         await this.prisma.feed.createMany({ data: feedsJson });*/
     this.prisma.$connect().then(() => {
       logger.info("[PRISMA]", "Connected to MongoDB");
-      this.streamClient.start();
+      //this.streamClient.start();
     });
   }
 

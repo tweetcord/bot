@@ -18,11 +18,12 @@ model Guild {
 }
 
 model User {
-  id              String   @id @map("_id")
-  donator         Boolean  @default(false)
-  premium         Boolean  @default(false)
-  premium_servers String[]
-
+  id                  String   @id @map("_id")
+  donator             Boolean  @default(false)
+  premium             Boolean  @default(false)
+  premium_servers     String[]
+  accessToken         String
+  accessSecret        String
   @@map(name: "users")
 }
 
@@ -30,8 +31,8 @@ model Feed {
   id            String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
   message       String      @default("{link}")
   channel       String
-  Guild         Guild?      @relation(fields: [guildId], references: [id])
-  guildId       String?
+  Guild         Guild       @relation(fields: [guildId], references: [id])
+  guildId       String
   twitterUserId String
   replies       Boolean     @default(false)
   retweets      Boolean     @default(false)
@@ -42,7 +43,7 @@ model Webhook {
   id            String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
   webhookId     String
   webhookToken  String      @unique
-  Guild         Guild?      @relation(fields: [guildId], references: [id])
-  guildId       String?
+  Guild         Guild       @relation(fields: [guildId], references: [id])
+  guildId       String
   channelId     String
 }
