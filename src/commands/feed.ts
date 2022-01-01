@@ -182,9 +182,9 @@ export default class Feeds extends Command {
           let find = feedsUnique.find((f: any) => f.name === feed.channel);
 
           if (find) {
-            find.value = [...find.value, data.find((user) => user.id === feed.twitterUserId)?.username];
+            find.value = [...find.value, data.find((user: any) => user.id === feed.twitterUserId)?.username];
           } else {
-            feedsUnique.push({ name: feed.channel, value: [data.find((user) => user.id === feed.twitterUserId)?.username], inline: true });
+            feedsUnique.push({ name: feed.channel, value: [data.find((user: any) => user.id === feed.twitterUserId)?.username], inline: true });
           }
         }
 
