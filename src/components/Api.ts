@@ -111,6 +111,8 @@ export default class App {
         });
         guildDB = await this.convertIDtoTwitterUser(guildDB);
         let channels = discordGuild?.channels.cache.filter((channel: any) => channel.type === "GUILD_TEXT");
+        this.client.streamClient.restart();
+
         return res.send({ ...guildDB, name: guild.name, icon: guild.icon, channels: channels });
       })
       .post("/api/feeds", async (req: Request, res: Response) => {
@@ -184,6 +186,7 @@ export default class App {
         });
         guildDB = await this.convertIDtoTwitterUser(guildDB);
         let channels = guild.channels.cache.filter((channel) => channel.type === "GUILD_TEXT");
+        this.client.streamClient.restart();
         return res.send({ ...guildDB, name: guild.name, icon: guild.icon, channels: channels });
       })
       .get("/auth/twitter", async (req: Request, res: Response) => {
