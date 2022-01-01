@@ -118,8 +118,7 @@ export default class App {
       })
       .post("/api/feeds", async (req: Request, res: Response) => {
         let feed = req.body;
-        if (!feed || !feed.channel || !feed.guildId || !feed.twitterUserId || !feed.message || !feed.replies || !feed.retweets || !feed.keywords)
-          return res.send({ error: 4045, message: "Missing required fields." });
+        if (!feed || !feed.channel || !feed.guildId || !feed.twitterUserId) return res.send({ error: 4045, message: "Missing required fields." });
         let userData = await this.getUserData(req, res);
         if (userData.error) return res.send(userData);
         let { guilds } = userData;
