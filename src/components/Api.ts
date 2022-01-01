@@ -61,7 +61,6 @@ export default class App {
         if (userData.error) return res.send(userData);
         let { user, guilds } = userData;
         let guildId = req.body.id;
-        console.log(req.body);
         let discordGuild = this.client.guilds.cache.get(guildId);
         if (!discordGuild) return res.send({ error: 4043, message: "Can't find guild with provided ID." });
         if (!user || !guilds) return res.send({ error: 4040, message: "Can't access user's information." });
@@ -76,11 +75,14 @@ export default class App {
         if (guildDb) {
           guildDb = await this.convertIDtoTwitterUser(guildDb);
         } else {
-          await this.client.prisma.guild.create({
+          guildDb = (await this.client.prisma.guild.create({
             data: {
               id: guildId,
             },
-          });
+          })) as Guild & {
+            feeds: Feed[];
+          };
+          guildDb.feeds = [];
         }
         let channels = discordGuild.channels.cache.filter((channel) => channel.type === "GUILD_TEXT");
         return res.send({ ...guildDb, name: discordGuild.name, icon: discordGuild.icon, channels: channels });
@@ -112,7 +114,6 @@ export default class App {
         guildDB = await this.convertIDtoTwitterUser(guildDB);
         let channels = discordGuild?.channels.cache.filter((channel: any) => channel.type === "GUILD_TEXT");
         this.client.streamClient.restart();
-
         return res.send({ ...guildDB, name: guild.name, icon: guild.icon, channels: channels });
       })
       .post("/api/feeds", async (req: Request, res: Response) => {
