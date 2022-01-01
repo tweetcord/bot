@@ -192,7 +192,7 @@ export default class App {
         if (!discordAuthToken) res.send({ error: 4040, message: "User not found" });
         res.cookie("discordAuthToken", discordAuthToken);
 
-        const authLink = await this.client.twitter.generateAuthLink("http://www.localhost:3001/auth/twitter/callback", { linkMode: "authorize" });
+        const authLink = await this.client.twitter.generateAuthLink("https://api.tweetcord.xyz/auth/twitter/callback", { linkMode: "authorize" });
         let options = {
           maxAge: 1000 * 60 * 30,
         };
@@ -204,7 +204,7 @@ export default class App {
         const { oauth_token, oauth_verifier } = req.query;
         let authTokenS = req.cookies.authTokenS;
         if (!oauth_token || !oauth_verifier || !authTokenS) {
-          return res.redirect("http://localhost:3000/link?failure=true");
+          return res.redirect("https://tweetcord.xyz/link");
         }
         let userData = await this.getUserData(req, res, req.cookies["discordAuthToken"]);
         if (userData.error) return res.send(userData);
@@ -237,7 +237,7 @@ export default class App {
             });
           }
         });
-        return res.redirect("http://localhost:3000/link");
+        return res.redirect("https://api.tweetcord.xyz/link");
       })
       .post("/getLinkStatus", async (req: Request, res: Response) => {
         let userData = await this.getUserData(req, res);
