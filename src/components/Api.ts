@@ -244,7 +244,7 @@ export default class App {
             });
           }
         });
-        return res.redirect("https://api.tweetcord.xyz/link");
+        return res.redirect("https://tweetcord.xyz/link");
       })
       .post("/getLinkStatus", async (req: Request, res: Response) => {
         let userData = await this.getUserData(req, res);
