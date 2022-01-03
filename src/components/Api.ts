@@ -146,8 +146,12 @@ export default class App {
           });
         }
         if (feed.twitterUserId === "newUser") {
-          let twitterUser = await this.client.twitter.v2.userByUsername(feed.user.username.replace("@", ""));
-          if (!twitterUser) return res.send({ error: 4042, message: "Twitter user not found" });
+          let twitterUser = await this.client.twitter.v2.userByUsername(feed.user.username.replace("@", "")).catch(() => {});
+          if (!twitterUser || !twitterUser.data) {
+            let guildDBSend = await this.convertIDtoTwitterUser(guildDb);
+            let channels = guild.channels.cache.filter((channel) => channel.type === "GUILD_TEXT");
+            return res.send({ ...guildDBSend, name: guild.name, icon: guild.icon, channels: channels });
+          }
           await this.client.prisma.feed.create({
             data: {
               channel: feed.channel,
@@ -159,7 +163,6 @@ export default class App {
               keywords: feed.keywords,
             },
           });
-          console.log("create");
         } else {
           let find = guildDb?.feeds.find((feed: any) => feed.twitterUserId === feed.twitterUserId);
           if (!find) return res.send({ error: 4041, message: "Feed not found" });
