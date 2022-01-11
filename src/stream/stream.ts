@@ -34,6 +34,12 @@ export default class TWStream {
           imgs = ext?.entities?.media?.length === ext?.extended_entities?.media?.length ? ext?.entities?.media : ext?.extended_entities?.media;
           content = await formatTweets(ext.full_text);
         }
+        if (tweet.retweeted_status && tweet.retweeted_status.extended_tweet) {
+          let retweet = tweet.retweeted_status;
+          imgs = retweet.extended_tweet.extended_entities ? retweet.extended_tweet.extended_entities.media : imgs;
+          content = await formatTweets(`RT @${retweet.user.screen_name}: ` + retweet.extended_tweet.full_text);
+        }
+
         let userID = tweet.user.id_str;
         let profileImageURL = tweet.user.profile_image_url_https.replace("_normal", "");
         let feeds = await that.client.prisma.feed.findMany({
