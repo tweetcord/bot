@@ -365,9 +365,9 @@ buffer-equal-constant-time@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/buffer-equal-constant-time/-/buffer-equal-constant-time-1.0.1.tgz"
 
-bufferutil@^4.0.4:
-  version "4.0.5"
-  resolved "https://registry.npmjs.org/bufferutil/-/bufferutil-4.0.5.tgz"
+bufferutil@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/bufferutil/-/bufferutil-4.0.6.tgz#ebd6c67c7922a0e902f053e5d8be5ec850e48433"
   dependencies:
     node-gyp-build "^4.3.0"
 
