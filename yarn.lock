@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@discordjs/builders@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@discordjs/builders/-/builders-0.11.0.tgz#4102abe3e0cd093501f3f71931df43eb92f5b0cc"
+  dependencies:
+    "@sindresorhus/is" "^4.2.0"
+    discord-api-types "^0.26.0"
+    ts-mixer "^6.0.0"
+    tslib "^2.3.1"
+    zod "^3.11.6"
+
 "@discordjs/builders@^0.8.1":
   version "0.8.2"
   resolved "https://registry.npmjs.org/@discordjs/builders/-/builders-0.8.2.tgz"
@@ -11,16 +21,6 @@
     ow "^0.27.0"
     ts-mixer "^6.0.0"
     tslib "^2.3.1"
-
-"@discordjs/builders@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.npmjs.org/@discordjs/builders/-/builders-0.9.0.tgz"
-  dependencies:
-    "@sindresorhus/is" "^4.2.0"
-    discord-api-types "^0.24.0"
-    ts-mixer "^6.0.0"
-    tslib "^2.3.1"
-    zod "^3.11.6"
 
 "@discordjs/collection@^0.3.2":
   version "0.3.2"
@@ -562,6 +562,10 @@ discord-api-types@^0.24.0:
 discord-api-types@^0.25.2:
   version "0.25.2"
   resolved "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.25.2.tgz"
+
+discord-api-types@^0.26.0:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.26.1.tgz#726f766ddc37d60da95740991d22cb6ef2ed787b"
 
 discord.js@^13.3.1:
   version "13.3.1"
