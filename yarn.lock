@@ -42,13 +42,13 @@
   dependencies:
     "@prisma/engines-version" "3.7.0-31.8746e055198f517658c08a0c426c7eec87f5a85f"
 
-"@prisma/engines-version@3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727":
-  version "3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727"
-  resolved "https://registry.npmjs.org/@prisma/engines-version/-/engines-version-3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727.tgz"
+"@prisma/engines-version@3.7.0-31.8746e055198f517658c08a0c426c7eec87f5a85f":
+  version "3.7.0-31.8746e055198f517658c08a0c426c7eec87f5a85f"
+  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-3.7.0-31.8746e055198f517658c08a0c426c7eec87f5a85f.tgz#055f36ac8b06c301332c14963cd0d6c795942c90"
 
-"@prisma/engines@3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727":
-  version "3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727"
-  resolved "https://registry.npmjs.org/@prisma/engines/-/engines-3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727.tgz"
+"@prisma/engines@3.7.0-31.8746e055198f517658c08a0c426c7eec87f5a85f":
+  version "3.7.0-31.8746e055198f517658c08a0c426c7eec87f5a85f"
+  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-3.7.0-31.8746e055198f517658c08a0c426c7eec87f5a85f.tgz#12f28d5b78519fbd84c89a5bdff457ff5095e7a2"
 
 "@sapphire/async-queue@^1.1.9":
   version "1.1.9"
@@ -694,8 +694,8 @@ finalhandler@~1.1.2:
     unpipe "~1.0.0"
 
 follow-redirects@^1.14.4:
-  version "1.14.6"
-  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.6.tgz"
+  version "1.14.7"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
 
 forever-agent@~0.6.1:
   version "0.6.1"
