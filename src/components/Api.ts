@@ -56,6 +56,7 @@ export default class App {
         return;
       })
       .post("/api/guild", async (req: Request, res: Response) => {
+        console.log("data");
         let userData = await this.getUserData(req, res);
         if (!userData) return;
         if (userData.error) return res.send(userData);
@@ -134,16 +135,22 @@ export default class App {
         });
         if (guildDb && !guildDb.webhooks.find((webhook: any) => webhook.channelId === feed.channel)) {
           let channel = this.client.channels.cache.get(feed.channel) as TextChannel;
-          let webhook = await channel?.createWebhook("Tweetcord Notification");
-          if (!webhook) return res.send({ error: 4032, message: "Webhook creation failed" });
-          await this.client.prisma.webhook.create({
-            data: {
-              webhookId: webhook.id,
-              webhookToken: webhook.token as string,
-              guildId: feed.guildId,
-              channelId: feed.channel,
-            },
-          });
+          try {
+            let webhook = await channel?.createWebhook("Tweetcord Notification");
+            if (!webhook) return res.send({ error: 4032, message: "Webhook creation failed" });
+            await this.client.prisma.webhook.create({
+              data: {
+                webhookId: webhook.id,
+                webhookToken: webhook.token as string,
+                guildId: feed.guildId,
+                channelId: feed.channel,
+              },
+            });
+          } catch (e) {
+            let channels = guild.channels.cache.filter((channel) => channel.type === "GUILD_TEXT");
+            this.client.streamClient.restart();
+            return res.send({ ...guildDb, name: guild.name, icon: guild.icon, channels: channels });
+          }
         }
         if (feed.twitterUserId === "newUser") {
           let twitterUser = await this.client.twitter.v2.userByUsername(feed.user.username.replace("@", "")).catch(() => {});
