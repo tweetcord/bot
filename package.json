@@ -12,7 +12,7 @@
   "author": "https://github.com/tweetcord/people",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^0.9.0",
+    "@discordjs/builders": "^0.11.0",
     "@discordjs/rest": "^0.2.0-canary.0",
     "@prisma/client": "^3.4.0",
     "axios": "^0.24.0",
@@ -20,7 +20,7 @@
     "chalk": "^4.1.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "discord.js": "^13.3.1",
+    "discord.js": "^13.6.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "googleapis": "^92.0.0",
@@ -36,7 +36,7 @@
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/express-session": "^1.17.4",
-    "@types/node": "^17.0.2",
+    "@types/node": "^17.0.8",
     "@types/passport": "^1.0.7",
     "@types/twit": "^2.2.30",
     "prisma": "^3.4.0"
