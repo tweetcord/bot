@@ -147,6 +147,7 @@ export default class App {
               },
             });
           } catch (e) {
+            console.log(e);
             let channels = guild.channels.cache.filter((channel) => channel.type === "GUILD_TEXT");
             this.client.streamClient.restart();
             return res.send({ ...guildDb, name: guild.name, icon: guild.icon, channels: channels });
