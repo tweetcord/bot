@@ -4,18 +4,22 @@ import Axios from "axios";
 import { userRateLimits } from "../constants";
 
 export const createWebhook = async (client: Client, channel: TextChannel, guildId: string): Promise<any> => {
-  let webhook = await channel?.createWebhook("Tweetcord Notification");
-  if (!webhook) return;
-  let webhookDb = await client.prisma.webhook.create({
-    data: {
-      webhookId: webhook.id,
-      webhookToken: webhook.token as string,
-      guildId: guildId,
-      channelId: channel.id,
-    },
-  });
-
-  return webhookDb;
+  try {
+    let webhook = await channel?.createWebhook("Tweetcord Notification");
+    if (!webhook) return;
+    let webhookDb = await client.prisma.webhook.create({
+      data: {
+        webhookId: webhook.id,
+        webhookToken: webhook.token as string,
+        guildId: guildId,
+        channelId: channel.id,
+      },
+    });
+    return webhookDb;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
 };
 
 export const getGuildData = async (interaction: Interaction): Promise<any> => {
@@ -127,8 +131,9 @@ export const formatTweets = async (text: string): Promise<string> => {
     .replaceAll("\n", " \n")
     .split(" ")
     .map((word: string) => {
-      if (word.startsWith("@")) return (word = hyperlink(word, "https://twitter.com/" + word.substring(1)));
-      if (word.startsWith("#")) return (word = hyperlink(word, "https://twitter.com/search?q=%23" + word.substring(1)));
+      let tempWord = word.replace(":", "");
+      if (word.startsWith("@")) return (word = hyperlink(word, "https://twitter.com/" + tempWord.substring(1)));
+      if (word.startsWith("#")) return (word = hyperlink(word, "https://twitter.com/search?q=%23" + tempWord.substring(1)));
       if (word.startsWith("https://t.co")) return (word = "");
       return word;
     })
