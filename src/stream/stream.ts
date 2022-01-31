@@ -122,7 +122,4 @@ export default class TWStream {
          this.start();
       }
    }
-   /*private interval = setInterval(() => {
-      this.restart();
-   }, 300000);*/
 }
