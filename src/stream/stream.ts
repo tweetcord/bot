@@ -79,8 +79,6 @@ export default class TWStream {
             timestamp: new Date(),
          },
       ];
-      console.log(tweetA);
-
       let i = 0;
       if (tweet.entities.media) {
          for (let img of tweet.entities.media) {
