@@ -156,8 +156,12 @@ export default class Account extends Command {
       } else if (subcommand === "tweet") {
          let text = interaction.options.getString("text", true);
          let tweet = (await twitterClient.v1.tweet(text).catch((e) => {
-            console.log(e.data.errors[0].message);
+            return console.log(e.data.errors[0].message);
          })) as TweetV1;
+         if(!tweet) {
+            iFollowUp(interaction, { content: emojis.f + "There is something wrong while tweeting please try again later." });
+            return;
+         }
          iFollowUp(interaction, {
             content: emojis.t + `**Tweet sent!**`,
             components: [
