@@ -36,7 +36,7 @@
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/express-session": "^1.17.4",
-    "@types/node": "^17.0.8",
+    "@types/node": "^17.0.43",
     "@types/passport": "^1.0.7",
     "@types/twit": "^2.2.30",
     "prisma": "^3.4.0"
