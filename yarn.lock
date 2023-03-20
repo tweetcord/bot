@@ -117,9 +117,9 @@
     "@types/qs" "*"
     "@types/range-parser" "*"
 
-"@types/express-session@^1.17.4":
-  version "1.17.4"
-  resolved "https://registry.npmjs.org/@types/express-session/-/express-session-1.17.4.tgz"
+"@types/express-session@^1.17.7":
+  version "1.17.7"
+  resolved "https://registry.yarnpkg.com/@types/express-session/-/express-session-1.17.7.tgz#ced215c1244cb594be10e39f2781ddcd650be9a6"
   dependencies:
     "@types/express" "*"
 
