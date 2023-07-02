@@ -19,7 +19,7 @@ export default class SelectMenu {
         const filter = (i: MessageComponentInteraction) => i.user.id === options.interaction?.user.id;
         const collector = options.interaction.channel?.createMessageComponentCollector({
             filter,
-            time: 3e5, // 5 minute
+            time: 3e5, // 5 minutes
         });
         collector?.on("collect", async (i: SelectMenuInteraction) => {
             if (i.customId === id) {

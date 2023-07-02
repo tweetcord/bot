@@ -23,7 +23,8 @@ export default class Tweetcord extends Client {
    public userRateLimits: Collection<string, any>;
    public constructor() {
       super(clientOptions);
-      this.on("ready", this.handleReady)
+      this
+         .on("ready", this.handleReady)
          .on("interactionCreate", this.handleInteraction)
          .on("guildDelete", this.handleLeave)
          .on("error", console.error)
@@ -128,7 +129,6 @@ export default class Tweetcord extends Client {
       const commands = this.commands.map((a) => a.data().toJSON()).filter((a) => a.name !== "eval");
       try {
          await rest.put(
-            // Global yapacaginiz zaman: Routes.applicationCommands
             Routes.applicationCommands(this.user?.id as string),
             { body: commands }
          );

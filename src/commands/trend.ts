@@ -17,7 +17,7 @@ export default class Trend extends Command {
       const woeid = await this.woeid(country, interaction);
       const data = await interaction.client.twitter.v1.trendsByPlace(woeid?.woeid!);
       const trend = data[0];
-      // Duplicate olanlari silmek
+      // Remove duplicates
       const trends = trend.trends.filter((v, i, a) => a.findIndex((t) => t.name === v.name) === i);
       const embed: MessageEmbedOptions = {
         color: resolveColor("#1da0f6"),

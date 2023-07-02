@@ -65,8 +65,7 @@ export default class Search extends Command {
             {},
             {
               label: u.screen_name,
-              // Description 100den büyükse 99dan kesip 3 nokta unicode'u ekliyor
-              // https://discord.com/developers/docs/interactions/message-components#select-menu-object
+              // Adds unicode 2026 if description is >100
               description: u.description?.length === 0 ? "No description" : (u.description?.length! > 100 ? u.description?.substring(0, 99) + "\u2026" : u.description)!,
               value: (++i).toString(),
             }

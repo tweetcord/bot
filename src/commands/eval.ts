@@ -15,11 +15,8 @@ export default class Eval extends Command {
     public async run(interaction: CommandInteraction): Promise<any> {
         //@ts-ignore
         const { getGuildData, createWebhook, getWebhookData, removeGuildData } = require("../utils/functions");
-        //@ts-ignore
         let db = interaction.client.prisma;
-        //@ts-ignore
         let client = interaction.client;
-        //@ts-ignore
         let guild = interaction.guild;
         await interaction?.deferReply({});
         if (!["534099893979971584", "548547460276944906", "300573341591535617", "693445343332794408"].includes(interaction.user.id)) {
