@@ -3,9 +3,6 @@ import { PrismaClient } from "@prisma/client";
 import { Routes } from "discord-api-types/v9";
 import { Client, Collection, Interaction, Guild, ApplicationCommandPermissionData } from "discord.js";
 import { exec } from "child_process";
-/*import guildJson from "../database/guild.json";
-import webhookJson from "../database/webhooks.json";
-import feedsJson from "../database/feeds.json";*/
 import { AutoPoster } from "topgg-autoposter";
 import { readdirSync } from "fs";
 import { join, resolve } from "path";
@@ -36,8 +33,8 @@ export default class Tweetcord extends Client {
       this.twitter = new TwitterApi({
          appKey: process.env.TWITTER_APPKEY as string,
          appSecret: process.env.TWITTER_APPSECRET as string,
-         accessToken: "1310499494912458755-xLht9pfcRkr1IBDfST5XNHeGjnJnNN",
-         accessSecret: "BzLDhp9LJIvMSGIKT6MzDJup4a8z4FWX2oqr1GQkqwdY3",
+         accessToken: process.env.TWITTER_ACCESSTOKEN as string,
+         accessSecret: process.env.TWITTER_ACCESSSECRET as string,
       });
       this.prisma = new PrismaClient({ errorFormat: "colorless" });
       this.streamClient = new TWStream(this);
@@ -49,9 +46,6 @@ export default class Tweetcord extends Client {
    }
    private async handleReady(client: Client): Promise<void> {
       logger.info("[BOT]", `Logged in as ${client.user?.tag} (${client.guilds.cache.size} guilds)`);
-      /*await this.prisma.guild.createMany({ data: guildJson });
-        await this.prisma.webhook.createMany({ data: webhookJson });
-        await this.prisma.feed.createMany({ data: feedsJson });*/
       this.prisma.$connect().then(() => {
          logger.info("[PRISMA]", "Connected to MongoDB");
          this.streamClient.start();
@@ -149,7 +143,7 @@ export default class Tweetcord extends Client {
    public async sendTopGGStats() {
       try {
          AutoPoster(
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Nzk1MTEwMjkxMzc0MDgwMSIsImJvdCI6dHJ1ZSwiaWF0IjoxNjA4OTY5NzA0fQ.uU5Y6O9K-lWPI0OZ1o3wyAYgokW30lYIx66JBKACL4Q",
+            process.env.TOPGG_TOKEN,
             this
          ).on("posted", () => {
             return "Posted stats to Top.gg!";
