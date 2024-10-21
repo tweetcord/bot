@@ -20,7 +20,7 @@
     "chalk": "^5.1.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "discord.js": "^13.6.0",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.0.3",
     "express": "^4.21.1",
     "googleapis": "^92.0.0",
