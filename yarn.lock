@@ -42,13 +42,40 @@
   dependencies:
     "@prisma/engines-version" "3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f"
 
+"@prisma/debug@6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@prisma/debug/-/debug-6.2.0.tgz#0d04866eb871348e9a6b0db69001cb6e4a713347"
+
 "@prisma/engines-version@3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f":
   version "3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f"
   resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f.tgz#4c8d9744b5e54650a8ba5fde0a711399d6adba24"
 
-"@prisma/engines@3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f":
-  version "3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f"
-  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f.tgz#4479099b99f6a082ce5843ee7208943ccedd127f"
+"@prisma/engines-version@6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69":
+  version "6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69"
+  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69.tgz#b84ce3fab44bfa13a22669da02752330b61745b2"
+
+"@prisma/engines@6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-6.2.0.tgz#c71160a59eea0e6cc7c31f95b13b027a992a29e0"
+  dependencies:
+    "@prisma/debug" "6.2.0"
+    "@prisma/engines-version" "6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69"
+    "@prisma/fetch-engine" "6.2.0"
+    "@prisma/get-platform" "6.2.0"
+
+"@prisma/fetch-engine@6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@prisma/fetch-engine/-/fetch-engine-6.2.0.tgz#489ccb875fea1a3d232b3bb50f768b5d8736cb7d"
+  dependencies:
+    "@prisma/debug" "6.2.0"
+    "@prisma/engines-version" "6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69"
+    "@prisma/get-platform" "6.2.0"
+
+"@prisma/get-platform@6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@prisma/get-platform/-/get-platform-6.2.0.tgz#04767b27e70834a17e6e28373601c35b7b9b2f73"
+  dependencies:
+    "@prisma/debug" "6.2.0"
 
 "@sapphire/async-queue@^1.1.9":
   version "1.1.9"
@@ -786,6 +813,10 @@ fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.npmjs.org/fresh/-/fresh-0.5.2.tgz"
 
+fsevents@2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
+
 fsevents@~2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
@@ -1352,11 +1383,13 @@ prepend-http@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/prepend-http/-/prepend-http-2.0.0.tgz"
 
-prisma@^3.4.0:
-  version "3.8.1"
-  resolved "https://registry.npmjs.org/prisma/-/prisma-3.8.1.tgz"
+prisma@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/prisma/-/prisma-6.2.0.tgz#8e31aaba41ce113424bfbe0d8ce2135e338d95c8"
   dependencies:
-    "@prisma/engines" "3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f"
+    "@prisma/engines" "6.2.0"
+  optionalDependencies:
+    fsevents "2.3.3"
 
 proxy-addr@~2.0.7:
   version "2.0.7"
